@@ -1,0 +1,15 @@
+@import "../../../../styles/variables.scss";
+
+.video-wrapper {
+  max-width: 300px;
+  max-height: fit-content;
+
+  h3 {
+    color: $accent;
+  }
+
+  iframe {
+    border-radius: 20px;
+    box-shadow: $accent 0px 3px 8px;
+  }
+}

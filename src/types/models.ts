@@ -6,6 +6,7 @@ export interface Topic {
 export interface Video {
   id: number;
   name: string;
-  link: string;
+  subtitle: string;
+  identifier: string;
   topic: Topic;
 }
