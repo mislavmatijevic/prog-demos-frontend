@@ -1,1 +1,4 @@
-<p>videos works!</p>
+<h1>Uči po temama</h1>
+<div class="video-grid" *ngFor="let video of videos">
+    <app-video-card [video]=video></app-video-card>
+</div>
