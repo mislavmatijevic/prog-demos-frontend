@@ -1,11 +1,14 @@
 @import "primeng/resources/themes/lara-light-blue/theme.css";
 @import "primeng/resources/primeng.css";
+@import "./styles/variables.scss";
 
 html,
 body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
 html,
@@ -17,4 +20,50 @@ app-root {
 app-root {
   display: flex;
   flex-direction: row;
+}
+
+body {
+  background-color: $dark;
+  color: $text;
+}
+
+h1 {
+  color: $primary;
+}
+
+nav {
+  background-color: $secondary;
+}
+
+a {
+  color: $accent;
+}
+
+button.primary {
+  background-color: $primary;
+  color: $white;
+}
+
+button.secondary {
+  background-color: $secondary;
+  color: $white;
+}
+
+footer {
+  background-color: $dark;
+  color: $grey;
+}
+
+input,
+textarea {
+  background-color: $white;
+  color: $dark;
+}
+
+.content {
+  background-color: $white;
+}
+
+div.divider {
+  border-top: 1px solid $grey;
 }

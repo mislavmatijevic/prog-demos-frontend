@@ -1,9 +1,48 @@
+@import "../../../styles/variables.scss";
+
 section {
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 20px;
-  height: 60%;
+  height: 100%;
   width: 200px;
   padding-left: 50px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  img {
+    width: 80px;
+  }
+  span {
+    font-size: large;
+  }
+}
+
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animated-gradient {
+  background: linear-gradient(
+    270deg,
+    darken($primary, 40%),
+    darken($secondary, 30%)
+  );
+  background-size: 400% 400%;
+  animation: gradientAnimation 15s ease infinite;
 }
