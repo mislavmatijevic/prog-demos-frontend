@@ -15,14 +15,7 @@ import { VideoService } from '../../services/video.service';
 export class VideosComponent {
   constructor(private videoService: VideoService) {}
 
-  videos: Video[] = [
-    {
-      id: 1,
-      name: 'ab',
-      link: 'bc',
-      topic: { id: 1, name: 'def' },
-    },
-  ];
+  videos: Video[] = [];
 
   ngOnInit() {
     this.fetchVideos();
