@@ -1,4 +1,7 @@
 <h1>Uči po temama</h1>
-<div class="video-grid" *ngFor="let video of videos">
-    <app-video-card [video]=video></app-video-card>
-</div>
+<section class="topic" *ngFor="let topic of topics">
+    <h2>{{topic.name}}</h2>
+    <div class="topic__video-grid">
+        <app-video-card *ngFor="let video of videos" [video]=video></app-video-card>
+    </div>
+</section>

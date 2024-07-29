@@ -1,0 +1,23 @@
+@import "../../../styles/variables.scss";
+
+.topic {
+  max-height: 80%;
+  max-width: 90%;
+
+  border-radius: 20px;
+  padding: 30px;
+
+  background-color: $dark-accent;
+
+  width: fit-content;
+  overflow-y: scroll;
+
+  box-shadow: $accent 0px 1px 20px, $accent 0px 0px 0px 3px;
+
+  &__video-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 50px;
+  }
+}
