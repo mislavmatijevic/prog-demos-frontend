@@ -1,7 +1,7 @@
-<div class="video-wrapper">
+<div class="video-wrapper" (click)="onVideoSelected()">
     <div class="video-title">
         <div class="full-height"></div>
         <h3>{{video.name}}</h3>
     </div>
-        <img class="video-image" src="https://i.ytimg.com/vi_webp/{{video.identifier}}/hqdefault.webp" alt="">
+    <img class="video-image" src="https://i.ytimg.com/vi_webp/{{video.identifier}}/hqdefault.webp" alt="">
 </div>
