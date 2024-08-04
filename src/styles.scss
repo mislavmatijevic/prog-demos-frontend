@@ -22,6 +22,19 @@ app-root {
   flex-direction: row;
 }
 
+.main-space {
+  flex-grow: 1;
+  max-height: 100%;
+  max-width: 95%;
+
+  padding: 0px 30px;
+
+  width: fit-content;
+  overflow-y: scroll;
+  scrollbar-color: $primary $accent;
+  scrollbar-width: auto;
+}
+
 body {
   background-color: $dark;
   color: $text;

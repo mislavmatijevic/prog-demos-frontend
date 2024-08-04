@@ -1,18 +1,8 @@
 @import "../../../styles/variables.scss";
 
 .topic {
-  max-height: 85%;
-  max-width: 95%;
-
   padding: 30px;
-
   background: linear-gradient(50deg, darken($accent, 40%), $dark-accent);
-
-  width: fit-content;
-  overflow-y: scroll;
-  scrollbar-color: $primary $accent;
-  scrollbar-width: auto;
-
   box-shadow: $accent 0px 1px 20px, $accent 0px 0px 0px 3px;
 
   &__video-grid {
