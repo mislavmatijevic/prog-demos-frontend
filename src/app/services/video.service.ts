@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Video } from '../../types/models';
+import { Topic } from '../../types/models';
 import { ApiService } from './api.service';
 
-export type Videos = {
-  Videos: Array<Video>;
+export type VideosResponse = {
+  topics: Array<Topic>;
 };
 
 @Injectable({
@@ -13,9 +13,9 @@ export type Videos = {
 export class VideoService {
   constructor(private apiService: ApiService) {}
 
-  getPublicVideos(): Observable<Array<Video>> {
-    return this.apiService.get<Array<Video>>('/videos/public') as Observable<
-      Array<Video>
-    >;
+  getPublicVideosPerTopics(): Observable<VideosResponse> {
+    return this.apiService.get<VideosResponse>(
+      '/videos/public'
+    ) as Observable<VideosResponse>;
   }
 }

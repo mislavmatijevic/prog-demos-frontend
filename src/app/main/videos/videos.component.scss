@@ -19,5 +19,20 @@
     flex-wrap: wrap;
     justify-content: center;
     gap: 50px;
+
+    &__subtopic {
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+      justify-content: center;
+
+      &__grid {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 50px;
+      }
+    }
   }
 }

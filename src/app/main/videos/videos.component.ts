@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { Topic, Video } from '../../../types/models';
+import { Topic } from '../../../types/models';
 import { VideoCardComponent } from '../../components/videos/video-card/video-card.component';
-import { VideoService } from '../../services/video.service';
+import { VideoService, VideosResponse } from '../../services/video.service';
 
 @Component({
   selector: 'app-videos',
@@ -15,7 +15,6 @@ import { VideoService } from '../../services/video.service';
 export class VideosComponent {
   constructor(private videoService: VideoService) {}
 
-  videos: Video[] = [];
   topics: Topic[] = [];
 
   ngOnInit() {
@@ -23,24 +22,13 @@ export class VideosComponent {
   }
 
   fetchVideos() {
-    this.videoService.getPublicVideos().subscribe({
-      next: (videos: Video[]) => {
-        this.videos = videos;
-
-        this.videos = videos;
-        this.loadUniqueTopicsForLoadedVideos();
+    this.videoService.getPublicVideosPerTopics().subscribe({
+      next: (res: VideosResponse) => {
+        this.topics = res.topics;
       },
       error: (error) => {
         console.log(error);
       },
     });
-  }
-
-  loadUniqueTopicsForLoadedVideos() {
-    this.videos.forEach(
-      (video) =>
-        !this.topics.some((topic) => topic.name == video.topic.name) &&
-        this.topics.push(video.topic)
-    );
   }
 }

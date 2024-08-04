@@ -2,6 +2,11 @@
 <section class="topic" *ngFor="let topic of topics">
     <h2>{{topic.name}}</h2>
     <div class="topic__video-grid">
-        <app-video-card *ngFor="let video of videos" [video]=video></app-video-card>
+        <section class="topic__video-grid__subtopic" *ngFor="let subtopic of topic.subtopics">
+            <h3>{{subtopic.name}}</h3>
+            <div class="topic__video-grid__subtopic__grid">
+                <app-video-card *ngFor="let video of subtopic.videos" [video]=video></app-video-card>
+            </div>
+        </section>
     </div>
 </section>
