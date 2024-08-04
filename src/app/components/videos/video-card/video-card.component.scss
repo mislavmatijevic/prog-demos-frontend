@@ -3,13 +3,49 @@
 .video-wrapper {
   max-width: 300px;
   max-height: fit-content;
+  box-shadow: $accent 0px 3px 8px;
+
+  .video-title {
+    position: relative;
+    height: auto;
+  }
+
+  .full-height {
+    height: 100%;
+  }
 
   h3 {
+    top: 100px;
+    width: 100%;
+    text-align: center;
+    position: absolute;
+
+    font-size: medium;
+
     color: $accent;
+    background-color: transparentize($color: $dark-accent, $amount: 0.25);
+    pointer-events: none;
+
+    z-index: 10;
   }
 
-  iframe {
-    border-radius: 20px;
-    box-shadow: $accent 0px 3px 8px;
+  &:hover {
+    box-shadow: $primary 0px 3px 8px;
+
+    cursor: pointer;
+
+    h3 {
+      color: $primary;
+    }
+    .video-image {
+      filter: saturate(150%);
+    }
   }
+}
+
+.video-image {
+  width: 250px;
+  height: 170px;
+
+  filter: saturate(50%) blur(2px);
 }
