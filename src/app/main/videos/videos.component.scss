@@ -1,15 +1,17 @@
 @import "../../../styles/variables.scss";
 
 .topic {
-  max-height: 80%;
-  max-width: 90%;
+  max-height: 85%;
+  max-width: 95%;
 
   padding: 30px;
 
-  background-color: $dark-accent;
+  background: linear-gradient(50deg, darken($accent, 40%), $dark-accent);
 
   width: fit-content;
   overflow-y: scroll;
+  scrollbar-color: $primary $accent;
+  scrollbar-width: auto;
 
   box-shadow: $accent 0px 1px 20px, $accent 0px 0px 0px 3px;
 
