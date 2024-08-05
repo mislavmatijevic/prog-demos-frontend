@@ -1,4 +1,4 @@
-import { ApplicationConfig } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import {
@@ -6,6 +6,7 @@ import {
   withFetch,
   withInterceptors,
 } from '@angular/common/http';
+import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 import { httpCacheInterceptor } from '../http-cache.interceptor';
 import { routes } from './app.routes';
 
@@ -21,5 +22,6 @@ export const appConfig: ApplicationConfig = {
         }),
       ])
     ),
+    importProvidersFrom(MonacoEditorModule.forRoot()),
   ],
 };

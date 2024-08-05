@@ -1,13 +1,16 @@
-<p>Zadatak {{task.id_subtopic}}-{{task.order_num}} (#{{task.id}})</p>
-<p>Ulaz: {{task.input}}</p>
-<p>Izlaz: {{task.output}}</p>
-<p>Pomoć 1: {{task.helper1_text}}</p>
-<p>Pomoć 2: {{task.helper2_text}}</p>
-<p>Pomoć 3: {{task.helper3_text}}</p>
-<p>Ulaz-izlaz: {{task.input_output_example}}</p>
-<p>Final boss={{task.is_final_boss}}</p>
-<p>Rješenje: {{task.solution_code}}</p>
-<p>Početni kod: {{task.starter_code}}</p>
-<p>Pomoćni korak 1: {{task.step1_code}}</p>
-<p>Pomoćni korak 2: {{task.step2_code}}</p>
-<p>Pomoćni korak 3: {{task.step3_code}}</p>
+<div *ngIf="task">
+    <ngx-monaco-editor (onInit)="onEditorReady($event)" [options]=editorOptions [model]=editorModel></ngx-monaco-editor>
+    <p>Zadatak {{task.id_subtopic}}-{{task.order_num}} (#{{task.id}})</p>
+    <p>Ulaz: {{task.input}}</p>
+    <p>Izlaz: {{task.output}}</p>
+    <p>Pomoć 1: {{task.helper1_text}}</p>
+    <p>Pomoć 2: {{task.helper2_text}}</p>
+    <p>Pomoć 3: {{task.helper3_text}}</p>
+    <p>Ulaz-izlaz: {{task.input_output_example}}</p>
+    <p>Final boss={{task.is_final_boss}}</p>
+    <p>Rješenje: {{task.solution_code}}</p>
+    <p>Početni kod: {{task.starter_code}}</p>
+    <p>Pomoćni korak 1: {{task.step1_code}}</p>
+    <p>Pomoćni korak 2: {{task.step2_code}}</p>
+    <p>Pomoćni korak 3: {{task.step3_code}}</p>
+</div>
