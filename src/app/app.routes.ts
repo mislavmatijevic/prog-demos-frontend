@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { TaskPlaygroundComponent } from './components/tasks/task-playground/task-playground.component';
 import { VideoPlaybackComponent } from './components/videos/video-playback/video-playback.component';
 import { TasksComponent } from './main/tasks/tasks.component';
 import { VideosComponent } from './main/videos/videos.component';
@@ -20,5 +21,9 @@ export const routes: Routes = [
   {
     path: 'prog',
     component: TasksComponent,
+  },
+  {
+    path: 'prog/:taskId',
+    component: TaskPlaygroundComponent,
   },
 ];

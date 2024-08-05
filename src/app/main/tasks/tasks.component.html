@@ -5,8 +5,8 @@
         <section class="topic__task-grid__subtopic" *ngFor="let subtopic of topic.subtopics">
             <h3>{{subtopic.name}}</h3>
             <div class="topic__task-grid__subtopic__grid">
-                <app-tasks-in-subtopic *ngFor="let task of subtopic.tasks" [subtopic]=subtopic
-                    [task]=task></app-tasks-in-subtopic>
+                <app-tasks-in-subtopic *ngFor="let task of subtopic.tasks" [subtopic]=subtopic [task]=task
+                    (taskSelected)="onTaskSelected($event)"></app-tasks-in-subtopic>
             </div>
         </section>
     </div>

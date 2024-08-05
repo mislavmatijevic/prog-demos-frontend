@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { Topic } from '../../../types/models';
+import { Router } from '@angular/router';
+import { BasicTask, Topic } from '../../../types/models';
 import { TasksInSubtopicComponent } from '../../components/tasks/tasks-in-subtopic/tasks-in-subtopic.component';
 import { TaskService, TasksResponse } from '../../services/task.service';
 
@@ -12,7 +13,7 @@ import { TaskService, TasksResponse } from '../../services/task.service';
   styleUrl: './tasks.component.scss',
 })
 export class TasksComponent {
-  constructor(private taskService: TaskService) {}
+  constructor(private taskService: TaskService, private _router: Router) {}
 
   topics: Topic[] = [];
 
@@ -29,5 +30,9 @@ export class TasksComponent {
         console.log(error);
       },
     });
+  }
+
+  onTaskSelected(task: BasicTask) {
+    this._router.navigateByUrl(`/prog/${task.id}`);
   }
 }
