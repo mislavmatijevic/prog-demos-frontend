@@ -24,7 +24,7 @@ export interface BasicTask {
 
 export interface FullTask {
   id: number;
-  subtopic_id: number;
+  id_subtopic: number;
   order_num: number;
   input: string;
   output: string;

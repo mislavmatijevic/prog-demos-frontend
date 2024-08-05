@@ -8,7 +8,7 @@ export type TasksResponse = {
 };
 
 export type TaskResponse = {
-  Task: FullTask;
+  task: FullTask;
 };
 
 @Injectable({
