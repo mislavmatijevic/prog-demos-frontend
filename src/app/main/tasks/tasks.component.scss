@@ -1,0 +1,37 @@
+@import "../../../styles/variables.scss";
+
+.topic {
+  padding: 30px;
+  background: linear-gradient(
+    50deg,
+    darken($primary, 40%),
+    darken($secondary, 40%)
+  );
+  box-shadow: $primary 0px 1px 20px, $primary 0px 0px 0px 3px;
+
+  &__task-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 50px;
+
+    &__subtopic {
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+      justify-content: center;
+      width: 100%;
+      padding-bottom: 50px;
+      border-top: 1px dashed $secondary;
+      border-bottom: 1px dashed $secondary;
+
+      &__grid {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 50px;
+      }
+    }
+  }
+}

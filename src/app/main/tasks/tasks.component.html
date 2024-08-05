@@ -1,1 +1,13 @@
-<p>tasks works!</p>
+<h1>Vježbaj na zadacima po temama</h1>
+<section class="topic" *ngFor="let topic of topics">
+    <h2>{{topic.name}}</h2>
+    <div class="topic__task-grid">
+        <section class="topic__task-grid__subtopic" *ngFor="let subtopic of topic.subtopics">
+            <h3>{{subtopic.name}}</h3>
+            <div class="topic__task-grid__subtopic__grid">
+                <app-tasks-in-subtopic *ngFor="let task of subtopic.tasks" [subtopic]=subtopic
+                    [task]=task></app-tasks-in-subtopic>
+            </div>
+        </section>
+    </div>
+</section>
