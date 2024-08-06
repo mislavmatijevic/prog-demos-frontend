@@ -1,3 +1,4 @@
+import { Clipboard } from '@angular/cdk/clipboard';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -28,10 +29,12 @@ export class TaskPlaygroundComponent {
   constructor(
     private route: ActivatedRoute,
     private taskService: TaskService,
-    private newlinePipe: NewlinePipe
+    private newlinePipe: NewlinePipe,
+    private clipboard: Clipboard
   ) {}
 
   task!: FullTask;
+  editor!: any;
   editorModel: NgxEditorModel = {
     value: '// Učitavanje početnog koda',
     language: 'cpp',
@@ -58,6 +61,7 @@ export class TaskPlaygroundComponent {
         $event._themeService.defineTheme('prog-demos-theme', data);
         $event._themeService.setTheme('prog-demos-theme');
       });
+    this.editor = $event;
   }
 
   fetchTask(videoId: number) {
@@ -76,6 +80,10 @@ export class TaskPlaygroundComponent {
 
   expandCode() {
     this.maximizeCodeHeight = !this.maximizeCodeHeight;
+  }
+
+  copyCode() {
+    this.clipboard.copy(this.editor.getValue());
   }
 
   giveHelp() {
