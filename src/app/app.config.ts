@@ -6,6 +6,7 @@ import {
   withFetch,
   withInterceptors,
 } from '@angular/common/http';
+import { provideAnimations } from '@angular/platform-browser/animations';
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 import { httpCacheInterceptor } from '../http-cache.interceptor';
 import { routes } from './app.routes';
@@ -23,5 +24,6 @@ export const appConfig: ApplicationConfig = {
       ])
     ),
     importProvidersFrom(MonacoEditorModule.forRoot()),
+    provideAnimations(),
   ],
 };

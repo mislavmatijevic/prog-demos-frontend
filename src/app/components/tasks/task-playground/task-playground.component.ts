@@ -2,9 +2,15 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { MonacoEditorModule, NgxEditorModel } from 'ngx-monaco-editor-v2';
+import {
+  DiffEditorModel,
+  MonacoEditorModule,
+  NgxEditorModel,
+} from 'ngx-monaco-editor-v2';
+import { MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 import { FullTask } from '../../../../types/models';
 import { NewlinePipe } from '../../../pipes/newline.pipe';
@@ -20,8 +26,9 @@ import { TaskResponse, TaskService } from '../../../services/task.service';
     Button,
     OverlayPanelModule,
     TooltipModule,
+    ToastModule,
   ],
-  providers: [NewlinePipe],
+  providers: [NewlinePipe, MessageService],
   templateUrl: './task-playground.component.html',
   styleUrl: './task-playground.component.scss',
 })
@@ -30,24 +37,46 @@ export class TaskPlaygroundComponent {
     private route: ActivatedRoute,
     private taskService: TaskService,
     private newlinePipe: NewlinePipe,
-    private clipboard: Clipboard
+    private clipboard: Clipboard,
+    private messageService: MessageService
   ) {}
 
   task!: FullTask;
   editor!: any;
+  diffEditor!: any;
   editorModel: NgxEditorModel = {
     value: '// Učitavanje početnog koda',
     language: 'cpp',
   };
+  helpPreviousEditorModel: DiffEditorModel = {
+    code: '',
+    language: 'cpp',
+  };
+  helpSuggestionEditorModel: DiffEditorModel = {
+    code: '',
+    language: 'cpp',
+  };
   editorOptions = {
-    theme: 'vs-dark',
+    theme: 'prog-demos-theme',
     language: 'cpp',
     minimap: { enabled: false },
     scrollBeyondLastLine: false,
     fontSize: 14,
     automaticLayout: true,
   };
+  diffEditorOptions = {
+    theme: 'prog-demos-theme',
+    language: 'cpp',
+    minimap: { enabled: false },
+    scrollBeyondLastLine: false,
+    fontSize: 14,
+    readonly: true,
+  };
   maximizeCodeHeight: boolean = false;
+
+  helpStepGiven: number = 0;
+  codeHelpShown: boolean = false;
+  helpButtonRageTolerance = 5;
 
   ngOnInit() {
     const taskId = parseInt(this.route.snapshot.paramMap.get('taskId')!);
@@ -62,6 +91,12 @@ export class TaskPlaygroundComponent {
         $event._themeService.setTheme('prog-demos-theme');
       });
     this.editor = $event;
+  }
+
+  onDiffEditorReady($event: any) {
+    this.diffEditor = null;
+    this.diffEditor = $event;
+    this.diffEditor.goToDiff();
   }
 
   fetchTask(videoId: number) {
@@ -87,6 +122,87 @@ export class TaskPlaygroundComponent {
   }
 
   giveHelp() {
-    throw new Error('Method not implemented.');
+    this.helpStepGiven++;
+    let foundHelpfulCodeStep = undefined;
+    let foundHelpfulTip = undefined;
+
+    if (this.helpStepGiven == 1) {
+      this.initialCodeForFirstStepHelpComparison();
+    }
+
+    foundHelpfulCodeStep = (this.task as any)[`step${this.helpStepGiven}_code`];
+    foundHelpfulTip = (this.task as any)[`helper${this.helpStepGiven}_text`];
+    const helpExistsForThisStep =
+      foundHelpfulCodeStep !== undefined || foundHelpfulTip !== undefined;
+
+    if (helpExistsForThisStep) {
+      this.handleDisplayingHelp(foundHelpfulCodeStep, foundHelpfulTip);
+    } else {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'To je to od pomoći!',
+        detail: 'Ne mogu ti dati više pomoći, dalje moraš samostalno.',
+      });
+      this.helpButtonRageTolerance--;
+      if (this.helpButtonRageTolerance == 0) {
+        this.messageService.add({
+          severity: 'info',
+          summary: 'Prestani klikati',
+          detail:
+            'Ok, pomoći ću ti tako da maknem gumb, pa da se fokusiraš na zadatak.',
+          life: 5000,
+        });
+      }
+    }
+  }
+
+  closeHelp() {
+    this.codeHelpShown = false;
+  }
+
+  private handleDisplayingHelp(
+    foundHelpfulCodeStep: string | undefined,
+    foundHelpfulTip: string | undefined
+  ) {
+    if (foundHelpfulCodeStep !== undefined) {
+      this.showCodeDifference(foundHelpfulCodeStep);
+    }
+    if (foundHelpfulTip !== undefined) {
+      this.displayHelpToast();
+    }
+  }
+
+  private initialCodeForFirstStepHelpComparison() {
+    this.helpSuggestionEditorModel = {
+      code: this.newlinePipe.transform(this.task.starter_code),
+      language: 'cpp',
+    };
+  }
+
+  private displayHelpToast() {
+    const helpMessageForCurrentStep = (this.task as any)[
+      `helper${this.helpStepGiven}_text`
+    ];
+    if (
+      helpMessageForCurrentStep !== undefined &&
+      helpMessageForCurrentStep != ''
+    ) {
+      this.messageService.add({
+        severity: 'info',
+        summary: 'Moj savjet',
+        detail: helpMessageForCurrentStep,
+        life: 30000,
+      });
+    }
+  }
+
+  private showCodeDifference(foundHelpfulCodeStep: string) {
+    this.helpPreviousEditorModel!.code = this.helpSuggestionEditorModel!.code;
+    this.helpSuggestionEditorModel!.code =
+      this.newlinePipe.transform(foundHelpfulCodeStep);
+    this.codeHelpShown = true;
+    setTimeout(() => {
+      this.diffEditor.goToDiff();
+    }, 500);
   }
 }
