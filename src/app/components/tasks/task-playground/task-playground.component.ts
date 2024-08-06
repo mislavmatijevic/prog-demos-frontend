@@ -42,7 +42,9 @@ export class TaskPlaygroundComponent {
     minimap: { enabled: false },
     scrollBeyondLastLine: false,
     fontSize: 14,
+    automaticLayout: true,
   };
+  maximizeCodeHeight: boolean = false;
 
   ngOnInit() {
     const taskId = parseInt(this.route.snapshot.paramMap.get('taskId')!);
@@ -70,5 +72,13 @@ export class TaskPlaygroundComponent {
         console.log(error);
       },
     });
+  }
+
+  expandCode() {
+    this.maximizeCodeHeight = !this.maximizeCodeHeight;
+  }
+
+  giveHelp() {
+    throw new Error('Method not implemented.');
   }
 }

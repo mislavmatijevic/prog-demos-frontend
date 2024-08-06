@@ -1,5 +1,6 @@
 <div class="task__wrapper">
-    <div class="task__wrapper-info__wrapper" *ngIf="task">
+    <div class="task__wrapper-info__wrapper" *ngIf="task"
+        [ngStyle]="{'width': maximizeCodeHeight ? '0%' : '50%', 'padding': maximizeCodeHeight ? '0' : '20px 20px'}">
         <h2>Zadatak {{task.id_subtopic}}-{{task.order_num}} (#{{task.id}})</h2>
         <ul>
             <li>Ulaz: {{task.input}}</li>
@@ -11,12 +12,19 @@
         </div>
     </div>
     <div class="task__wrapper-input__wrapper">
+        <div class="task__wrapper-input__wrapper-controls-top">
+            <p-button (onClick)="expandCode()" text="true" icon="pi pi-code" pTooltip="Fokusiraj kod"
+                tooltipPosition="bottom" />
+            <p-button text="true" icon="pi pi-copy" pTooltip="Kopiraj cijeli kod" tooltipPosition="bottom" />
+        </div>
         <ngx-monaco-editor (onInit)="onEditorReady($event)" [options]=editorOptions
-            [model]=editorModel></ngx-monaco-editor>
-        <div class="task__wrapper-input__wrapper-controls">
-            <p-button pTooltip="Pomozi mi!" tooltipPosition="top" severity="info">💡</p-button>
-            <p-button pTooltip="Motiviraj me!" tooltipPosition="top" severity="help">🪫</p-button>
-            <p-button pTooltip="Testiraj!" tooltipPosition="top" severity="contrast">▶️</p-button>
+            [ngStyle]="{'width': maximizeCodeHeight ? '100%' : 'initial'}" [model]=editorModel></ngx-monaco-editor>
+        <div class="task__wrapper-input__wrapper-controls-bottom">
+            <p-button rounded="true" icon="pi pi-lightbulb" (onClick)="giveHelp()" pTooltip="Pomozi mi!"
+                tooltipPosition="top" severity="info" />
+            <p-button rounded="true" icon="pi pi-face-smile" pTooltip="Motiviraj me!" tooltipPosition="top"
+                severity="help" />
+            <p-button rounded="true" icon="pi pi-play" pTooltip="Testiraj!" tooltipPosition="top" severity="contrast" />
         </div>
     </div>
 </div>
