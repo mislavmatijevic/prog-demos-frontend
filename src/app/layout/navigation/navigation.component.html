@@ -6,7 +6,7 @@
         </span>
     </div>
     <div *ngFor="let navigationHeader of navigationHeaders">
-        <a [routerLink]="navigationHeader.link" routerLinkActive="active"
+        <a class="navigation-link" [routerLink]="navigationHeader.link" routerLinkActive="active"
             [routerLinkActiveOptions]="{exact: true}">{{navigationHeader.name}}</a>
     </div>
 </section>

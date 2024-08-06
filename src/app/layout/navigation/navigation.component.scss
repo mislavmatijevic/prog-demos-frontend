@@ -46,3 +46,11 @@ section {
   background-size: 400% 400%;
   animation: gradientAnimation 15s ease infinite;
 }
+
+.navigation-link {
+  color: $accent;
+
+  &:hover {
+    color: $primary;
+  }
+}
