@@ -30,7 +30,7 @@ app-root {
   padding: 0px 30px;
 
   width: fit-content;
-  overflow-y: scroll;
+  overflow-y: auto;
   scrollbar-color: $primary $accent;
   scrollbar-width: auto;
 }
