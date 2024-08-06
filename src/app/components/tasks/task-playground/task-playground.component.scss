@@ -1,0 +1,56 @@
+@import "../../../../styles/variables.scss";
+
+.task__wrapper {
+  display: flex;
+
+  &-info__wrapper {
+    display: flex;
+    flex-direction: column;
+
+    background-color: $dark-accent;
+    padding: 20px 20px;
+    box-shadow: $secondary 0px 1px 20px, $secondary 0px 0px 0px 3px;
+    margin-bottom: 20px;
+    height: 95vh;
+    width: 50%;
+    min-width: 200px;
+    overflow-y: auto;
+
+    .console-output {
+      padding: 10px 20px;
+      background-color: black;
+      color: lighten($color: $accent, $amount: 40%);
+      width: fit-content;
+
+      pre {
+        text-wrap: wrap;
+      }
+    }
+  }
+
+  &-input__wrapper {
+    display: flex;
+    flex-direction: column;
+
+    background-color: $dark-accent;
+    padding: 20px 0px;
+    box-shadow: $secondary 0px 1px 20px, $secondary 0px 0px 0px 3px;
+    margin-bottom: 20px;
+    height: 95vh;
+    width: 50%;
+    min-width: 300px;
+
+    h3 {
+      padding-left: 20px;
+    }
+
+    ngx-monaco-editor {
+      height: 100%;
+    }
+
+    &-controls {
+      display: flex;
+      justify-content: space-evenly;
+    }
+  }
+}

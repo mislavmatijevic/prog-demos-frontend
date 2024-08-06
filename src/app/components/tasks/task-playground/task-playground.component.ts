@@ -2,20 +2,33 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MonacoEditorModule, NgxEditorModel } from 'ngx-monaco-editor-v2';
+import { Button } from 'primeng/button';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { TooltipModule } from 'primeng/tooltip';
 import { FullTask } from '../../../../types/models';
+import { NewlinePipe } from '../../../pipes/newline.pipe';
 import { TaskResponse, TaskService } from '../../../services/task.service';
 
 @Component({
   selector: 'app-task-playground',
   standalone: true,
-  imports: [CommonModule, MonacoEditorModule],
+  imports: [
+    CommonModule,
+    MonacoEditorModule,
+    NewlinePipe,
+    Button,
+    OverlayPanelModule,
+    TooltipModule,
+  ],
+  providers: [NewlinePipe],
   templateUrl: './task-playground.component.html',
   styleUrl: './task-playground.component.scss',
 })
 export class TaskPlaygroundComponent {
   constructor(
     private route: ActivatedRoute,
-    private taskService: TaskService
+    private taskService: TaskService,
+    private newlinePipe: NewlinePipe
   ) {}
 
   task!: FullTask;
@@ -23,11 +36,17 @@ export class TaskPlaygroundComponent {
     value: '// Učitavanje početnog koda',
     language: 'cpp',
   };
-  editorOptions = { theme: 'vs-dark', language: 'cpp' };
+  editorOptions = {
+    theme: 'vs-dark',
+    language: 'cpp',
+    minimap: { enabled: false },
+    scrollBeyondLastLine: false,
+    fontSize: 14,
+  };
 
   ngOnInit() {
     const taskId = parseInt(this.route.snapshot.paramMap.get('taskId')!);
-    this.fetchVideo(taskId);
+    this.fetchTask(taskId);
   }
 
   onEditorReady($event: any) {
@@ -39,14 +58,13 @@ export class TaskPlaygroundComponent {
       });
   }
 
-  fetchVideo(videoId: number) {
+  fetchTask(videoId: number) {
     this.taskService.getSingleTask(videoId).subscribe({
       next: (res: TaskResponse) => {
         this.task = res.task;
-        this.editorModel.value = `${this.task.starter_code.replaceAll(
-          '\\n',
-          '\n'
-        )}`;
+        this.editorModel.value = this.newlinePipe.transform(
+          this.task.starter_code
+        );
       },
       error: (error) => {
         console.log(error);
