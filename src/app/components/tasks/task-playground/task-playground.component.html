@@ -14,8 +14,8 @@
     </div>
     <div class="task__wrapper-input__wrapper">
         <div class="task__wrapper-input__wrapper-controls-top">
-            <p-button (onClick)="expandCode()" text="true" icon="pi pi-code" pTooltip="Fokusiraj kod"
-                tooltipPosition="bottom" />
+            <p-button (onClick)="expandCode()" text="true" icon="pi pi-code"
+                [pTooltip]="maximizeCodeHeight ? 'Prikaži zadatak' : 'Fokusiraj kod'" tooltipPosition="bottom" />
             <p-button (onClick)="copyCode()" text="true" icon="pi pi-copy" pTooltip="Kopiraj cijeli kod"
                 tooltipPosition="bottom" />
         </div>
