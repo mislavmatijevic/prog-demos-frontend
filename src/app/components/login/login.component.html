@@ -1,15 +1,17 @@
-<div class="login-container">
-    <div class="login-container__row">
+<form class="login-form" (ngSubmit)="onSubmit()">
+    <div class="login-form__row">
         <p-floatLabel>
-            <input pInputText id="identifier" type="text" class="login-container__row__input" />
-            <label for="identifier" class="w-6rem" class="login-container__row__label">Korisničko ime ili email</label>
+            <input pInputText id="identifier" type="text" class="form-control login-form__row__input" name="identifier"
+                minlength="2" required [formControl]="identifier" />
+            <label for="identifier" class="w-6rem" class="login-form__row__label">Korisničko ime ili email</label>
         </p-floatLabel>
     </div>
-    <div class="login-container__row">
+    <div class="login-form__row">
         <p-floatLabel>
-            <input pInputText id="password" type="password" class="login-container__row__input" />
-            <label for="password" class="w-6rem" class="login-container__row__label">Lozinka</label>
+            <input pInputText id="password" type="password" class="form-control login-form__row__input" name="password"
+                minlength="8" required [formControl]="password" />
+            <label for="password" class="w-6rem" class="login-form__row__label">Lozinka</label>
         </p-floatLabel>
     </div>
-    <p-button label="Prijava" icon="pi pi-user" styleClass="w-10rem mx-auto" />
-</div>
+    <p-button label="Prijava" type="submit" icon="pi pi-user" styleClass="w-10rem mx-auto" />
+</form>
