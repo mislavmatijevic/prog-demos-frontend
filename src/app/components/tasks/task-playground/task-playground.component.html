@@ -2,14 +2,14 @@
     <p-toast [position]="'bottom-left'" />
     <div class="task__wrapper-info__wrapper" *ngIf="task"
         [ngStyle]="{'width': maximizeCodeHeight ? '0%' : '50%', 'padding': maximizeCodeHeight ? '0' : '20px 20px'}">
-        <h2>Zadatak {{task.id_subtopic}}-{{task.order_num}} (#{{task.id}})</h2>
+        <h2>Zadatak {{task.idSubtopic}}-{{task.orderNum}} (#{{task.id}})</h2>
         <ul>
             <li>Ulaz: {{task.input}}</li>
             <li>Izlaz: {{task.output}}</li>
         </ul>
         <h2>Primjer:</h2>
         <div class="console-output">
-            <pre>{{task.input_output_example|newline}}</pre>
+            <pre>{{task.inputOutputExample|newline}}</pre>
         </div>
     </div>
     <div class="task__wrapper-input__wrapper">

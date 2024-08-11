@@ -104,7 +104,7 @@ export class TaskPlaygroundComponent {
       next: (res: TaskResponse) => {
         this.task = res.task;
         this.editorModel.value = this.newlinePipe.transform(
-          this.task.starter_code
+          this.task.starterCode
         );
       },
       error: (error) => {
@@ -179,7 +179,7 @@ export class TaskPlaygroundComponent {
 
   private initialCodeForFirstStepHelpComparison() {
     this.helpSuggestionEditorModel = {
-      code: this.newlinePipe.transform(this.task.starter_code),
+      code: this.newlinePipe.transform(this.task.starterCode),
       language: 'cpp',
     };
   }

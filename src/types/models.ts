@@ -19,23 +19,23 @@ export interface Video {
 
 export interface BasicTask {
   id: number;
-  order_num: number;
+  orderNum: number;
 }
 
 export interface FullTask {
   id: number;
-  id_subtopic: number;
-  order_num: number;
+  idSubtopic: number;
+  orderNum: number;
   input: string;
   output: string;
-  input_output_example: string;
-  is_final_boss: boolean;
-  starter_code: string;
-  step1_code: string;
-  step2_code: string;
-  step3_code: string;
-  helper1_text: string;
-  helper2_text: string;
-  helper3_text: string;
-  solution_code: string;
+  inputOutputExample: string;
+  isFinalBoss: boolean;
+  starterCode: string;
+  step1Code: string;
+  step2Code: string;
+  step3Code: string;
+  helper1Text: string;
+  helper2Text: string;
+  helper3Text: string;
+  solutionCode: string;
 }
