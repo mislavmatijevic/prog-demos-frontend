@@ -10,7 +10,6 @@ import {
 import { MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
-import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 import { FullTask } from '../../../../types/models';
 import { NewlinePipe } from '../../../pipes/newline.pipe';
@@ -28,7 +27,7 @@ import { TaskResponse, TaskService } from '../../../services/task.service';
     TooltipModule,
     ToastModule,
   ],
-  providers: [NewlinePipe, MessageService],
+  providers: [NewlinePipe],
   templateUrl: './task-playground.component.html',
   styleUrl: './task-playground.component.scss',
 })
