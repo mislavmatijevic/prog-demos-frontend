@@ -119,6 +119,11 @@ export class TaskPlaygroundComponent {
 
   copyCode() {
     this.clipboard.copy(this.editor.getValue());
+    this.messageService.add({
+      severity: 'success',
+      detail: 'Kod kopiran',
+      life: 1000,
+    });
   }
 
   giveHelp() {
