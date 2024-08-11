@@ -23,4 +23,9 @@ export class ApiService {
     const uri = `${this.rootUrl}${url}`;
     return this.httpClient.get<T>(uri) as Observable<T>;
   }
+
+  post<T>(url: string, body: any): Observable<T> {
+    const uri = `${this.rootUrl}${url}`;
+    return this.httpClient.post<T>(uri, body);
+  }
 }
