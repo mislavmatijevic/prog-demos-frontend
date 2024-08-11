@@ -135,8 +135,8 @@ export class TaskPlaygroundComponent {
       this.initialCodeForFirstStepHelpComparison();
     }
 
-    foundHelpfulCodeStep = (this.task as any)[`step${this.helpStepGiven}_code`];
-    foundHelpfulTip = (this.task as any)[`helper${this.helpStepGiven}_text`];
+    foundHelpfulCodeStep = (this.task as any)[`step${this.helpStepGiven}Code`];
+    foundHelpfulTip = (this.task as any)[`helper${this.helpStepGiven}Text`];
     const helpExistsForThisStep =
       foundHelpfulCodeStep !== undefined || foundHelpfulTip !== undefined;
 
@@ -173,7 +173,7 @@ export class TaskPlaygroundComponent {
       this.showCodeDifference(foundHelpfulCodeStep);
     }
     if (foundHelpfulTip !== undefined) {
-      this.displayHelpToast();
+      this.displayHelpToast(foundHelpfulTip);
     }
   }
 
@@ -184,10 +184,7 @@ export class TaskPlaygroundComponent {
     };
   }
 
-  private displayHelpToast() {
-    const helpMessageForCurrentStep = (this.task as any)[
-      `helper${this.helpStepGiven}_text`
-    ];
+  private displayHelpToast(helpMessageForCurrentStep: string) {
     if (
       helpMessageForCurrentStep !== undefined &&
       helpMessageForCurrentStep != ''
