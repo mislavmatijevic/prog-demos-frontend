@@ -9,11 +9,14 @@ import {
 } from 'ngx-monaco-editor-v2';
 import { MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { TooltipModule } from 'primeng/tooltip';
 import { FullTask } from '../../../../types/models';
 import { NewlinePipe } from '../../../pipes/newline.pipe';
+import { AuthService } from '../../../services/auth.service';
 import { TaskResponse, TaskService } from '../../../services/task.service';
+import { LoginComponent } from '../../login/login.component';
 
 @Component({
   selector: 'app-task-playground',
@@ -25,7 +28,8 @@ import { TaskResponse, TaskService } from '../../../services/task.service';
     Button,
     OverlayPanelModule,
     TooltipModule,
-    ToastModule,
+    DialogModule,
+    LoginComponent,
   ],
   providers: [NewlinePipe],
   templateUrl: './task-playground.component.html',
@@ -37,7 +41,8 @@ export class TaskPlaygroundComponent {
     private taskService: TaskService,
     private newlinePipe: NewlinePipe,
     private clipboard: Clipboard,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private authService: AuthService
   ) {}
 
   task!: FullTask;
@@ -76,6 +81,8 @@ export class TaskPlaygroundComponent {
   helpStepGiven: number = 0;
   codeHelpShown: boolean = false;
   helpButtonRageTolerance = 5;
+
+  loginDialogVisible: boolean = false;
 
   ngOnInit() {
     const taskId = parseInt(this.route.snapshot.paramMap.get('taskId')!);
@@ -130,6 +137,14 @@ export class TaskPlaygroundComponent {
       this._showHelp();
     } else {
       this._hideHelp();
+    }
+  }
+
+  executeCode() {
+    if (this.authService.isLoggedIn()) {
+      // TODO: await task execution
+    } else {
+      this.loginDialogVisible = true;
     }
   }
 
