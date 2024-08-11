@@ -126,13 +126,21 @@ export class TaskPlaygroundComponent {
     });
   }
 
-  giveHelp() {
+  toggleHelp() {
+    if (!this.codeHelpShown) {
+      this._showHelp();
+    } else {
+      this._hideHelp();
+    }
+  }
+
+  _showHelp() {
     this.helpStepGiven++;
     let foundHelpfulCodeStep = undefined;
     let foundHelpfulTip = undefined;
 
     if (this.helpStepGiven == 1) {
-      this.initialCodeForFirstStepHelpComparison();
+      this._initialCodeForFirstStepHelpComparison();
     }
 
     foundHelpfulCodeStep = (this.task as any)[`step${this.helpStepGiven}Code`];
@@ -141,7 +149,7 @@ export class TaskPlaygroundComponent {
       foundHelpfulCodeStep !== undefined || foundHelpfulTip !== undefined;
 
     if (helpExistsForThisStep) {
-      this.handleDisplayingHelp(foundHelpfulCodeStep, foundHelpfulTip);
+      this._handleDisplayingHelp(foundHelpfulCodeStep, foundHelpfulTip);
     } else {
       this.messageService.add({
         severity: 'error',
@@ -161,30 +169,30 @@ export class TaskPlaygroundComponent {
     }
   }
 
-  closeHelp() {
+  _hideHelp() {
     this.codeHelpShown = false;
   }
 
-  private handleDisplayingHelp(
+  private _handleDisplayingHelp(
     foundHelpfulCodeStep: string | undefined,
     foundHelpfulTip: string | undefined
   ) {
     if (foundHelpfulCodeStep !== undefined) {
-      this.showCodeDifference(foundHelpfulCodeStep);
+      this._showCodeDifference(foundHelpfulCodeStep);
     }
     if (foundHelpfulTip !== undefined) {
-      this.displayHelpToast(foundHelpfulTip);
+      this._displayHelpToast(foundHelpfulTip);
     }
   }
 
-  private initialCodeForFirstStepHelpComparison() {
+  private _initialCodeForFirstStepHelpComparison() {
     this.helpSuggestionEditorModel = {
       code: this.newlinePipe.transform(this.task.starterCode),
       language: 'cpp',
     };
   }
 
-  private displayHelpToast(helpMessageForCurrentStep: string) {
+  private _displayHelpToast(helpMessageForCurrentStep: string) {
     if (
       helpMessageForCurrentStep !== undefined &&
       helpMessageForCurrentStep != ''
@@ -198,7 +206,7 @@ export class TaskPlaygroundComponent {
     }
   }
 
-  private showCodeDifference(foundHelpfulCodeStep: string) {
+  private _showCodeDifference(foundHelpfulCodeStep: string) {
     this.helpPreviousEditorModel!.code = this.helpSuggestionEditorModel!.code;
     this.helpSuggestionEditorModel!.code =
       this.newlinePipe.transform(foundHelpfulCodeStep);

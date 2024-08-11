@@ -23,15 +23,14 @@
             [ngStyle]="{'width': maximizeCodeHeight ? '100%' : 'initial'}" [model]=editorModel></ngx-monaco-editor>
 
         <div *ngIf="this.codeHelpShown">
-            <p-button rounded="true" icon="pi pi-times" (onClick)="closeHelp()" pTooltip="Zatvori pomoć"
-                tooltipPosition="top" severity="info" />
             <ngx-monaco-diff-editor (onInit)="onDiffEditorReady($event)" [options]=editorOptions
                 [ngStyle]="{'width': maximizeCodeHeight ? '100%' : 'initial'}" [originalModel]=helpPreviousEditorModel!
                 [modifiedModel]=helpSuggestionEditorModel!></ngx-monaco-diff-editor>
         </div>
         <div class="task__wrapper-input__wrapper-controls-bottom">
-            <p-button *ngIf="!this.codeHelpShown && helpButtonRageTolerance != 0" rounded="true" icon="pi pi-lightbulb"
-                (onClick)="giveHelp()" pTooltip="Pomozi mi!" tooltipPosition="top" severity="info" />
+            <p-button *ngIf="helpButtonRageTolerance != 0" rounded="true"
+                [icon]="codeHelpShown ? 'pi pi-times' : 'pi pi-lightbulb'" (onClick)="toggleHelp()"
+                [pTooltip]="codeHelpShown ? 'Zatvori pomoć' : 'Pomozi mi!'" tooltipPosition="top" severity="info" />
             <p-button rounded="true" icon="pi pi-face-smile" pTooltip="Motiviraj me!" tooltipPosition="top"
                 severity="help" />
             <p-button rounded="true" icon="pi pi-play" pTooltip="Testiraj!" tooltipPosition="top" severity="contrast" />
