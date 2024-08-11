@@ -10,6 +10,7 @@ import {
 import { MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
+import { DividerModule } from 'primeng/divider';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { TooltipModule } from 'primeng/tooltip';
 import { FullTask } from '../../../../types/models';
@@ -17,6 +18,7 @@ import { NewlinePipe } from '../../../pipes/newline.pipe';
 import { AuthService } from '../../../services/auth.service';
 import { TaskResponse, TaskService } from '../../../services/task.service';
 import { LoginComponent } from '../../login/login.component';
+import { RegisterComponent } from '../../register/register.component';
 
 @Component({
   selector: 'app-task-playground',
@@ -30,6 +32,8 @@ import { LoginComponent } from '../../login/login.component';
     TooltipModule,
     DialogModule,
     LoginComponent,
+    DividerModule,
+    RegisterComponent,
   ],
   providers: [NewlinePipe],
   templateUrl: './task-playground.component.html',
@@ -185,6 +189,14 @@ export class TaskPlaygroundComponent {
 
   _hideHelp() {
     this.codeHelpShown = false;
+  }
+
+  handleLoginSuccessful() {
+    this.loginDialogVisible = false;
+  }
+
+  handleRegistrationSuccessful() {
+    this.loginDialogVisible = false;
   }
 
   private _handleDisplayingHelp(

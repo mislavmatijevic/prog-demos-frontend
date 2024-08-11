@@ -2,6 +2,17 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
 
+export enum RegistrationErrorCode {
+  INFO_INVALID = 1,
+  USERNAME_OR_EMAIL_TAKEN = 2,
+}
+
+export type RegistrationFailureResponse = {
+  success: boolean;
+  message: string;
+  errorCode: RegistrationErrorCode;
+};
+
 export type LoginResponse = {
   user: {
     id: number;
@@ -26,6 +37,17 @@ export class AuthService {
   private username: string | null = null;
 
   constructor(private apiService: ApiService) {}
+
+  register(username: string, email: string, password: string) {
+    const registrationResponse =
+      this.apiService.post<RegistrationFailureResponse>('/auth/register', {
+        username,
+        email,
+        password,
+      });
+
+    return registrationResponse;
+  }
 
   login(identifier: string, password: string): Observable<LoginResponse> {
     const loginResponse = this.apiService.post<LoginResponse>('/auth/login', {

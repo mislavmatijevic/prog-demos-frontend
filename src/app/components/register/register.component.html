@@ -1,0 +1,27 @@
+<form class="register-form" (ngSubmit)="onSubmit()">
+    <div class="register-form__row">
+        <div class="register-form__row__group">
+            <label for="username" class="register-form__row__label">Novo korisničko ime</label>
+            <input pInputText id="username" type="text" class="form-control register-form__row__input" name="username"
+                minlength="2" required [formControl]="username" />
+        </div>
+    </div>
+    <div class="register-form__row">
+        <label for="email" class="register-form__row__label">Tvoj email za registraciju</label>
+        <div class="register-form__row__group">
+            <input pInputText id="email" type="text" class="form-control register-form__row__input" name="email"
+                minlength="4" required [formControl]="email" ngModel email />
+            <small>
+                Email mi samo treba da ti pošaljem poveznicu za aktivaciju tvog novog računa.
+            </small>
+        </div>
+    </div>
+    <div class="register-form__row">
+        <p-floatLabel>
+            <input pInputText id="password" type="password" class="form-control register-form__row__input"
+                name="password" minlength="8" required [formControl]="password" />
+            <label for="password" class="register-form__row__label">Lozinka</label>
+        </p-floatLabel>
+    </div>
+    <p-button label="Registracija" type="submit" icon="pi pi-user-plus" />
+</form>
