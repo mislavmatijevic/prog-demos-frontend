@@ -42,7 +42,7 @@
     &__button {
       position: absolute;
       top: 10px;
-      transition: transform 0.5s ease-out;
+      transition: transform 0.55s cubic-bezier(0.075, 0.82, 0.165, 1);
     }
   }
 }
