@@ -90,19 +90,21 @@
 
   background: radial-gradient(
     circle,
-    darken($primary, 10%),
-    darken($orange, 40%),
-    darken($orange, 60%)
+    darken($orange, 30%),
+    darken($primary, 30%),
+    darken($orange, 50%)
   );
   background-size: 500% 500%;
   animation: gradientAnimation 60s ease infinite;
 
-  .inner-sun {
+  .outer-sun-ring {
     width: 420px;
     height: 420px;
     border-radius: 50%;
     transform: translate(-15%, -60px);
 
-    background: radial-gradient(circle, transparent 65%, $primary 40%);
+    background: radial-gradient(circle, transparent 70%, $orange 40%);
+    filter: blur(12px);
+    pointer-events: none;
   }
 }
