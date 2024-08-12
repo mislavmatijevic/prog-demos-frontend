@@ -34,6 +34,7 @@
       text-wrap: nowrap;
       img {
         width: 80px;
+        cursor: pointer;
       }
       span {
         font-size: large;
@@ -71,11 +72,15 @@
   &-link {
     padding: 5px;
     text-align: left;
-    color: $accent;
+    color: $orange;
     background-color: $dark-accent;
-    box-shadow: $accent 0px 1px 20px, $accent 0px 0px 0px 3px;
+    box-shadow: $orange 0px 1px 20px, $orange 0px 0px 0px 3px;
 
     &:hover {
+      color: $primary;
+    }
+
+    &__active {
       color: $primary;
     }
   }

@@ -1,7 +1,7 @@
 <section class="navigation-drawer" [ngStyle]="{'width': isCollapsed ? '0' : '200px'}">
     <div class="navigation-drawer__header">
         <div class="navigation-drawer__header__logo">
-            <img src="assets/images/prog_demos.png">
+            <img routerLink="/" src="assets/images/prog_demos.png">
             <span>
                 &#64; 2024
             </span>
@@ -13,11 +13,11 @@
     </div>
     <div class="navigation">
         <a *ngFor="let navigationHeader of navigationHeaders" class="navigation-link"
-            [routerLink]="navigationHeader.link" routerLinkActive="active"
-            [routerLinkActiveOptions]="{exact: true}">{{navigationHeader.name}}</a>
+            [routerLink]="navigationHeader.link"
+            routerLinkActive="navigation-link__active">{{navigationHeader.name}}</a>
     </div>
 
     <div class="synthwave-sun">
-        <div class="inner-sun"></div>
+        <div class="outer-sun-ring"></div>
     </div>
 </section>
