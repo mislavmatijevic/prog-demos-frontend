@@ -86,27 +86,36 @@
   }
 }
 
-.synthwave-sun {
+.sun-wrapper {
   width: 300px;
   height: 300px;
-  border-radius: 50%;
-  box-shadow: 0 0 50px rgba(255, 255, 255, 0.2);
-  transform: translate(-40%, 20%);
 
-  background: radial-gradient(
-    circle,
-    darken($orange, 30%),
-    darken($primary, 30%),
-    darken($orange, 50%)
-  );
-  background-size: 500% 500%;
-  animation: gradientAnimation 60s ease infinite;
+  .synthwave-sun {
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    box-shadow: 0 0 50px rgba(255, 255, 255, 0.2);
+    transform: translate(-40%, 20%);
+
+    background: radial-gradient(
+      circle,
+      darken($orange, 30%),
+      darken($primary, 30%),
+      darken($orange, 50%)
+    );
+    background-size: 500% 500%;
+    animation: gradientAnimation 60s ease infinite;
+
+    cursor: pointer;
+
+    overflow: hidden;
+  }
 
   .outer-sun-ring {
     width: 420px;
     height: 420px;
     border-radius: 50%;
-    transform: translate(-15%, -60px);
+    transform: translate(-40%, -300px);
 
     background: radial-gradient(circle, transparent 70%, $orange 40%);
     filter: blur(12px);

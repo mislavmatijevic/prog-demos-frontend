@@ -17,7 +17,9 @@
             routerLinkActive="navigation-link__active">{{navigationHeader.name}}</a>
     </div>
 
-    <div class="synthwave-sun">
+    <div class="sun-wrapper">
+        <div (click)="onSunClick($event)" class="synthwave-sun">
+        </div>
         <div class="outer-sun-ring"></div>
     </div>
 </section>
