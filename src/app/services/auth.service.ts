@@ -57,8 +57,8 @@ export class AuthService {
 
     loginResponse.subscribe({
       next: (res: LoginResponse) => {
-        this._setTokens(res.tokens.accessToken, res.tokens.refreshToken.value);
-        this._setUsername(res.user.username);
+        this.setTokens(res.tokens.accessToken, res.tokens.refreshToken.value);
+        this.setUsername(res.user.username);
       },
     });
 
@@ -75,32 +75,6 @@ export class AuthService {
     localStorage.removeItem('refreshToken');
   }
 
-  _setTokens(accessToken: string, refreshToken: string): void {
-    this.accessToken = accessToken;
-    this.refreshToken = refreshToken;
-    localStorage.setItem('accessToken', accessToken);
-    localStorage.setItem('refreshToken', refreshToken);
-  }
-
-  _setUsername(username: string): void {
-    this.username = username;
-    localStorage.setItem('username', username);
-  }
-
-  getAccessToken(): string | null {
-    if (!this.accessToken) {
-      this.accessToken = localStorage.getItem('accessToken');
-    }
-    return this.accessToken;
-  }
-
-  getRefreshToken(): string | null {
-    if (!this.refreshToken) {
-      this.refreshToken = localStorage.getItem('refreshToken');
-    }
-    return this.refreshToken;
-  }
-
   getUsername(): string | null {
     if (!this.username) {
       this.username = localStorage.getItem('username');
@@ -109,4 +83,30 @@ export class AuthService {
   }
 
   isLoggedIn = signal(this.getAccessToken() !== null);
+
+  private setTokens(accessToken: string, refreshToken: string): void {
+    this.accessToken = accessToken;
+    this.refreshToken = refreshToken;
+    localStorage.setItem('accessToken', accessToken);
+    localStorage.setItem('refreshToken', refreshToken);
+  }
+
+  private setUsername(username: string): void {
+    this.username = username;
+    localStorage.setItem('username', username);
+  }
+
+  private getAccessToken(): string | null {
+    if (!this.accessToken) {
+      this.accessToken = localStorage.getItem('accessToken');
+    }
+    return this.accessToken;
+  }
+
+  private getRefreshToken(): string | null {
+    if (!this.refreshToken) {
+      this.refreshToken = localStorage.getItem('refreshToken');
+    }
+    return this.refreshToken;
+  }
 }
