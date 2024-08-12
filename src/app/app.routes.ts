@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { RegisterComponent } from './components/register/register.component';
 import { TaskPlaygroundComponent } from './components/tasks/task-playground/task-playground.component';
 import { VideoPlaybackComponent } from './components/videos/video-playback/video-playback.component';
 import { authGuard } from './guards/auth.guard';
@@ -34,6 +35,11 @@ export const routes: Routes = [
     path: 'login',
     canActivate: [noAuthGuard],
     component: LoginPageComponent,
+  },
+  {
+    path: 'register',
+    canActivate: [noAuthGuard],
+    component: RegisterComponent,
   },
   {
     path: 'account',

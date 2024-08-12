@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, Renderer2 } from '@angular/core';
+import { Component, effect, Renderer2 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { NavigationItem } from '../../../types/general';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-navigation',
@@ -15,17 +16,31 @@ import { NavigationItem } from '../../../types/general';
 export class NavigationComponent {
   constructor(
     private renderer: Renderer2,
-    private messageService: MessageService
-  ) {}
+    private messageService: MessageService,
+    private authService: AuthService
+  ) {
+    effect(() => {
+      this.navigationHeaders = [
+        { name: 'Uči', link: '/demos' },
+        { name: 'Vježbaj', link: '/prog' },
+      ];
+      if (!this.authService.isLoggedIn()) {
+        this.navigationHeaders.push({ name: 'Prijava', link: '/login' });
+        this.navigationHeaders.push({
+          name: 'Registracija',
+          link: '/register',
+        });
+      } else {
+        this.navigationHeaders.push({ name: 'Račun', link: '/account' });
+      }
+    });
+  }
 
   isCollapsed: boolean = false;
   sunClickedCounter: number = 0;
   stopClickingSunMessageShown: boolean = false;
 
-  navigationHeaders: Array<NavigationItem> = [
-    { name: 'Uči', link: '/demos' },
-    { name: 'Vježbaj', link: '/prog' },
-  ];
+  navigationHeaders!: Array<NavigationItem>;
 
   toggleVisibility() {
     this.isCollapsed = !this.isCollapsed;

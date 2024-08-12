@@ -59,6 +59,7 @@ export class AuthService {
       next: (res: LoginResponse) => {
         this.setTokens(res.tokens.accessToken, res.tokens.refreshToken.value);
         this.setUsername(res.user.username);
+        this.isLoggedIn.set(true);
       },
     });
 
@@ -73,6 +74,7 @@ export class AuthService {
     this.refreshToken = null;
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
+    this.isLoggedIn.set(false);
   }
 
   getUsername(): string | null {
