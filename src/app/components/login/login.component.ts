@@ -26,7 +26,7 @@ export class LoginComponent {
     private authService: AuthService,
     private messageService: MessageService
   ) {}
-  @Output() loginSuccessful = new EventEmitter<boolean>();
+  @Output() loginSuccessful = new EventEmitter();
 
   identifier = new FormControl('');
   password = new FormControl('');
@@ -41,7 +41,7 @@ export class LoginComponent {
               severity: 'success',
               detail: `Pozdrav, ${this.authService.getUsername()}!`,
             });
-            this.loginSuccessful.emit(true);
+            this.loginSuccessful.emit();
           },
           error: () => {
             this.messageService.add({
@@ -50,7 +50,6 @@ export class LoginComponent {
               detail:
                 'Provjeri još jednom svoje podatke ili pokušaj ponovno kasnije!',
             });
-            this.loginSuccessful.emit(false);
           },
         });
     } else {

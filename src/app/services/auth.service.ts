@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
 
@@ -108,7 +108,5 @@ export class AuthService {
     return this.username;
   }
 
-  isLoggedIn(): boolean {
-    return this.getAccessToken() !== null;
-  }
+  isLoggedIn = signal(this.getAccessToken() !== null);
 }
