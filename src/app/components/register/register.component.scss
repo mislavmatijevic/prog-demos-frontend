@@ -4,13 +4,14 @@
   width: 100%;
   padding-top: 2.5rem;
   padding-bottom: 1rem;
+  text-align: start;
 
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 
-  gap: 1.8rem;
+  gap: 1.5rem;
 
   &__row {
     display: flex;
@@ -23,10 +24,6 @@
       flex-direction: column;
       align-items: center;
       width: 100%;
-
-      small {
-        max-width: 50%;
-      }
     }
 
     &__label {
@@ -37,6 +34,11 @@
     &__input {
       background-color: $dark-accent;
       color: $orange;
+    }
+
+    &__hint {
+      margin-bottom: 0.5rem;
+      max-width: 15rem;
     }
   }
 }

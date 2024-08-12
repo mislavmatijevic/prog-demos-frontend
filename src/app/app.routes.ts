@@ -1,11 +1,11 @@
 import { Routes } from '@angular/router';
-import { RegisterComponent } from './components/register/register.component';
 import { TaskPlaygroundComponent } from './components/tasks/task-playground/task-playground.component';
 import { VideoPlaybackComponent } from './components/videos/video-playback/video-playback.component';
 import { authGuard } from './guards/auth.guard';
 import { noAuthGuard } from './guards/no-auth.guard';
 import { AccountComponent } from './main/account/account.component';
 import { LoginPageComponent } from './main/login-page/login-page.component';
+import { RegisterPageComponent } from './main/register-page/register-page.component';
 import { TasksComponent } from './main/tasks/tasks.component';
 import { VideosComponent } from './main/videos/videos.component';
 import { WelcomeComponent } from './main/welcome/welcome.component';
@@ -39,7 +39,7 @@ export const routes: Routes = [
   {
     path: 'register',
     canActivate: [noAuthGuard],
-    component: RegisterComponent,
+    component: RegisterPageComponent,
   },
   {
     path: 'account',

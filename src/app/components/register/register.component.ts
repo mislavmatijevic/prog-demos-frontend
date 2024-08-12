@@ -6,6 +6,7 @@ import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
+import { TooltipModule } from 'primeng/tooltip';
 import {
   AuthService,
   RegistrationErrorCode,
@@ -22,6 +23,7 @@ import {
     FloatLabelModule,
     FormsModule,
     ReactiveFormsModule,
+    TooltipModule,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
