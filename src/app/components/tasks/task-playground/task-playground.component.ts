@@ -1,6 +1,6 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
   DiffEditorModel,
@@ -12,6 +12,7 @@ import { Button } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { DividerModule } from 'primeng/divider';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TooltipModule } from 'primeng/tooltip';
 import { FullTask } from '../../../../types/models';
 import { NewlinePipe } from '../../../pipes/newline.pipe';
@@ -34,6 +35,7 @@ import { RegisterComponent } from '../../register/register.component';
     LoginComponent,
     DividerModule,
     RegisterComponent,
+    ProgressSpinnerModule,
   ],
   providers: [NewlinePipe],
   templateUrl: './task-playground.component.html',
@@ -46,14 +48,15 @@ export class TaskPlaygroundComponent {
     private newlinePipe: NewlinePipe,
     private clipboard: Clipboard,
     private messageService: MessageService,
-    private authService: AuthService
+    private authService: AuthService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {}
 
   task!: FullTask;
   editor!: any;
   diffEditor!: any;
   editorModel: NgxEditorModel = {
-    value: '// Učitavanje početnog koda',
+    value: '',
     language: 'cpp',
   };
   helpPreviousEditorModel: DiffEditorModel = {
@@ -80,6 +83,8 @@ export class TaskPlaygroundComponent {
     fontSize: 14,
     readonly: true,
   };
+  starterCodeIsLoaded: boolean = false;
+  mainEditorReady: boolean = false;
   maximizeCodeHeight: boolean = false;
 
   helpStepGiven: number = 0;
@@ -101,6 +106,8 @@ export class TaskPlaygroundComponent {
         $event._themeService.setTheme('prog-demos-theme');
       });
     this.editor = $event;
+    this.mainEditorReady = true;
+    this.changeDetectorRef.detectChanges();
   }
 
   onDiffEditorReady($event: any) {
@@ -116,6 +123,7 @@ export class TaskPlaygroundComponent {
         this.editorModel.value = this.newlinePipe.transform(
           this.task.starterCode
         );
+        this.starterCodeIsLoaded = true;
       },
       error: (error) => {
         console.log(error);

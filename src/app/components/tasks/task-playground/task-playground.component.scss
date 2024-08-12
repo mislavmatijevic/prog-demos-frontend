@@ -60,3 +60,15 @@
     }
   }
 }
+
+.loading-spinner {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.loading-spinner-code {
+  height: 100%;
+}

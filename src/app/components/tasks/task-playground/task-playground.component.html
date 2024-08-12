@@ -11,7 +11,7 @@
     <app-register (registrationSuccessful)="handleRegistrationSuccessful()"></app-register>
 </p-dialog>
 <div class="task__wrapper">
-    <div class="task__wrapper-info__wrapper" *ngIf="task"
+    <div class="task__wrapper-info__wrapper" *ngIf="task; else loadingTask"
         [ngStyle]="{'width': maximizeCodeHeight ? '0%' : '50%', 'padding': maximizeCodeHeight ? '0' : '20px 20px'}">
         <h2>Zadatak {{task.idSubtopic}}-{{task.orderNum}} (#{{task.id}})</h2>
         <ul>
@@ -23,6 +23,11 @@
             <pre>{{task.inputOutputExample|newline}}</pre>
         </div>
     </div>
+    <ng-template #loadingTask>
+        <div class="loading-spinner">
+            <p-progressSpinner ariaLabel="loading" />
+        </div>
+    </ng-template>
     <div class="task__wrapper-input__wrapper">
         <div class="task__wrapper-input__wrapper-controls-top">
             <p-button (onClick)="expandCode()" text="true" icon="pi pi-code"
@@ -30,14 +35,19 @@
             <p-button (onClick)="copyCode()" text="true" icon="pi pi-copy" pTooltip="Kopiraj cijeli kod"
                 tooltipPosition="bottom" />
         </div>
-        <ngx-monaco-editor (onInit)="onEditorReady($event)" [options]=editorOptions
-            [ngStyle]="{'width': maximizeCodeHeight ? '100%' : 'initial'}" [model]=editorModel></ngx-monaco-editor>
 
-        <div *ngIf="this.codeHelpShown">
+        <ngx-monaco-editor *ngIf="starterCodeIsLoaded" (onInit)="onEditorReady($event)" [options]=editorOptions
+            [ngStyle]="{'width': maximizeCodeHeight ? '100%' : 'initial'}" [model]=editorModel></ngx-monaco-editor>
+        <div *ngIf="codeHelpShown && starterCodeIsLoaded">
             <ngx-monaco-diff-editor (onInit)="onDiffEditorReady($event)" [options]=editorOptions
                 [ngStyle]="{'width': maximizeCodeHeight ? '100%' : 'initial'}" [originalModel]=helpPreviousEditorModel!
                 [modifiedModel]=helpSuggestionEditorModel!></ngx-monaco-diff-editor>
         </div>
+
+        <div *ngIf="!mainEditorReady" class="loading-spinner loading-spinner-code">
+            <p-progressSpinner ariaLabel="loading" />
+        </div>
+
         <div class="task__wrapper-input__wrapper-controls-bottom">
             <p-button *ngIf="helpButtonRageTolerance != 0" rounded="true"
                 [icon]="codeHelpShown ? 'pi pi-times' : 'pi pi-lightbulb'" (onClick)="toggleHelp()"
