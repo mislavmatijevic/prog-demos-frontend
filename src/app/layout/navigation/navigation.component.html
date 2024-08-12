@@ -1,12 +1,23 @@
-<section class="animated-gradient">
-    <div class="logo">
-        <img src="assets/images/prog_demos.png">
-        <span>
-            &#64; 2024
-        </span>
+<section class="navigation-drawer" [ngStyle]="{'width': isCollapsed ? '0' : '200px'}">
+    <div class="navigation-drawer__header">
+        <div class="navigation-drawer__header__logo">
+            <img src="assets/images/prog_demos.png">
+            <span>
+                &#64; 2024
+            </span>
+        </div>
+        <p-button (onClick)="toggleVisibility()"
+            [ngStyle]="{'transform': isCollapsed ? 'translateX(7px)' : 'translateX(100px)'}"
+            class="navigation-drawer__header__button" [icon]="isCollapsed ? 'pi pi-directions' : 'pi pi-directions-alt'"
+            rounded="true"></p-button>
     </div>
-    <div *ngFor="let navigationHeader of navigationHeaders">
-        <a class="navigation-link" [routerLink]="navigationHeader.link" routerLinkActive="active"
+    <div class="navigation">
+        <a *ngFor="let navigationHeader of navigationHeaders" class="navigation-link"
+            [routerLink]="navigationHeader.link" routerLinkActive="active"
             [routerLinkActiveOptions]="{exact: true}">{{navigationHeader.name}}</a>
+    </div>
+
+    <div class="synthwave-sun">
+        <div class="inner-sun"></div>
     </div>
 </section>
