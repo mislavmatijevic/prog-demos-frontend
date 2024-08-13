@@ -67,10 +67,11 @@ export class NavigationComponent {
     }
 
     const ripple = this.renderer.createElement('div');
+    const distanceFromBottom = window.innerHeight - e.clientY;
 
     this.renderer.setStyle(ripple, 'position', 'absolute');
-    this.renderer.setStyle(ripple, 'top', `${e.clientY - 560}px`);
-    this.renderer.setStyle(ripple, 'left', `${e.clientX + 110}px`);
+    this.renderer.setStyle(ripple, 'bottom', `${50 + distanceFromBottom}px`);
+    this.renderer.setStyle(ripple, 'left', `${110 + e.clientX}px`);
     this.renderer.setStyle(ripple, 'width', '20px');
     this.renderer.setStyle(ripple, 'height', '20px');
     this.renderer.setStyle(ripple, 'background-color', 'darkorange');
@@ -87,11 +88,12 @@ export class NavigationComponent {
 
     setTimeout(() => {
       this.renderer.setStyle(ripple, 'opacity', '0');
-      this.renderer.setStyle(ripple, 'width', '250px');
-      this.renderer.setStyle(ripple, 'height', '250px');
+      this.renderer.setStyle(ripple, 'scale', '20');
+      this.renderer.setStyle(ripple, 'height', '30px');
       this.renderer.setStyle(ripple, 'background-color', 'red');
-      this.renderer.setStyle(ripple, 'transform', 'translate(-20%, -20%)');
+      this.renderer.setStyle(ripple, 'transform', 'translate(40%, 30%)');
     }, 20);
+    console.log(ripple);
 
     setTimeout(() => {
       this.renderer.removeChild(sunContainer, ripple);
