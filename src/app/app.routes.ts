@@ -4,6 +4,7 @@ import { VideoPlaybackComponent } from './components/videos/video-playback/video
 import { authGuard } from './guards/auth.guard';
 import { noAuthGuard } from './guards/no-auth.guard';
 import { AccountComponent } from './main/account/account.component';
+import { ActivationComponent } from './main/activation/activation.component';
 import { LoginPageComponent } from './main/login-page/login-page.component';
 import { RegisterPageComponent } from './main/register-page/register-page.component';
 import { TasksComponent } from './main/tasks/tasks.component';
@@ -45,5 +46,9 @@ export const routes: Routes = [
     path: 'account',
     canActivate: [authGuard],
     component: AccountComponent,
+  },
+  {
+    path: 'activation',
+    component: ActivationComponent,
   },
 ];
