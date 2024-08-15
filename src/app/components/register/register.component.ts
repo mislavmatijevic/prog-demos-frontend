@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -6,6 +7,7 @@ import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TooltipModule } from 'primeng/tooltip';
 import {
   AuthService,
@@ -17,6 +19,7 @@ import {
   selector: 'app-register',
   standalone: true,
   imports: [
+    CommonModule,
     DividerModule,
     ButtonModule,
     InputTextModule,
@@ -24,6 +27,7 @@ import {
     FormsModule,
     ReactiveFormsModule,
     TooltipModule,
+    ProgressSpinnerModule,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
@@ -33,6 +37,7 @@ export class RegisterComponent {
     private authService: AuthService,
     private messageService: MessageService
   ) {}
+  registrationInProgress: boolean = false;
   @Output() registrationSuccessful = new EventEmitter();
 
   email = new FormControl('');
@@ -41,10 +46,13 @@ export class RegisterComponent {
 
   onSubmit() {
     if (this.email.valid && this.username.valid && this.password.valid) {
+      this.registrationInProgress = true;
+
       this.authService
         .register(this.username.value!, this.email.value!, this.password.value!)
         .subscribe({
           complete: () => {
+            this.registrationInProgress = false;
             this.messageService.add({
               severity: 'success',
               detail: 'Registracija je uspjela!',
@@ -52,6 +60,8 @@ export class RegisterComponent {
             this.registrationSuccessful.emit(true);
           },
           error: (errorResponse: HttpErrorResponse) => {
+            this.registrationInProgress = false;
+
             let message =
               'Nažalost, registracija nije uspjela. Molim te, pokušaj malo kasnije.';
 

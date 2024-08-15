@@ -13,5 +13,6 @@
             <label for="password" class="login-form__row__label">Lozinka</label>
         </p-floatLabel>
     </div>
-    <p-button label="Prijava" type="submit" icon="pi pi-sign-in" />
+    <p-button *ngIf="!loginInProgress" label="Prijava" type="submit" icon="pi pi-sign-in" />
+    <p-progressSpinner *ngIf="loginInProgress" />
 </form>

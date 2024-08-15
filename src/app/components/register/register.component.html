@@ -26,5 +26,6 @@
             <label for="password" class="register-form__row__label">Lozinka</label>
         </p-floatLabel>
     </div>
-    <p-button label="Registracija" type="submit" icon="pi pi-user-plus" />
+    <p-button *ngIf="!registrationInProgress" label="Registracija" type="submit" icon="pi pi-user-plus" />
+    <p-progressSpinner *ngIf="registrationInProgress" />
 </form>

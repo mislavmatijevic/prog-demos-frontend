@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MessageService } from 'primeng/api';
@@ -5,18 +6,21 @@ import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [
+    CommonModule,
     DividerModule,
     ButtonModule,
     InputTextModule,
     FloatLabelModule,
     FormsModule,
     ReactiveFormsModule,
+    ProgressSpinnerModule,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
@@ -26,6 +30,7 @@ export class LoginComponent {
     private authService: AuthService,
     private messageService: MessageService
   ) {}
+  loginInProgress: boolean = false;
   @Output() loginSuccessful = new EventEmitter();
 
   identifier = new FormControl('');
@@ -33,10 +38,13 @@ export class LoginComponent {
 
   onSubmit() {
     if (this.identifier.valid && this.password.valid) {
+      this.loginInProgress = true;
+
       this.authService
         .login(this.identifier.value!, this.password.value!)
         .subscribe({
           complete: () => {
+            this.loginInProgress = false;
             this.messageService.add({
               severity: 'success',
               detail: `Pozdrav, ${this.authService.getUsername()}!`,
@@ -44,6 +52,8 @@ export class LoginComponent {
             this.loginSuccessful.emit();
           },
           error: () => {
+            this.loginInProgress = false;
+
             this.messageService.add({
               severity: 'error',
               summary: 'Prijava nije uspjela!',
