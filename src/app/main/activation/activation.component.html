@@ -1,1 +1,17 @@
-<p>activation works!</p>
+<div class="activation-wrapper">
+    <p-progressSpinner *ngIf="!isActivationCompleted" />
+    <div *ngIf="isActivationCompleted && !isActivationSuccessful">
+        <p class="error-text">Nije moguće provesti aktivaciju.
+        </p>
+        <p>Moguće je da je račun već aktiviran. U suprotnom, pokušaj ponovno kasnije.</p>
+    </div>
+    <div *ngIf="isActivationCompleted && isActivationSuccessful">
+        <p class="success-text">Pozdrav, {{activatedUsername}}!</p>
+        <p>Želim ti dobrodošlicu na svoju stranicu!</p>
+        <p>Sada se možeš prijaviti korisničkim imenom '{{activatedUsername}}' i svojom lozinkom <a
+                [routerLink]="['/login']">ovdje</a>.
+        </p>
+        <br>
+        <p>Sretno programiranje!</p>
+    </div>
+</div>

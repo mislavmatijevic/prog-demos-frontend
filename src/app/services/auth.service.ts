@@ -77,6 +77,12 @@ export class AuthService {
     this.isLoggedIn.set(false);
   }
 
+  activate(activationToken: string): Observable<{ username: string }> {
+    return this.apiService.post('/auth/activate', {
+      activationToken: activationToken,
+    });
+  }
+
   getUsername(): string | null {
     if (!this.username) {
       this.username = localStorage.getItem('username');
