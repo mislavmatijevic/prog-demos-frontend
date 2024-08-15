@@ -72,7 +72,7 @@ export class NavigationComponent {
     this.renderer.setStyle(ripple, 'position', 'absolute');
     this.renderer.setStyle(ripple, 'bottom', `${50 + distanceFromBottom}px`);
     this.renderer.setStyle(ripple, 'left', `${110 + e.clientX}px`);
-    this.renderer.setStyle(ripple, 'width', '20px');
+    this.renderer.setStyle(ripple, 'width', '25px');
     this.renderer.setStyle(ripple, 'height', '20px');
     this.renderer.setStyle(ripple, 'background-color', 'darkorange');
     this.renderer.setStyle(ripple, 'border-radius', '50%');
@@ -89,7 +89,6 @@ export class NavigationComponent {
     setTimeout(() => {
       this.renderer.setStyle(ripple, 'opacity', '0');
       this.renderer.setStyle(ripple, 'scale', '20');
-      this.renderer.setStyle(ripple, 'height', '30px');
       this.renderer.setStyle(ripple, 'background-color', 'red');
       this.renderer.setStyle(ripple, 'transform', 'translate(40%, 30%)');
     }, 20);
