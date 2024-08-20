@@ -1,3 +1,4 @@
+<app-request-reset-password-dialog [(visible)]="requestPasswordResetDialogVisible" />
 <form class="login-form" (ngSubmit)="onSubmit()">
     <div class="login-form__row">
         <p-floatLabel>
@@ -14,5 +15,6 @@
         </p-floatLabel>
     </div>
     <p-button *ngIf="!loginInProgress" label="Prijava" type="submit" icon="pi pi-sign-in" />
+    <button class="reset-password" (click)="openResetPasswordDialog($event)">Zaboravljena lozinka?</button>
     <p-progressSpinner *ngIf="loginInProgress" />
 </form>

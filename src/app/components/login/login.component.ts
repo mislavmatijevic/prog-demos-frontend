@@ -8,6 +8,7 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { AuthService } from '../../services/auth.service';
+import { RequestResetPasswordDialogComponent } from '../request-reset-password-dialog/request-reset-password-dialog.component';
 
 @Component({
   selector: 'app-login',
@@ -21,6 +22,7 @@ import { AuthService } from '../../services/auth.service';
     FormsModule,
     ReactiveFormsModule,
     ProgressSpinnerModule,
+    RequestResetPasswordDialogComponent,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
@@ -35,6 +37,8 @@ export class LoginComponent {
 
   identifier = new FormControl('');
   password = new FormControl('');
+
+  requestPasswordResetDialogVisible = false;
 
   onSubmit() {
     if (this.identifier.valid && this.password.valid) {
@@ -68,5 +72,9 @@ export class LoginComponent {
         detail: 'Unesi ispravne korisničke podatke.',
       });
     }
+  }
+  openResetPasswordDialog(event: Event) {
+    event.preventDefault();
+    this.requestPasswordResetDialogVisible = true;
   }
 }
