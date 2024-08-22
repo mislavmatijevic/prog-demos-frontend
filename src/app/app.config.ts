@@ -18,7 +18,12 @@ export const appConfig: ApplicationConfig = {
       withFetch(),
       withInterceptors([
         httpCacheInterceptor({
-          urlsToCache: ['/videos/public', 'tasks', 'tasks/.*'],
+          urlsToCache: [
+            '/videos/public',
+            'tasks',
+            'tasks/.*',
+            'auth/password/request-reset',
+          ],
           globalTTL: 60000,
         }),
       ])

@@ -83,6 +83,12 @@ export class AuthService {
     });
   }
 
+  requestPasswordReset(email: string): Observable<{ username: string }> {
+    return this.apiService.post('/auth/password/request-reset', {
+      email: email,
+    });
+  }
+
   getUsername(): string | null {
     if (!this.username) {
       this.username = localStorage.getItem('username');
