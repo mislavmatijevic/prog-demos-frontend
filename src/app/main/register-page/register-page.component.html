@@ -1,9 +1,9 @@
-<div class="register-page-wrapper">
+<div class="register-page-wrapper" *ngIf="!registrationSucceeded;else postRegistrationMessage">
     <h1>Registriraj se</h1>
     <p><strong>Registracija je potpuno besplatna.</strong></p>
     <div class="register-page-wrapper__grid">
         <div class="register-page-wrapper__form">
-            <app-register />
+            <app-register (registrationSuccessful)="handlePostRegistration()" />
         </div>
         <div class="register-page-wrapper__info">
             <p>Registracijom stječeš mogućnosti</p>
@@ -16,3 +16,8 @@
         </div>
     </div>
 </div>
+<ng-template #postRegistrationMessage class="register-page-wrapper">
+    <h1>Dovrši registraciju</h1>
+    <p><strong>Na mail će ti stići uputa za aktivaciju tvog računa.</strong></p>
+    <p>Čim je račun aktiviran, možeš ga početi koristiti.</p>
+</ng-template>

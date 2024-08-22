@@ -54,8 +54,9 @@ export class RegisterComponent {
           complete: () => {
             this.registrationInProgress = false;
             this.messageService.add({
-              severity: 'success',
-              detail: 'Registracija je uspjela!',
+              severity: 'info',
+              detail: 'Poslan ti je mail za dovršetak registracije!',
+              life: 60000,
             });
             this.registrationSuccessful.emit(true);
           },
@@ -104,6 +105,7 @@ export class RegisterComponent {
         severity: 'error',
         summary: 'Provjeri još jednom podatke za registraciju!',
         detail: errorMessage,
+        life: 5000,
       });
     }
   }

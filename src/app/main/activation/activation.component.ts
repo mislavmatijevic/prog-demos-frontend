@@ -42,6 +42,7 @@ export class ActivationComponent {
           this.messageService.add({
             severity: 'success',
             detail: 'Aktivacija uspješna!',
+            life: 30000,
           });
         },
         error: () => {
@@ -50,6 +51,7 @@ export class ActivationComponent {
           this.messageService.add({
             severity: 'error',
             detail: 'Aktivacija neuspješna.',
+            life: 30000,
           });
         },
       });
