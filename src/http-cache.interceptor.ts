@@ -84,7 +84,6 @@ export const httpCacheInterceptor = (options?: {
           tap({
             next: (res) => {
               const req = getPreviousRequestLikeThis();
-
               if (!req) return;
 
               if (res instanceof HttpResponse) {
@@ -93,10 +92,15 @@ export const httpCacheInterceptor = (options?: {
                 req.ttl = getTTL();
                 req.successData$.next(res);
                 req.successData$.complete();
-              } else if (res instanceof HttpErrorResponse) {
+              }
+            },
+            error: (res) => {
+              const req = getPreviousRequestLikeThis();
+              if (!req) return;
+
+              if (res instanceof HttpErrorResponse) {
                 req.didSucceed = false;
                 req.errorData = res;
-
                 req.ttl = getTTL();
                 req.successData$.complete();
               }
