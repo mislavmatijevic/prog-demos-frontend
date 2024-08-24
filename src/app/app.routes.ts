@@ -3,8 +3,10 @@ import { TaskPlaygroundComponent } from './components/tasks/task-playground/task
 import { VideoPlaybackComponent } from './components/videos/video-playback/video-playback.component';
 import { authGuard } from './guards/auth.guard';
 import { noAuthGuard } from './guards/no-auth.guard';
+import { specialTypeAuthGuard } from './guards/special-type-auth.guard';
 import { AccountComponent } from './main/account/account.component';
 import { ActivationComponent } from './main/activation/activation.component';
+import { CreateTaskComponent } from './main/create-task/create-task.component';
 import { LoginPageComponent } from './main/login-page/login-page.component';
 import { RegisterPageComponent } from './main/register-page/register-page.component';
 import { TasksComponent } from './main/tasks/tasks.component';
@@ -50,5 +52,10 @@ export const routes: Routes = [
   {
     path: 'activation',
     component: ActivationComponent,
+  },
+  {
+    path: 'create-task',
+    canActivate: [authGuard, specialTypeAuthGuard],
+    component: CreateTaskComponent,
   },
 ];

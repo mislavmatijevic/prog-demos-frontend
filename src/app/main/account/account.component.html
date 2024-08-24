@@ -1,4 +1,4 @@
 <h1>Račun</h1>
-<p>Ti si {{authService.getUsername()}}.</p>
+<p>Ti si {{authService.getUser()?.username}}.</p>
 
 <p-button (onClick)="signOut()" label="Odjava" type="submit" icon="pi pi-sign-out" />

@@ -13,12 +13,15 @@ export type RegistrationFailureResponse = {
   errorCode: RegistrationErrorCode;
 };
 
+type User = {
+  id: number;
+  username: string;
+  email: string;
+  type: string;
+};
+
 export type LoginResponse = {
-  user: {
-    id: number;
-    username: string;
-    email: string;
-  };
+  user: User;
   tokens: {
     accessToken: string;
     refreshToken: {
@@ -28,13 +31,15 @@ export type LoginResponse = {
   };
 };
 
+const specialTypes = ['creator', 'admin'];
+
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private accessToken: string | null = null;
   private refreshToken: string | null = null;
-  private username: string | null = null;
+  private user: User | null = null;
 
   constructor(private apiService: ApiService) {}
 
@@ -57,9 +62,10 @@ export class AuthService {
 
     loginResponse.subscribe({
       next: (res: LoginResponse) => {
+        this.setUser(res.user);
         this.setTokens(res.tokens.accessToken, res.tokens.refreshToken.value);
-        this.setUsername(res.user.username);
         this.isLoggedIn.set(true);
+        this.isSpecialType.set(this.checkIfSpecialType());
       },
     });
 
@@ -75,6 +81,7 @@ export class AuthService {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     this.isLoggedIn.set(false);
+    this.isSpecialType.set(false);
   }
 
   activate(activationToken: string): Observable<{ username: string }> {
@@ -89,14 +96,22 @@ export class AuthService {
     });
   }
 
-  getUsername(): string | null {
-    if (!this.username) {
-      this.username = localStorage.getItem('username');
+  getUser(): User | null {
+    const userFromLocalStorage = localStorage.getItem('user');
+    if (!this.user && userFromLocalStorage !== null) {
+      this.user = JSON.parse(userFromLocalStorage);
     }
-    return this.username;
+    return this.user;
   }
 
   isLoggedIn = signal(this.getAccessToken() !== null);
+
+  isSpecialType = signal(this.checkIfSpecialType());
+
+  private checkIfSpecialType(): boolean {
+    const user = this.getUser();
+    return user?.type !== undefined && specialTypes.includes(user?.type);
+  }
 
   private setTokens(accessToken: string, refreshToken: string): void {
     this.accessToken = accessToken;
@@ -105,9 +120,9 @@ export class AuthService {
     localStorage.setItem('refreshToken', refreshToken);
   }
 
-  private setUsername(username: string): void {
-    this.username = username;
-    localStorage.setItem('username', username);
+  private setUser(user: User): void {
+    this.user = user;
+    localStorage.setItem('user', JSON.stringify(user));
   }
 
   private getAccessToken(): string | null {

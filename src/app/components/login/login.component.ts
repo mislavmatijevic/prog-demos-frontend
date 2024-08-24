@@ -51,7 +51,7 @@ export class LoginComponent {
             this.loginInProgress = false;
             this.messageService.add({
               severity: 'success',
-              detail: `Pozdrav, ${this.authService.getUsername()}!`,
+              detail: `Pozdrav, ${this.authService.getUser()!.username}!`,
             });
             this.loginSuccessful.emit();
           },

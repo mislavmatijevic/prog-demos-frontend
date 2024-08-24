@@ -24,15 +24,7 @@ export class NavigationComponent {
         { name: 'Uči', link: '/demos' },
         { name: 'Vježbaj', link: '/prog' },
       ];
-      if (!this.authService.isLoggedIn()) {
-        this.navigationHeaders.push({ name: 'Prijava', link: '/login' });
-        this.navigationHeaders.push({
-          name: 'Registracija',
-          link: '/register',
-        });
-      } else {
-        this.navigationHeaders.push({ name: 'Račun', link: '/account' });
-      }
+      this.displayAppropriateNavigations();
     });
   }
 
@@ -97,5 +89,20 @@ export class NavigationComponent {
     setTimeout(() => {
       this.renderer.removeChild(sunContainer, ripple);
     }, 5020);
+  }
+
+  private displayAppropriateNavigations() {
+    if (!this.authService.isLoggedIn()) {
+      this.navigationHeaders.push({ name: 'Prijava', link: '/login' });
+      this.navigationHeaders.push({
+        name: 'Registracija',
+        link: '/register',
+      });
+    } else {
+      this.navigationHeaders.push({ name: 'Račun', link: '/account' });
+      if (this.authService.isSpecialType()) {
+        this.navigationHeaders.push({ name: 'Stvaraj', link: '/create-task' });
+      }
+    }
   }
 }
