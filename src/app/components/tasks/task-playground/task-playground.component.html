@@ -13,7 +13,7 @@
 <div class="task__wrapper">
     <div class="task__wrapper-info__wrapper" *ngIf="task; else loadingTask"
         [ngStyle]="{'width': maximizeCodeHeight ? '0%' : '50%', 'padding': maximizeCodeHeight ? '0' : '20px 20px'}">
-        <h2>Zadatak {{task.idSubtopic}}-{{task.orderNum}} (#{{task.id}})</h2>
+        <h2>{{task.name}}</h2>
         <ul>
             <li>Ulaz: {{task.input}}</li>
             <li>Izlaz: {{task.output}}</li>

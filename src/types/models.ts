@@ -19,13 +19,15 @@ export interface Video {
 
 export interface BasicTask {
   id: number;
-  orderNum: number;
+  complexity: number;
+  name: string;
 }
 
 export interface FullTask {
   id: number;
   idSubtopic: number;
-  orderNum: number;
+  name: string;
+  complexity: number;
   input: string;
   output: string;
   inputOutputExample: string;
