@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { Video } from '../../../../types/models';
@@ -11,7 +11,7 @@ import { VideoResponse, VideoService } from '../../../services/video.service';
   templateUrl: './video-playback.component.html',
   styleUrl: './video-playback.component.scss',
 })
-export class VideoPlaybackComponent {
+export class VideoPlaybackComponent implements OnInit {
   constructor(
     private sanitizer: DomSanitizer,
     private route: ActivatedRoute,

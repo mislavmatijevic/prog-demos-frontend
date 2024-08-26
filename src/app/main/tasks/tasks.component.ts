@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { BasicTask, Topic } from '../../../types/models';
 import { TasksInSubtopicComponent } from '../../components/tasks/tasks-in-subtopic/tasks-in-subtopic.component';
@@ -12,7 +12,7 @@ import { TaskService, TasksResponse } from '../../services/task.service';
   templateUrl: './tasks.component.html',
   styleUrl: './tasks.component.scss',
 })
-export class TasksComponent {
+export class TasksComponent implements OnInit {
   constructor(private taskService: TaskService, private _router: Router) {}
 
   topics: Topic[] = [];

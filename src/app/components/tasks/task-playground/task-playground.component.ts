@@ -1,6 +1,6 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
   DiffEditorModel,
@@ -41,7 +41,7 @@ import { RegisterComponent } from '../../register/register.component';
   templateUrl: './task-playground.component.html',
   styleUrl: './task-playground.component.scss',
 })
-export class TaskPlaygroundComponent {
+export class TaskPlaygroundComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private taskService: TaskService,

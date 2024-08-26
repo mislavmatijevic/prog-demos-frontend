@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
@@ -12,7 +12,7 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './activation.component.html',
   styleUrl: './activation.component.scss',
 })
-export class ActivationComponent {
+export class ActivationComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
