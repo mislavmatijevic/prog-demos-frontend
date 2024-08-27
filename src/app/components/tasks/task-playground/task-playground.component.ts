@@ -2,11 +2,6 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import {
-  DiffEditorModel,
-  MonacoEditorModule,
-  NgxEditorModel,
-} from 'ngx-monaco-editor-v2';
 import { MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
@@ -18,6 +13,7 @@ import { FullTask } from '../../../../types/models';
 import { NewlinePipe } from '../../../pipes/newline.pipe';
 import { AuthService } from '../../../services/auth.service';
 import { TaskResponse, TaskService } from '../../../services/task.service';
+import { EditorComponent } from '../../editor/editor.component';
 import { LoginComponent } from '../../login/login.component';
 import { RegisterComponent } from '../../register/register.component';
 
@@ -26,7 +22,6 @@ import { RegisterComponent } from '../../register/register.component';
   standalone: true,
   imports: [
     CommonModule,
-    MonacoEditorModule,
     NewlinePipe,
     Button,
     OverlayPanelModule,
@@ -36,8 +31,8 @@ import { RegisterComponent } from '../../register/register.component';
     DividerModule,
     RegisterComponent,
     ProgressSpinnerModule,
+    EditorComponent,
   ],
-  providers: [NewlinePipe],
   templateUrl: './task-playground.component.html',
   styleUrl: './task-playground.component.scss',
 })
@@ -45,7 +40,6 @@ export class TaskPlaygroundComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private taskService: TaskService,
-    private newlinePipe: NewlinePipe,
     private clipboard: Clipboard,
     private messageService: MessageService,
     private authService: AuthService,
@@ -53,37 +47,9 @@ export class TaskPlaygroundComponent implements OnInit {
   ) {}
 
   task!: FullTask;
-  editor!: any;
-  diffEditor!: any;
-  editorModel: NgxEditorModel = {
-    value: '',
-    language: 'cpp',
-  };
-  helpPreviousEditorModel: DiffEditorModel = {
-    code: '',
-    language: 'cpp',
-  };
-  helpSuggestionEditorModel: DiffEditorModel = {
-    code: '',
-    language: 'cpp',
-  };
-  editorOptions = {
-    theme: 'prog-demos-theme',
-    language: 'cpp',
-    minimap: { enabled: false },
-    scrollBeyondLastLine: false,
-    fontSize: 14,
-    automaticLayout: true,
-  };
-  diffEditorOptions = {
-    theme: 'prog-demos-theme',
-    language: 'cpp',
-    minimap: { enabled: false },
-    scrollBeyondLastLine: false,
-    fontSize: 14,
-    readonly: true,
-  };
-  starterCodeIsLoaded: boolean = false;
+  helpPreviousCode: string = '';
+  helpSuggestionCode: string = '';
+  mainCode: string | undefined = undefined;
   mainEditorReady: boolean = false;
   maximizeCodeHeight: boolean = false;
 
@@ -98,32 +64,16 @@ export class TaskPlaygroundComponent implements OnInit {
     this.fetchTask(taskId);
   }
 
-  onEditorReady($event: any) {
-    fetch('assets/monaco-theme/prog-demos-theme.json')
-      .then((data) => data.json())
-      .then((data) => {
-        $event._themeService.defineTheme('prog-demos-theme', data);
-        $event._themeService.setTheme('prog-demos-theme');
-      });
-    this.editor = $event;
+  onMainEditorReady() {
     this.mainEditorReady = true;
     this.changeDetectorRef.detectChanges();
-  }
-
-  onDiffEditorReady($event: any) {
-    this.diffEditor = null;
-    this.diffEditor = $event;
-    this.diffEditor.goToDiff();
   }
 
   fetchTask(videoId: number) {
     this.taskService.getSingleTask(videoId).subscribe({
       next: (res: TaskResponse) => {
         this.task = res.task;
-        this.editorModel.value = this.newlinePipe.transform(
-          this.task.starterCode
-        );
-        this.starterCodeIsLoaded = true;
+        this.mainCode = res.task.starterCode;
       },
       error: (error) => {
         console.log(error);
@@ -136,7 +86,7 @@ export class TaskPlaygroundComponent implements OnInit {
   }
 
   copyCode() {
-    this.clipboard.copy(this.editor.getValue());
+    this.clipboard.copy(this.mainCode!);
     this.messageService.add({
       severity: 'success',
       detail: 'Kod kopiran',
@@ -207,6 +157,10 @@ export class TaskPlaygroundComponent implements OnInit {
     this.loginDialogVisible = false;
   }
 
+  private _initialCodeForFirstStepHelpComparison() {
+    this.helpSuggestionCode = this.task.starterCode;
+  }
+
   private _handleDisplayingHelp(
     foundHelpfulCodeStep: string | undefined,
     foundHelpfulTip: string | undefined
@@ -219,11 +173,10 @@ export class TaskPlaygroundComponent implements OnInit {
     }
   }
 
-  private _initialCodeForFirstStepHelpComparison() {
-    this.helpSuggestionEditorModel = {
-      code: this.newlinePipe.transform(this.task.starterCode),
-      language: 'cpp',
-    };
+  private _showCodeDifference(foundHelpfulCodeStep: string) {
+    this.helpPreviousCode = this.helpSuggestionCode;
+    this.helpSuggestionCode = foundHelpfulCodeStep;
+    this.codeHelpShown = true;
   }
 
   private _displayHelpToast(helpMessageForCurrentStep: string) {
@@ -238,15 +191,5 @@ export class TaskPlaygroundComponent implements OnInit {
         life: 30000,
       });
     }
-  }
-
-  private _showCodeDifference(foundHelpfulCodeStep: string) {
-    this.helpPreviousEditorModel!.code = this.helpSuggestionEditorModel!.code;
-    this.helpSuggestionEditorModel!.code =
-      this.newlinePipe.transform(foundHelpfulCodeStep);
-    this.codeHelpShown = true;
-    setTimeout(() => {
-      this.diffEditor.goToDiff();
-    }, 500);
   }
 }

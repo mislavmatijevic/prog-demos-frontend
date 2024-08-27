@@ -1,0 +1,5 @@
+<ngx-monaco-editor *ngIf="!isDiffEditor && editorModel" (onInit)="onReady($event)" [options]="editorOptions"
+    [ngStyle]="ngStyle" [model]=editorModel />
+
+<ngx-monaco-diff-editor *ngIf="isDiffEditor" (onInit)="onReady($event)" [options]="editorOptions" [ngStyle]="ngStyle"
+    [originalModel]="diffOriginalModel!" [modifiedModel]="diffModifiedModel!" />

@@ -36,12 +36,12 @@
                 tooltipPosition="bottom" />
         </div>
 
-        <ngx-monaco-editor *ngIf="starterCodeIsLoaded" (onInit)="onEditorReady($event)" [options]=editorOptions
-            [ngStyle]="{'width': maximizeCodeHeight ? '100%' : 'initial'}" [model]=editorModel></ngx-monaco-editor>
-        <div *ngIf="codeHelpShown && starterCodeIsLoaded">
-            <ngx-monaco-diff-editor (onInit)="onDiffEditorReady($event)" [options]=editorOptions
-                [ngStyle]="{'width': maximizeCodeHeight ? '100%' : 'initial'}" [originalModel]=helpPreviousEditorModel!
-                [modifiedModel]=helpSuggestionEditorModel!></ngx-monaco-diff-editor>
+        <app-editor *ngIf="mainCode !== undefined" (onEditorReady)="onMainEditorReady()" [(code)]="mainCode"
+            [ngStyle]="{'width': maximizeCodeHeight ? '100%' : 'initial'}" />
+
+        <div *ngIf="codeHelpShown && mainCode !== undefined">
+            <app-editor [isDiffEditor]="true" [originalCode]="helpPreviousCode" [(comparedCode)]="helpSuggestionCode"
+                [ngStyle]="{'width': maximizeCodeHeight ? '100%' : 'initial'}" />
         </div>
 
         <div *ngIf="!mainEditorReady" class="loading-spinner loading-spinner-code">
