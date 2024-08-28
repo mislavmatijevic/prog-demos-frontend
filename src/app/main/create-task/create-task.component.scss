@@ -1,0 +1,72 @@
+@import "../../../styles/variables.scss";
+
+.form-create-new-task {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  :nth-child(1n) {
+    margin: 0.5em 10px;
+  }
+
+  .input-output-column {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: center;
+
+    :nth-child(1n) {
+      flex-grow: 1;
+      max-width: 20rem;
+    }
+  }
+
+  &__row {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    min-width: 50%;
+  }
+
+  &__column {
+    display: flex;
+    flex-direction: column;
+    &__code {
+      &__small {
+        height: 250px;
+        max-width: 50%;
+        padding-bottom: 20px;
+      }
+      &__big {
+        height: 400px;
+        max-width: 80%;
+        padding-bottom: 20px;
+      }
+    }
+  }
+
+  &__subtopic-selection {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+  }
+  .new-task-input {
+    background-color: $orange;
+    max-width: 50%;
+
+    &__code {
+      background-color: black;
+      color: white;
+      font-family: "Courier New", Courier, monospace;
+      min-height: 5rem;
+      max-width: 100%;
+    }
+  }
+
+  .difficulty-slider {
+    align-self: center;
+    max-width: 50%;
+  }
+}

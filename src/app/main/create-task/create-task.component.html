@@ -1,1 +1,97 @@
-<p>create-task works!</p>
+<h1>Stvori novi zadatak</h1>
+<form class="form-create-new-task" (ngSubmit)="onSubmit()">
+    <div class="form-create-new-task__row">
+        <label for="name" class="form-create-new-task__row__label">Naziv zadatka</label>
+        <input pInputText class="new-task-input" id="name" type="text"
+            class="new-task-input form-create-new-task__row__input" name="name" minlength="2" required
+            [formControl]="nameControl" />
+    </div>
+    <div class="form-create-new-task__subtopic-selection">
+        <p-dropdown [loading]="possibleTopics.length == 0" [formControl]="selectedTopic" [options]="possibleTopics"
+            optionLabel="name" placeholder="Odaberi temu" />
+
+        <p-dropdown *ngIf="selectedTopic.value != undefined" [formControl]="selectedSubtopic"
+            [options]="selectedTopic.value!.subtopics" optionLabel="name" placeholder="Odaberi podtemu" />
+    </div>
+
+    <div class="input-output-row">
+        <small>Razdvoji više različitih testnih ulaza i izlaza po linijama!</small>
+        <div class="input-output-column">
+            <div class="form-create-new-task__column">
+                <label for="input" class="form-create-new-task__column__label">Ulaz:</label>
+                <textarea pInputTextarea id="input" type="text"
+                    class="new-task-input__code form-create-new-task__column__input" name="input" minlength="2" required
+                    [formControl]="inputControl"></textarea>
+            </div>
+            <div class="form-create-new-task__column">
+                <label for="output" class="form-create-new-task__column__label">Izlaz:</label>
+                <textarea pInputTextarea id="output" type="text"
+                    class="new-task-input__code form-create-new-task__column__output" name="output" minlength="2"
+                    required [formControl]="outputControl"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-create-new-task__column">
+        <label for="output" class="form-create-new-task__column__label">Jedan primjer ulaza i izlaza:</label>
+        <textarea pInputTextarea id="output" type="text"
+            class="new-task-input__code form-create-new-task__column__output" name="output" minlength="2" required
+            [formControl]="inputOutputExampleControl"></textarea>
+    </div>
+
+    <div class="form-create-new-task__column difficulty-slider">
+        <span>Težina je u rasponu 1 - 10. Ovisi o tome koliko dodatna pomoć može pridonijeti rješavanju, koliko
+            planiranja se traži, koliko linija je očekivano...</span>
+        <span>{{complexity.value! / 10}}</span>
+        <p-slider step="10" [formControl]="complexity" animate="true" />
+    </div>
+
+    <div class="form-create-new-task__row">
+        <p-checkbox [formControl]="isFinalBoss" [(ngModel)]="isFinalBoss.value" value="{{true}}" inputId="finalBoss" />
+        <label for="finalBoss">Final boss?</label>
+        <span>Final boss zadatak ne nudi pomoć i koristi sve koncepte iz lekcije.</span>
+    </div>
+
+    <p-divider type="solid" />
+
+    <div class="form-create-new-task__column">
+        <span>Početni kod:</span>
+        <div class="form-create-new-task__column__code__small">
+            <app-editor *ngIf="codeEditorsVisible && starterCode.value" [(code)]="starterCode.value"></app-editor>
+        </div>
+    </div>
+
+    <p-divider *ngIf="!shouldHideHelpInputs" type="dotted" />
+
+    <div *ngIf="!shouldHideHelpInputs" class="form-create-new-task__column">
+        <span>Prvi korak pomoći:</span>
+        <div class="form-create-new-task__column__code__big">
+            <app-editor *ngIf="codeEditorsVisible && helpCodeStep1.value" [(code)]="helpCodeStep1.value"></app-editor>
+        </div>
+        <span>Prvi tekst pomoći:</span>
+        <textarea [formControl]="helpHintStep1" class="new-task-input" rows="5" cols="30" pInputTextarea></textarea>
+    </div>
+
+    <p-divider *ngIf="!shouldHideHelpInputs" type="dotted" />
+
+    <div *ngIf="!shouldHideHelpInputs" class="form-create-new-task__column">
+        <span>Drugi korak pomoći:</span>
+        <div class="form-create-new-task__column__code__big">
+            <app-editor *ngIf="codeEditorsVisible && helpCodeStep2.value" [(code)]="helpCodeStep2.value"></app-editor>
+        </div>
+        <span>Drugi tekst pomoći:</span>
+        <textarea [formControl]="helpHintStep2" class="new-task-input" rows="5" cols="30" pInputTextarea></textarea>
+    </div>
+
+    <p-divider *ngIf="!shouldHideHelpInputs" type="dotted" />
+
+    <div *ngIf="!shouldHideHelpInputs" class="form-create-new-task__column">
+        <span>Treći korak pomoći:</span>
+        <div class="form-create-new-task__column__code__big">
+            <app-editor *ngIf="codeEditorsVisible && helpCodeStep3.value" [(code)]="helpCodeStep3.value"></app-editor>
+        </div>
+        <span>Treći tekst pomoći:</span>
+        <textarea [formControl]="helpHintStep3" class="new-task-input" rows="5" cols="30" pInputTextarea></textarea>
+    </div>
+
+</form>
