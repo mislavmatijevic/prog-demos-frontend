@@ -1,7 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AccordionModule } from 'primeng/accordion';
 import { MessageService } from 'primeng/api';
+import { Button } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { DividerModule } from 'primeng/divider';
 import { DropdownModule } from 'primeng/dropdown';
@@ -28,6 +30,8 @@ import { TopicsService } from '../../services/topics.service';
     EditorComponent,
     InputTextareaModule,
     DividerModule,
+    AccordionModule,
+    Button,
   ],
   templateUrl: './create-task.component.html',
   styleUrl: './create-task.component.scss',
