@@ -17,9 +17,10 @@
             routerLinkActive="navigation-link__active">{{navigationHeader.name}}</a>
     </div>
 
+    <div [ngStyle]="{'transform': isCollapsed ? 'translate(-100%, 100%)' : 'translate(-40%, 20%)'}"
+        (click)="onSunClick($event)" class="synthwave-sun"></div>
     <div class="sun-wrapper">
-        <div (click)="onSunClick($event)" class="synthwave-sun">
-        </div>
-        <div class="outer-sun-ring"></div>
+        <div [ngStyle]="{'transform': isCollapsed ? 'translate(-100%, -300px)' : 'translate(-40%, -300px)'}"
+            class="outer-sun-ring"></div>
     </div>
 </section>

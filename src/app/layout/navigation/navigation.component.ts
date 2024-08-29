@@ -84,7 +84,6 @@ export class NavigationComponent {
       this.renderer.setStyle(ripple, 'background-color', 'red');
       this.renderer.setStyle(ripple, 'transform', 'translate(40%, 30%)');
     }, 20);
-    console.log(ripple);
 
     setTimeout(() => {
       this.renderer.removeChild(sunContainer, ripple);
