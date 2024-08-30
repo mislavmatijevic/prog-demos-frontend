@@ -13,6 +13,11 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { SliderModule } from 'primeng/slider';
 import { Topic } from '../../../types/models';
 import { EditorComponent } from '../../components/editor/editor.component';
+import {
+  NewTaskRequestBody,
+  NewTestDefinition,
+  TaskService,
+} from '../../services/task.service';
 import { TopicsService } from '../../services/topics.service';
 
 @Component({
@@ -39,18 +44,22 @@ import { TopicsService } from '../../services/topics.service';
 export class CreateTaskComponent implements OnInit {
   constructor(
     private topicsService: TopicsService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private taskService: TaskService
   ) {}
   possibleTopics: Array<Topic> = [];
 
   selectedTopic = new FormControl<Topic | undefined>(undefined);
   selectedSubtopic = new FormControl<Topic | undefined>(undefined);
   nameControl = new FormControl('');
-  complexity = new FormControl<number>(50);
+  complexityControl = new FormControl<number>(50);
   inputControl = new FormControl('');
   outputControl = new FormControl('');
+  sha256Control = new FormControl('');
+  inputExplanationControl = new FormControl('');
+  outputExplanationControl = new FormControl('');
   inputOutputExampleControl = new FormControl('');
-  isFinalBoss = new FormControl<boolean>(false);
+  isFinalBoss = new FormControl(false);
   helpCodeStep1 = new FormControl('');
   helpHintStep1 = new FormControl('');
   helpCodeStep2 = new FormControl('');
@@ -58,12 +67,50 @@ export class CreateTaskComponent implements OnInit {
   helpCodeStep3 = new FormControl('');
   helpHintStep3 = new FormControl('');
   starterCode = new FormControl('');
+  solutionCode = new FormControl('');
   codeEditorsVisible = false;
 
-  shouldHideHelpInputs = false;
-
   onSubmit() {
-    throw new Error('Method not implemented.');
+    if (
+      this.selectedSubtopic.value != undefined &&
+      this.nameControl.value != '' &&
+      this.inputExplanationControl.value != '' &&
+      this.outputExplanationControl.value != '' &&
+      (this.inputControl.value != '' ||
+        this.outputControl.value != '' ||
+        this.sha256Control.value != '') &&
+      this.inputOutputExampleControl.value != '' &&
+      this.starterCode.value != '' &&
+      (this.isFinalBoss.value ||
+        (!this.isFinalBoss.value &&
+          (this.helpCodeStep1.value != '' || this.helpHintStep1.value != '')))
+    ) {
+      const tests: Array<NewTestDefinition> =
+        this.fillTestsFromInputAndOutputTextAreas();
+
+      const newTask: NewTaskRequestBody = {
+        subtopicID: this.selectedSubtopic.value.id,
+        name: this.nameControl.value!,
+        complexity: this.complexityControl.value! / 10,
+        input: this.inputExplanationControl.value!,
+        output: this.outputExplanationControl.value!,
+        inputOutputExample: this.inputOutputExampleControl.value!,
+        isFinalBoss: this.isFinalBoss.value!,
+        starterCode: this.starterCode.value!,
+        step1Code: this.helpCodeStep1.value || '',
+        step2Code: this.helpCodeStep2.value || '',
+        step3Code: this.helpCodeStep3.value || '',
+        helper1Text: this.helpHintStep1.value || '',
+        helper2Text: this.helpHintStep2.value || '',
+        helper3Text: this.helpHintStep3.value || '',
+        solutionCode: this.solutionCode.value || undefined,
+        tests,
+      };
+
+      console.log(newTask);
+
+      this.taskService.createTask(newTask);
+    }
   }
 
   ngOnInit(): void {
@@ -73,7 +120,6 @@ export class CreateTaskComponent implements OnInit {
         if (response.topics.length == 1) {
           this.selectedTopic.setValue(response.topics[0]);
         }
-        this.setupEventHandlers();
         this.setupTemplateCode();
         this.enableEditors();
       },
@@ -97,11 +143,23 @@ export class CreateTaskComponent implements OnInit {
     this.helpCodeStep1.setValue(templateStarterCode);
     this.helpCodeStep2.setValue(templateStarterCode);
     this.helpCodeStep3.setValue(templateStarterCode);
+    this.solutionCode.setValue(templateStarterCode);
   }
 
-  setupEventHandlers() {
-    this.isFinalBoss.registerOnChange(() => {
-      this.shouldHideHelpInputs = (this.isFinalBoss.value as any)![0]!;
+  fillTestsFromInputAndOutputTextAreas(): NewTestDefinition[] {
+    const inputs = this.inputControl.value!.split('\n');
+    const outputs = this.outputControl.value!.split('\n');
+    const artefactSha256 = this.sha256Control.value!.split('\n');
+
+    const tests: NewTestDefinition[] = [];
+    inputs.forEach((input, index) => {
+      tests.push({
+        input,
+        expectedOutput: outputs[index],
+        artefactSha256: artefactSha256[index],
+      });
     });
+
+    return tests;
   }
 }

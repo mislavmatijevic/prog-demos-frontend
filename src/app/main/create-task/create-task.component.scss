@@ -2,90 +2,49 @@
 
 .form-create-new-task {
   display: flex;
+  flex-wrap: wrap;
   flex-direction: column;
-  gap: 20px;
+  gap: 1rem;
 
-  :nth-child(1n) {
-    margin: 0.5em 10px;
-  }
-
-  .input-output {
-    &__column {
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      justify-content: center;
-      align-items: center;
-
-      :nth-child(1n) {
-        flex-grow: 1;
-        max-width: 50rem;
-      }
-    }
-    &__row {
-      display: flex;
-      flex-direction: row;
-      width: 100%;
-      justify-content: center;
-
-      :nth-child(1n) {
-        flex-grow: 1;
-        max-width: 50rem;
-      }
-    }
-  }
-
-  .centered {
-    align-self: center;
-  }
-
-  &__row {
+  .new-task-definition {
     display: flex;
-    flex-direction: row;
-    gap: 20px;
-    justify-content: center;
-    align-items: center;
-    min-width: 50%;
-  }
-
-  &__column {
-    display: flex;
+    flex-wrap: wrap;
     flex-direction: column;
-    &__code {
-      &__small {
-        height: 250px;
-        max-width: 50%;
-        padding-bottom: 20px;
-      }
-      &__big {
-        height: 400px;
-        max-width: 80%;
-        padding-bottom: 20px;
-      }
-    }
+    gap: 3rem;
   }
 
-  &__subtopic-selection {
+  .column {
     display: flex;
-    justify-content: center;
-    flex-direction: row;
+    gap: 10px;
+    flex-wrap: wrap;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+  .row {
+    display: flex;
+    gap: 50px;
+    flex-wrap: wrap;
+    justify-content: space-around;
   }
   .new-task-input {
     background-color: $orange;
-    width: 50rem;
-    max-width: 50%;
 
-    &__code {
-      background-color: black;
-      color: white;
-      font-family: "Courier New", Courier, monospace;
-      min-height: 5rem;
-      max-width: 100%;
+    &__terminal {
+      background-color: $dark-accent;
+      color: $text;
+      font-family: monospace;
     }
   }
-
-  .difficulty-slider {
+  .centered {
     align-self: center;
-    max-width: 50%;
+  }
+  .form-label {
+    align-self: center;
+  }
+  .editor {
+    height: 200px;
+    resize: vertical;
+    overflow-y: hidden;
+    width: 50%;
   }
 }
