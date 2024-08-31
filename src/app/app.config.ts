@@ -8,8 +8,9 @@ import {
 } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
-import { httpCacheInterceptor } from '../http-cache.interceptor';
 import { routes } from './app.routes';
+import { authInterceptor } from './interceptors/auth.interceptor';
+import { httpCacheInterceptor } from './interceptors/http-cache.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -26,6 +27,7 @@ export const appConfig: ApplicationConfig = {
           ],
           globalTTL: 60000,
         }),
+        authInterceptor,
       ])
     ),
     importProvidersFrom(MonacoEditorModule.forRoot()),

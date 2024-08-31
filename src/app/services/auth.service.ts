@@ -1,5 +1,6 @@
+import { HttpRequest } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, tap, throwError } from 'rxjs';
 import { ApiService } from './api.service';
 
 export enum RegistrationErrorCode {
@@ -31,6 +32,15 @@ type LoginResponse = {
   };
 };
 
+type RefreshResponse = {
+  success: boolean;
+  accessToken: string;
+  refreshToken: {
+    value: string;
+    expiresAt: string;
+  };
+};
+
 const specialTypes = ['creator', 'admin'];
 
 @Injectable({
@@ -57,20 +67,20 @@ export class AuthService {
   login(identifier: string, password: string): Observable<LoginResponse> {
     const loginResponse = this.apiService
       .post<LoginResponse>('/auth/login', {
-      identifier,
-      password,
+        identifier,
+        password,
       })
       .pipe(
         tap({
-      next: (res: LoginResponse) => {
-        this.setUser(res.user);
+          next: (res: LoginResponse) => {
+            this.setUser(res.user);
             this.setTokens(
               res.tokens.accessToken,
               res.tokens.refreshToken.value
             );
-        this.isLoggedIn.set(true);
-        this.isSpecialType.set(this.checkIfSpecialType());
-      },
+            this.isLoggedIn.set(true);
+            this.isSpecialType.set(this.checkIfSpecialType());
+          },
         })
       );
 
@@ -78,15 +88,12 @@ export class AuthService {
   }
 
   logout(): void {
-    this.apiService.post('/auth/logout', {
-      refreshToken: this.refreshToken,
-    });
-    this.accessToken = null;
-    this.refreshToken = null;
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    this.isLoggedIn.set(false);
-    this.isSpecialType.set(false);
+    this.apiService
+      .post('/auth/logout', {
+        refreshToken: this.getRefreshToken(),
+      })
+      .subscribe();
+    this.clearAllLoginData();
   }
 
   activate(activationToken: string): Observable<{ username: string }> {
@@ -109,9 +116,51 @@ export class AuthService {
     return this.user;
   }
 
+  refreshTokens(): Observable<RefreshResponse> {
+    if (!this.isLoggedIn) throwError(() => 'Not logged in!');
+    const accessToken = this.getAccessToken();
+    const refreshToken = this.getRefreshToken();
+
+    return this.apiService
+      .post<RefreshResponse>('/auth/refresh', {
+        accessToken,
+        refreshToken,
+      })
+      .pipe(
+        tap({
+          next: (res: RefreshResponse) => {
+            this.setTokens(res.accessToken, res.refreshToken.value);
+            this.isLoggedIn.set(true);
+            this.isSpecialType.set(this.checkIfSpecialType());
+          },
+          error: () => {
+            this.clearAllLoginData();
+          },
+        })
+      );
+  }
+
+  getRequestWithAuthHeader(req: HttpRequest<unknown>): HttpRequest<unknown> {
+    const authorizedRequest = req.clone({
+      headers: req.headers
+        .delete('Authorization')
+        .append('Authorization', `Bearer ${this.getAccessToken()}`),
+    });
+    return authorizedRequest;
+  }
+
   isLoggedIn = signal(this.getAccessToken() !== null);
 
   isSpecialType = signal(this.checkIfSpecialType());
+
+  private clearAllLoginData() {
+    this.accessToken = null;
+    localStorage.removeItem('accessToken');
+    this.refreshToken = null;
+    localStorage.removeItem('refreshToken');
+    this.isLoggedIn.set(false);
+    this.isSpecialType.set(false);
+  }
 
   private checkIfSpecialType(): boolean {
     const user = this.getUser();
@@ -120,8 +169,8 @@ export class AuthService {
 
   private setTokens(accessToken: string, refreshToken: string): void {
     this.accessToken = accessToken;
-    this.refreshToken = refreshToken;
     localStorage.setItem('accessToken', accessToken);
+    this.refreshToken = refreshToken;
     localStorage.setItem('refreshToken', refreshToken);
   }
 

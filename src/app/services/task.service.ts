@@ -18,7 +18,7 @@ export type NewTestDefinition = {
 };
 
 export type NewTaskRequestBody = {
-  subtopicID: number;
+  idSubtopic: number;
   name: string;
   complexity: string;
   input: string;
@@ -57,7 +57,8 @@ export class TaskService {
   createTask(newTask: NewTaskRequestBody) {
     return this.apiService.post<TaskResponse>(
       `/tasks`,
-      newTask
+      newTask,
+      true
     ) as Observable<TaskResponse>;
   }
 }

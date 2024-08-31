@@ -92,7 +92,7 @@ export class CreateTaskComponent implements OnInit {
         this.fillTestsFromInputAndOutputTextAreas();
 
       const newTask: NewTaskRequestBody = {
-        subtopicID: this.selectedSubtopic.value.id,
+        idSubtopic: this.selectedSubtopic.value.id,
         name: this.nameControl.value!,
         complexity: this.complexityControl.value!.toString(),
         input: this.inputExplanationControl.value!,

@@ -1,6 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable, isDevMode } from '@angular/core';
 import { Observable } from 'rxjs';
+import { APPEND_AUTHORIZATION } from '../interceptors/auth.interceptor';
 
 type HttpClientGetOptions = Parameters<HttpClient['get']>[1];
 
@@ -24,8 +25,16 @@ export class ApiService {
     return this.httpClient.get<T>(uri) as Observable<T>;
   }
 
-  post<T>(url: string, body: any): Observable<T> {
+  post<T>(
+    url: string,
+    body: any,
+    requiresAuth: boolean = false
+  ): Observable<T> {
     const uri = `${this.rootUrl}${url}`;
-    return this.httpClient.post<T>(uri, body);
+    let options = undefined;
+    if (requiresAuth) {
+      options = { context: new HttpContext().set(APPEND_AUTHORIZATION, true) };
+    }
+    return this.httpClient.post<T>(uri, body, options);
   }
 }
