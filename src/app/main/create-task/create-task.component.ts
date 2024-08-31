@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AccordionModule } from 'primeng/accordion';
@@ -73,19 +74,19 @@ export class CreateTaskComponent implements OnInit {
   onSubmit() {
     if (
       this.selectedSubtopic.value != undefined &&
-      this.nameControl.value != '' &&
-      this.inputExplanationControl.value != '' &&
-      this.outputExplanationControl.value != '' &&
+      this.nameControl.valid &&
+      this.inputExplanationControl.valid &&
+      this.outputExplanationControl.valid &&
       this.complexityControl.value! >= 1 &&
       this.complexityControl.value! <= 5 &&
-      (this.inputControl.value != '' ||
-        this.outputControl.value != '' ||
-        this.sha256Control.value != '') &&
-      this.inputOutputExampleControl.value != '' &&
-      this.starterCode.value != '' &&
+      (this.inputControl.valid ||
+        this.outputControl.valid ||
+        this.sha256Control.valid) &&
+      this.inputOutputExampleControl.valid &&
+      this.starterCode.valid &&
       (this.isFinalBoss.value ||
         (!this.isFinalBoss.value &&
-          (this.helpCodeStep1.value != '' || this.helpHintStep1.value != '')))
+          (this.helpCodeStep1.value?.length! > 10 || this.helpHintStep1.valid)))
     ) {
       const tests: Array<NewTestDefinition> =
         this.fillTestsFromInputAndOutputTextAreas();
@@ -109,9 +110,21 @@ export class CreateTaskComponent implements OnInit {
         tests,
       };
 
-      console.log(newTask);
-
-      this.taskService.createTask(newTask);
+      this.taskService.createTask(newTask).subscribe({
+        complete: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Novi zadatak stvoren!',
+          });
+        },
+        error: (err: HttpErrorResponse) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Nije moguće stvoriti zadatak!',
+            detail: `Stvaranje zadatka nije uspjelo. (${err.status})`,
+          });
+        },
+      });
     } else {
       this.messageService.add({
         severity: 'error',

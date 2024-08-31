@@ -16,20 +16,20 @@
         </div>
     </div>
 
-    <section class="new-task-definition" *ngIf="nameControl.value != '' && selectedSubtopic.value != undefined">
+    <section class="new-task-definition" *ngIf="nameControl.valid && selectedSubtopic.value != undefined">
         <div class="column">
             <p class="centered">Dovoljno detaljno opiši očekivani ulaz i izlaz zadatka!</p>
             <div class="row">
                 <div class="column">
                     <label class="form-label" for="inputExplanation">Što je očekivani <strong>ULAZ</strong>?</label>
                     <textarea pInputTextarea id="inputExplanation" type="text" class="new-task-input"
-                        name="inputExplanation" minlength="10" required rows="5"
+                        name="inputExplanation" minlength="2" required rows="5"
                         [formControl]="inputExplanationControl"></textarea>
                 </div>
                 <div class="column">
                     <label class="form-label" for="outputExplanation">Što je očekivani <strong>IZLAZ</strong>?</label>
                     <textarea pInputTextarea id="outputExplanation" type="text" class="new-task-input"
-                        name="outputExplanation" minlength="10" required rows="5"
+                        name="outputExplanation" minlength="2" required rows="5"
                         [formControl]="outputExplanationControl"></textarea>
                 </div>
             </div>
@@ -62,11 +62,12 @@
                 </div>
             </div>
             <div class="column">
-                <label class="form-label" for="sha256">Ako zadatak generira
-                    datoteke, ovdje za svaki unos upiši SHA256 sažetak njihovih očekivanih sadržaja
+                <label class="form-label" for="sha256">Ako zadatak generira datoteke,
+                    ovdje upiši za svaki unos u novu liniju SHA256 sažetak njihovih očekivanih sadržaja
                     (po abecednom redu naziva datoteka):</label>
                 <small>OPCIONALNO</small>
-                <input pInputText id="sha256Control" [formControl]="sha256Control" class="new-task-input__terminal" />
+                <textarea pInputTextarea id="sha256Control" rows="1" [formControl]="sha256Control"
+                    class="new-task-input__terminal"></textarea>
             </div>
         </div>
 
