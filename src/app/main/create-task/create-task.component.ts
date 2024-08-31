@@ -76,6 +76,8 @@ export class CreateTaskComponent implements OnInit {
       this.nameControl.value != '' &&
       this.inputExplanationControl.value != '' &&
       this.outputExplanationControl.value != '' &&
+      this.complexityControl.value! >= 1 &&
+      this.complexityControl.value! <= 5 &&
       (this.inputControl.value != '' ||
         this.outputControl.value != '' ||
         this.sha256Control.value != '') &&
@@ -91,7 +93,7 @@ export class CreateTaskComponent implements OnInit {
       const newTask: NewTaskRequestBody = {
         subtopicID: this.selectedSubtopic.value.id,
         name: this.nameControl.value!,
-        complexity: this.complexityControl.value!,
+        complexity: this.complexityControl.value!.toString(),
         input: this.inputExplanationControl.value!,
         output: this.outputExplanationControl.value!,
         inputOutputExample: this.inputOutputExampleControl.value!,

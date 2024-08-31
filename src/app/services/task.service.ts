@@ -20,7 +20,7 @@ export type NewTestDefinition = {
 export type NewTaskRequestBody = {
   subtopicID: number;
   name: string;
-  complexity: number;
+  complexity: string;
   input: string;
   output: string;
   inputOutputExample: string;
