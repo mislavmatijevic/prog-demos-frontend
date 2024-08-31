@@ -17,6 +17,12 @@ export type NewTestDefinition = {
   artefactSha256?: string;
 };
 
+export type NewHelpStepDefinition = {
+  step: number;
+  helperCode: string;
+  helperText: string;
+};
+
 export type NewTaskRequestBody = {
   idSubtopic: number;
   name: string;
@@ -25,15 +31,9 @@ export type NewTaskRequestBody = {
   output: string;
   inputOutputExample: string;
   isFinalBoss: boolean;
-  starterCode: string;
-  step1Code?: string;
-  step2Code?: string;
-  step3Code?: string;
-  helper1Text?: string;
-  helper2Text?: string;
-  helper3Text?: string;
   solutionCode?: string;
   tests: NewTestDefinition[];
+  helpSteps: NewHelpStepDefinition[];
 };
 
 @Injectable({

@@ -92,45 +92,11 @@
 
         <p-divider type="solid" />
 
-        <div class="column">
-            <span>Početni kod:</span>
-            <div class="editor">
-                <app-editor *ngIf="codeEditorsVisible && starterCode.value !== null" [(code)]="starterCode.value" />
-            </div>
-        </div>
-
         <p-accordion *ngIf="!isFinalBoss.value">
             <p>Pomoći su opcionalne, nemoj unijeti ondje gdje ne želiš pomoći. Međutim, barem jednu pomoć trebaš unijeti
                 (ili jedan korak u kodu, ili jedan pomoćni oblačić)!</p>
-            <p-accordionTab header="Prvi korak pomoći">
-                <div class="column">
-                    <span>Prvi korak pomoći:</span>
-                    <app-editor class="editor" *ngIf="codeEditorsVisible && helpCodeStep1.value !== null"
-                        [(code)]="helpCodeStep1.value" />
-                    <span>Prvi tekst pomoći:</span>
-                    <textarea [formControl]="helpHintStep1" class="form-input" rows="5" cols="30"
-                        pInputTextarea></textarea>
-                </div>
-            </p-accordionTab>
-            <p-accordionTab header="Drugi korak pomoći">
-                <div class="column">
-                    <span>Drugi korak pomoći:</span>
-                    <app-editor class="editor" *ngIf="codeEditorsVisible && helpCodeStep2.value !== null"
-                        [(code)]="helpCodeStep2.value" />
-                    <span>Drugi tekst pomoći:</span>
-                    <textarea [formControl]="helpHintStep2" class="form-input" rows="5" cols="30"
-                        pInputTextarea></textarea>
-                </div>
-            </p-accordionTab>
-            <p-accordionTab header="Treći korak pomoći">
-                <div class="column">
-                    <span>Treći korak pomoći:</span>
-                    <app-editor class="editor" *ngIf="codeEditorsVisible && helpCodeStep3.value !== null"
-                        [(code)]="helpCodeStep3.value" />
-                    <span>Treći tekst pomoći:</span>
-                    <textarea [formControl]="helpHintStep3" class="form-input" rows="5" cols="30"
-                        pInputTextarea></textarea>
-                </div>
+            <p-accordionTab header="Korak pomoći">
+                <app-new-help-step-definition />
             </p-accordionTab>
 
             <p-accordionTab header="Konačno rješenje">

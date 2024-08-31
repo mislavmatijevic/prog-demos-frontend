@@ -1,0 +1,6 @@
+<div class="column">
+    <span>Programski kod:</span>
+    <app-editor class="editor" *ngIf="helpCode.value !== null" class="editor" [(code)]="helpCode.value" />
+    <span>Tekst oblačića:</span>
+    <textarea pInputTextarea [formControl]="helpHint" class="help-text" rows="5" cols="30"></textarea>
+</div>

@@ -12,9 +12,12 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { SliderModule } from 'primeng/slider';
+import { standardCppStarterCode } from '../../../helpers/editor-helpers';
 import { Topic } from '../../../types/models';
 import { EditorComponent } from '../../components/editor/editor.component';
+import { NewHelpStepDefinitionComponent } from '../../components/new-help-step-definition/new-help-step-definition.component';
 import {
+  NewHelpStepDefinition,
   NewTaskRequestBody,
   NewTestDefinition,
   TaskService,
@@ -38,6 +41,7 @@ import { TopicsService } from '../../services/topics.service';
     DividerModule,
     AccordionModule,
     Button,
+    NewHelpStepDefinitionComponent,
   ],
   templateUrl: './create-task.component.html',
   styleUrl: './create-task.component.scss',
@@ -61,15 +65,10 @@ export class CreateTaskComponent implements OnInit {
   outputExplanationControl = new FormControl('');
   inputOutputExampleControl = new FormControl('');
   isFinalBoss = new FormControl(false);
-  helpCodeStep1 = new FormControl('');
-  helpHintStep1 = new FormControl('');
-  helpCodeStep2 = new FormControl('');
-  helpHintStep2 = new FormControl('');
-  helpCodeStep3 = new FormControl('');
-  helpHintStep3 = new FormControl('');
-  starterCode = new FormControl('');
   solutionCode = new FormControl('');
+
   codeEditorsVisible = false;
+  starterCode = standardCppStarterCode;
 
   onSubmit() {
     if (
@@ -83,13 +82,14 @@ export class CreateTaskComponent implements OnInit {
         this.outputControl.valid ||
         this.sha256Control.valid) &&
       this.inputOutputExampleControl.valid &&
-      this.starterCode.valid &&
-      (this.isFinalBoss.value ||
-        (!this.isFinalBoss.value &&
-          (this.helpCodeStep1.value?.length! > 10 || this.helpHintStep1.valid)))
+      (this.isFinalBoss.value || !this.isFinalBoss.value)
     ) {
       const tests: Array<NewTestDefinition> =
         this.fillTestsFromInputAndOutputTextAreas();
+
+      // TODO:
+      const helpSteps: NewHelpStepDefinition[] = [];
+      // const helpSteps: Array<NewHelpStepDefinition> = this.fillHelpSteps();
 
       const newTask: NewTaskRequestBody = {
         idSubtopic: this.selectedSubtopic.value.id,
@@ -99,15 +99,9 @@ export class CreateTaskComponent implements OnInit {
         output: this.outputExplanationControl.value!,
         inputOutputExample: this.inputOutputExampleControl.value!,
         isFinalBoss: this.isFinalBoss.value!,
-        starterCode: this.starterCode.value!,
-        step1Code: this.helpCodeStep1.value || '',
-        step2Code: this.helpCodeStep2.value || '',
-        step3Code: this.helpCodeStep3.value || '',
-        helper1Text: this.helpHintStep1.value || '',
-        helper2Text: this.helpHintStep2.value || '',
-        helper3Text: this.helpHintStep3.value || '',
         solutionCode: this.solutionCode.value || undefined,
         tests,
+        helpSteps,
       };
 
       this.taskService.createTask(newTask).subscribe({
@@ -159,10 +153,7 @@ export class CreateTaskComponent implements OnInit {
   }
 
   setupTemplateCode() {
-    const templateStarterCode =
-      '#include<iostream>\n\nusing namespace std;\n\nint main() {\n\n    return 0;\n}\n';
-    this.starterCode.setValue(templateStarterCode);
-    this.solutionCode.setValue(templateStarterCode);
+    this.solutionCode.setValue(standardCppStarterCode);
   }
 
   fillTestsFromInputAndOutputTextAreas(): NewTestDefinition[] {

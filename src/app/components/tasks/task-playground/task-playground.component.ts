@@ -9,6 +9,7 @@ import { DividerModule } from 'primeng/divider';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TooltipModule } from 'primeng/tooltip';
+import { standardCppStarterCode } from '../../../../helpers/editor-helpers';
 import { FullTask } from '../../../../types/models';
 import { NewlinePipe } from '../../../pipes/newline.pipe';
 import { AuthService } from '../../../services/auth.service';
@@ -73,7 +74,7 @@ export class TaskPlaygroundComponent implements OnInit {
     this.taskService.getSingleTask(videoId).subscribe({
       next: (res: TaskResponse) => {
         this.task = res.task;
-        this.mainCode = res.task.starterCode;
+        this.mainCode = standardCppStarterCode;
       },
       error: (error) => {
         console.log(error);
@@ -158,7 +159,7 @@ export class TaskPlaygroundComponent implements OnInit {
   }
 
   private _initialCodeForFirstStepHelpComparison() {
-    this.helpSuggestionCode = this.task.starterCode;
+    this.helpSuggestionCode = standardCppStarterCode;
   }
 
   private _handleDisplayingHelp(

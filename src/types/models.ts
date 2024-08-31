@@ -19,7 +19,7 @@ export interface Video {
 
 export interface BasicTask {
   id: number;
-  complexity: number;
+  complexity: string;
   name: string;
 }
 
@@ -27,17 +27,10 @@ export interface FullTask {
   id: number;
   idSubtopic: number;
   name: string;
-  complexity: number;
+  complexity: string;
   input: string;
   output: string;
   inputOutputExample: string;
   isFinalBoss: boolean;
-  starterCode: string;
-  step1Code: string;
-  step2Code: string;
-  step3Code: string;
-  helper1Text: string;
-  helper2Text: string;
-  helper3Text: string;
   solutionCode: string;
 }
