@@ -11,6 +11,7 @@
     flex-wrap: wrap;
     flex-direction: column;
     gap: 3rem;
+    margin-top: 3rem;
   }
 
   .column {
@@ -40,6 +41,14 @@
   }
   .form-label {
     align-self: center;
+  }
+  .difficulty {
+    &-slider {
+      width: 20rem;
+    }
+    &-emoji {
+      font-size: 3rem;
+    }
   }
   .editor {
     height: 200px;

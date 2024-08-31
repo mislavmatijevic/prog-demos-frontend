@@ -16,20 +16,20 @@
         </div>
     </div>
 
-    <section class="new-task-definition" *ngIf="selectedSubtopic.value != undefined">
+    <section class="new-task-definition" *ngIf="nameControl.value != '' && selectedSubtopic.value != undefined">
         <div class="column">
             <p class="centered">Dovoljno detaljno opiši očekivani ulaz i izlaz zadatka!</p>
             <div class="row">
                 <div class="column">
                     <label class="form-label" for="inputExplanation">Što je očekivani <strong>ULAZ</strong>?</label>
                     <textarea pInputTextarea id="inputExplanation" type="text" class="new-task-input"
-                        name="inputExplanation" minlength="2" required
+                        name="inputExplanation" minlength="10" required rows="5"
                         [formControl]="inputExplanationControl"></textarea>
                 </div>
                 <div class="column">
                     <label class="form-label" for="outputExplanation">Što je očekivani <strong>IZLAZ</strong>?</label>
                     <textarea pInputTextarea id="outputExplanation" type="text" class="new-task-input"
-                        name="outputExplanation" minlength="2" required
+                        name="outputExplanation" minlength="10" required rows="5"
                         [formControl]="outputExplanationControl"></textarea>
                 </div>
             </div>
@@ -44,16 +44,21 @@
 
         <div class="column">
             <p>Razdvoji više različitih testnih ulaza i izlaza po linijama!</p>
+            <small class="form-label">
+                <i>Upiši kompletni unos i kompletni očekivani izlaz, a ne samo rezultate obrade.</i>
+                <i>Ovo su vrijednosti koje će se promatrati na standardnom ulazu i izlazu tijekom testiranja
+                    rješenja.</i>
+            </small>
             <div class="row">
                 <div class="column">
-                    <label class="form-label" for="input">Ulaz:</label>
-                    <textarea pInputTextarea id="input" type="text" class="new-task-input__terminal" name="input"
+                    <label class="form-label" for="test-inputs">Testni unosi:</label>
+                    <textarea pInputTextarea id="test-inputs" type="text" class="new-task-input__terminal" name="input"
                         minlength="2" required [formControl]="inputControl" rows="5"></textarea>
                 </div>
                 <div class="column">
-                    <label class="form-label" for="output">Izlaz:</label>
-                    <textarea pInputTextarea id="output" type="text" class="new-task-input__terminal" name="output"
-                        minlength="2" required [formControl]="outputControl" rows="5"></textarea>
+                    <label class="form-label" for="test-outputs">Očekivani izlazi:</label>
+                    <textarea pInputTextarea id="test-outputs" type="text" class="new-task-input__terminal"
+                        name="output" minlength="2" required [formControl]="outputControl" rows="5"></textarea>
                 </div>
             </div>
             <div class="column">
@@ -68,8 +73,8 @@
         <div class="column">
             <span>Težina je u rasponu 1 - 10. Ovisi o tome koliko dodatna pomoć može pridonijeti rješavanju, koliko
                 planiranja se traži, koliko linija je očekivano...</span>
-            <span>{{complexityControl.value! / 10}}</span>
-            <p-slider step="10" [formControl]="complexityControl" animate="true" />
+            <span class="centered difficulty-emoji">{{getCurrentComplexityInEmojis()}}</span>
+            <p-slider class="centered difficulty-slider" [min]="1" [max]="5" [formControl]="complexityControl" />
         </div>
 
         <div class="column">
@@ -80,6 +85,7 @@
             </div>
             <small class="form-label">
                 <i>Final boss zadatak ne nudi pomoć i koristi razne dijelove gradiva iz lekcije.</i>
+                <i>S druge strane, običan zadatak mora ponuditi barem jedan korak pomoći, i rješenje.</i>
             </small>
         </div>
 
@@ -88,7 +94,7 @@
         <div class="column">
             <span>Početni kod:</span>
             <div class="editor">
-                <app-editor *ngIf="codeEditorsVisible && starterCode.value" [(code)]="starterCode.value" />
+                <app-editor *ngIf="codeEditorsVisible && starterCode.value !== null" [(code)]="starterCode.value" />
             </div>
         </div>
 
@@ -98,7 +104,7 @@
             <p-accordionTab header="Prvi korak pomoći">
                 <div class="column">
                     <span>Prvi korak pomoći:</span>
-                    <app-editor class="editor" *ngIf="codeEditorsVisible && helpCodeStep1.value"
+                    <app-editor class="editor" *ngIf="codeEditorsVisible && helpCodeStep1.value !== null"
                         [(code)]="helpCodeStep1.value" />
                     <span>Prvi tekst pomoći:</span>
                     <textarea [formControl]="helpHintStep1" class="form-input" rows="5" cols="30"
@@ -108,7 +114,7 @@
             <p-accordionTab header="Drugi korak pomoći">
                 <div class="column">
                     <span>Drugi korak pomoći:</span>
-                    <app-editor class="editor" *ngIf="codeEditorsVisible && helpCodeStep2.value"
+                    <app-editor class="editor" *ngIf="codeEditorsVisible && helpCodeStep2.value !== null"
                         [(code)]="helpCodeStep2.value" />
                     <span>Drugi tekst pomoći:</span>
                     <textarea [formControl]="helpHintStep2" class="form-input" rows="5" cols="30"
@@ -118,7 +124,7 @@
             <p-accordionTab header="Treći korak pomoći">
                 <div class="column">
                     <span>Treći korak pomoći:</span>
-                    <app-editor class="editor" *ngIf="codeEditorsVisible && helpCodeStep3.value"
+                    <app-editor class="editor" *ngIf="codeEditorsVisible && helpCodeStep3.value !== null"
                         [(code)]="helpCodeStep3.value" />
                     <span>Treći tekst pomoći:</span>
                     <textarea [formControl]="helpHintStep3" class="form-input" rows="5" cols="30"
@@ -129,7 +135,7 @@
             <p-accordionTab header="Konačno rješenje">
                 <div class="column">
                     <span>Najbolje konačno rješenje:</span>
-                    <app-editor class="editor" *ngIf="codeEditorsVisible && solutionCode.value"
+                    <app-editor class="editor" *ngIf="codeEditorsVisible && solutionCode.value !== null"
                         [(code)]="solutionCode.value" />
                 </div>
             </p-accordionTab>

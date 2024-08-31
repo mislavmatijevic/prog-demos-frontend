@@ -52,7 +52,7 @@ export class CreateTaskComponent implements OnInit {
   selectedTopic = new FormControl<Topic | undefined>(undefined);
   selectedSubtopic = new FormControl<Topic | undefined>(undefined);
   nameControl = new FormControl('');
-  complexityControl = new FormControl<number>(50);
+  complexityControl = new FormControl<number>(1);
   inputControl = new FormControl('');
   outputControl = new FormControl('');
   sha256Control = new FormControl('');
@@ -91,7 +91,7 @@ export class CreateTaskComponent implements OnInit {
       const newTask: NewTaskRequestBody = {
         subtopicID: this.selectedSubtopic.value.id,
         name: this.nameControl.value!,
-        complexity: this.complexityControl.value! / 10,
+        complexity: this.complexityControl.value!,
         input: this.inputExplanationControl.value!,
         output: this.outputExplanationControl.value!,
         inputOutputExample: this.inputOutputExampleControl.value!,
@@ -110,6 +110,13 @@ export class CreateTaskComponent implements OnInit {
       console.log(newTask);
 
       this.taskService.createTask(newTask);
+    } else {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Nije moguće stvoriti zadatak!',
+        detail:
+          'Ne čini se da je zadatak u potpunosti definiran, provjeri još jednom sva polja.',
+      });
     }
   }
 
@@ -140,9 +147,6 @@ export class CreateTaskComponent implements OnInit {
     const templateStarterCode =
       '#include<iostream>\n\nusing namespace std;\n\nint main() {\n\n    return 0;\n}\n';
     this.starterCode.setValue(templateStarterCode);
-    this.helpCodeStep1.setValue(templateStarterCode);
-    this.helpCodeStep2.setValue(templateStarterCode);
-    this.helpCodeStep3.setValue(templateStarterCode);
     this.solutionCode.setValue(templateStarterCode);
   }
 
@@ -161,5 +165,22 @@ export class CreateTaskComponent implements OnInit {
     });
 
     return tests;
+  }
+
+  getCurrentComplexityInEmojis(): string {
+    switch (this.complexityControl.value) {
+      case 1:
+        return '😎';
+      case 2:
+        return '🧐';
+      case 3:
+        return '😬';
+      case 4:
+        return '😵‍💫';
+      case 5:
+        return '🫠';
+      default:
+        return '';
+    }
   }
 }
