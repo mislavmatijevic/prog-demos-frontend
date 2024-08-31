@@ -20,7 +20,7 @@ type User = {
   type: string;
 };
 
-export type LoginResponse = {
+type LoginResponse = {
   user: User;
   tokens: {
     accessToken: string;
@@ -55,19 +55,24 @@ export class AuthService {
   }
 
   login(identifier: string, password: string): Observable<LoginResponse> {
-    const loginResponse = this.apiService.post<LoginResponse>('/auth/login', {
+    const loginResponse = this.apiService
+      .post<LoginResponse>('/auth/login', {
       identifier,
       password,
-    });
-
-    loginResponse.subscribe({
+      })
+      .pipe(
+        tap({
       next: (res: LoginResponse) => {
         this.setUser(res.user);
-        this.setTokens(res.tokens.accessToken, res.tokens.refreshToken.value);
+            this.setTokens(
+              res.tokens.accessToken,
+              res.tokens.refreshToken.value
+            );
         this.isLoggedIn.set(true);
         this.isSpecialType.set(this.checkIfSpecialType());
       },
-    });
+        })
+      );
 
     return loginResponse;
   }
