@@ -68,7 +68,7 @@ export class CreateTaskComponent implements OnInit {
   solutionCode = new FormControl('');
 
   codeEditorsVisible = false;
-  starterCode = standardCppStarterCode;
+  definedHelpSteps: Array<NewHelpStepDefinition> = [];
 
   onSubmit() {
     if (
@@ -138,6 +138,7 @@ export class CreateTaskComponent implements OnInit {
         }
         this.setupTemplateCode();
         this.enableEditors();
+        this.addHelpStep();
       },
       error: () => {
         this.messageService.add({
@@ -188,5 +189,24 @@ export class CreateTaskComponent implements OnInit {
       default:
         return '';
     }
+  }
+
+  addHelpStep() {
+    if (this.definedHelpSteps.length < 10) {
+      this.definedHelpSteps.push({
+        step: this.definedHelpSteps.length + 1,
+        helperCode: this.solutionCode.value ?? '',
+        helperText: '',
+      });
+    } else {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Ne mogu dodati više pomoći na zadatak!',
+      });
+    }
+  }
+
+  removeHelpStep() {
+    this.definedHelpSteps.splice(this.definedHelpSteps.length - 1, 1);
   }
 }

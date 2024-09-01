@@ -95,9 +95,13 @@
         <p-accordion *ngIf="!isFinalBoss.value">
             <p>Pomoći su opcionalne, nemoj unijeti ondje gdje ne želiš pomoći. Međutim, barem jednu pomoć trebaš unijeti
                 (ili jedan korak u kodu, ili jedan pomoćni oblačić)!</p>
-            <p-accordionTab header="Korak pomoći">
-                <app-new-help-step-definition />
+
+            <p-button rounded="true" severity="info" (onClick)="addHelpStep()" type="button" icon="pi pi-plus-circle" />
+            <p-accordionTab *ngFor="let helpStep of definedHelpSteps" [header]="helpStep.step + '. korak pomoći'">
+                <app-new-help-step-definition [(helpCode)]="helpStep.helperCode" [(helpHint)]="helpStep.helperText" />
             </p-accordionTab>
+            <p-button rounded="true" severity="danger" (onClick)="removeHelpStep()" type="button"
+                icon="pi pi-minus-circle" *ngIf="definedHelpSteps.length > 1" />
 
             <p-accordionTab header="Konačno rješenje">
                 <div class="column">
