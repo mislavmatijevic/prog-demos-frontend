@@ -87,9 +87,7 @@ export class CreateTaskComponent implements OnInit {
       const tests: Array<NewTestDefinition> =
         this.fillTestsFromInputAndOutputTextAreas();
 
-      // TODO:
-      const helpSteps: NewHelpStepDefinition[] = [];
-      // const helpSteps: Array<NewHelpStepDefinition> = this.fillHelpSteps();
+      const helpSteps: NewHelpStepDefinition[] = this.definedHelpSteps;
 
       const newTask: NewTaskRequestBody = {
         idSubtopic: this.selectedSubtopic.value.id,
