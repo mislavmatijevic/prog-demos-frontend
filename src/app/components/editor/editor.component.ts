@@ -32,6 +32,9 @@ export class EditorComponent implements OnInit, OnChanges {
   @Output() onEditorReady = new EventEmitter();
 
   editor: any;
+  editorModel: NgxEditorModel | null = null;
+  initComplete = false;
+  editorOptions: any;
 
   @Input() originalCode: string = '';
   @Input() comparedCode: string = '';
@@ -39,16 +42,13 @@ export class EditorComponent implements OnInit, OnChanges {
   diffOriginalModel!: DiffEditorModel;
   diffModifiedModel!: DiffEditorModel;
 
-  editorModel: NgxEditorModel | null = null;
-
   @Input() code: string = '';
   @Output() codeChange = new EventEmitter<string>();
 
+  @Input() bitCode: string = '';
+
   ngOnInit(): void {
-    this.editorModel = {
-      value: this.newlinePipe.transform(this.code),
-      language: 'cpp',
-    };
+    this.setCodeEditorModel();
 
     if (!this.isDiffEditor) {
       this.editorOptions = {
@@ -68,10 +68,6 @@ export class EditorComponent implements OnInit, OnChanges {
         code: this.newlinePipe.transform(this.comparedCode),
         language: 'cpp',
       };
-
-      console.log(this.originalCode);
-      console.log(this.comparedCode);
-
       this.editorOptions = {
         theme: 'prog-demos-theme',
         language: 'cpp',
@@ -88,9 +84,19 @@ export class EditorComponent implements OnInit, OnChanges {
     if (changes['code'] !== undefined) {
       this.code = changes['code'].currentValue;
     }
-  }
 
-  initComplete = false;
+    if (changes['bitCode'] !== undefined) {
+      this.bitCode = changes['bitCode'].currentValue;
+      if (this.bitCode !== '') {
+        this.editorModel = {
+          value: this.bitCode,
+          language: 'raw',
+        };
+      } else {
+        this.setCodeEditorModel();
+      }
+    }
+  }
 
   onReady($event: any) {
     if (!this.initComplete) {
@@ -115,7 +121,12 @@ export class EditorComponent implements OnInit, OnChanges {
     }
   }
 
-  editorOptions: any;
+  private setCodeEditorModel() {
+    this.editorModel = {
+      value: this.newlinePipe.transform(this.code),
+      language: 'cpp',
+    };
+  }
 
   private enableEditorEvents() {
     this.editor.onKeyDown((e: IKeyboardEvent) => {

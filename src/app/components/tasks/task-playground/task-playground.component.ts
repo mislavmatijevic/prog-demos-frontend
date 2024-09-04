@@ -54,6 +54,9 @@ export class TaskPlaygroundComponent implements OnInit {
   mainEditorReady: boolean = false;
   maximizeCodeHeight: boolean = false;
 
+  bitCode: string = '';
+  isAnimatingBits: boolean = false;
+
   helpStepIndex = 0;
   codeHelpShown: boolean = false;
   helpButtonRageTolerance = 5;
@@ -107,6 +110,7 @@ export class TaskPlaygroundComponent implements OnInit {
   executeCode() {
     if (this.authService.isLoggedIn()) {
       // TODO: await task execution
+      this.animateCodeTransferToBits();
     } else {
       this.loginDialogVisible = true;
     }
@@ -191,5 +195,42 @@ export class TaskPlaygroundComponent implements OnInit {
         life: 30000,
       });
     }
+  }
+
+  private animateCodeTransferToBits() {
+    const codeLength = this.mainCode!.length!;
+    this.bitCode = this.mainCode!;
+    const lastBitIndex = codeLength / 2 - 1;
+
+    for (let i = 0; i <= lastBitIndex; i++) {
+      setTimeout(() => {
+        this.bitCode = this.transformToMockByteStream(this.bitCode, i);
+
+        if (i == lastBitIndex) {
+          this.bitCode = '';
+        }
+      }, 15 * i);
+    }
+  }
+
+  private transformToMockByteStream(
+    currentStream: string,
+    index: number
+  ): string {
+    let stream = currentStream;
+
+    const setCharAt = (str: string, index: number, replacement: string) =>
+      str.substring(0, index - 1) +
+      replacement +
+      str.substring(index + replacement.length);
+
+    const thisBit = (currentStream.charCodeAt(index) % 2).toString();
+    stream = setCharAt(stream, index, thisBit);
+
+    if (index != 0 && index % 8 == 0) {
+      stream = setCharAt(stream, index, `\n`);
+    }
+
+    return stream;
   }
 }
