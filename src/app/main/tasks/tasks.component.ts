@@ -13,7 +13,7 @@ import { TaskService, TasksResponse } from '../../services/task.service';
   styleUrl: './tasks.component.scss',
 })
 export class TasksComponent implements OnInit {
-  constructor(private taskService: TaskService, private _router: Router) {}
+  constructor(private taskService: TaskService, private router: Router) {}
 
   topics: Topic[] = [];
 
@@ -33,6 +33,6 @@ export class TasksComponent implements OnInit {
   }
 
   onTaskSelected(task: BasicTask) {
-    this._router.navigateByUrl(`/prog/${task.id}`);
+    this.router.navigateByUrl(`/prog/${task.id}`);
   }
 }

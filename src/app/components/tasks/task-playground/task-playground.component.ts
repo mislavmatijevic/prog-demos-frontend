@@ -97,9 +97,9 @@ export class TaskPlaygroundComponent implements OnInit {
 
   toggleHelp() {
     if (!this.codeHelpShown) {
-      this._showHelp();
+      this.showHelp();
     } else {
-      this._hideHelp();
+      this.hideHelp();
     }
   }
 
@@ -111,13 +111,21 @@ export class TaskPlaygroundComponent implements OnInit {
     }
   }
 
-  _showHelp() {
+  handleLoginSuccessful() {
+    this.loginDialogVisible = false;
+  }
+
+  handleRegistrationSuccessful() {
+    this.loginDialogVisible = false;
+  }
+
+  private showHelp() {
     this.helpStepGiven++;
     let foundHelpfulCodeStep = undefined;
     let foundHelpfulTip = undefined;
 
     if (this.helpStepGiven == 1) {
-      this._initialCodeForFirstStepHelpComparison();
+      this.initialCodeForFirstStepHelpComparison();
     }
 
     foundHelpfulCodeStep = (this.task as any)[`step${this.helpStepGiven}Code`];
@@ -126,7 +134,7 @@ export class TaskPlaygroundComponent implements OnInit {
       foundHelpfulCodeStep !== undefined || foundHelpfulTip !== undefined;
 
     if (helpExistsForThisStep) {
-      this._handleDisplayingHelp(foundHelpfulCodeStep, foundHelpfulTip);
+      this.handleDisplayingHelp(foundHelpfulCodeStep, foundHelpfulTip);
     } else {
       this.messageService.add({
         severity: 'error',
@@ -146,41 +154,33 @@ export class TaskPlaygroundComponent implements OnInit {
     }
   }
 
-  _hideHelp() {
+  private hideHelp() {
     this.codeHelpShown = false;
   }
 
-  handleLoginSuccessful() {
-    this.loginDialogVisible = false;
-  }
-
-  handleRegistrationSuccessful() {
-    this.loginDialogVisible = false;
-  }
-
-  private _initialCodeForFirstStepHelpComparison() {
+  private initialCodeForFirstStepHelpComparison() {
     this.helpSuggestionCode = standardCppStarterCode;
   }
 
-  private _handleDisplayingHelp(
+  private handleDisplayingHelp(
     foundHelpfulCodeStep: string | undefined,
     foundHelpfulTip: string | undefined
   ) {
     if (foundHelpfulCodeStep !== undefined) {
-      this._showCodeDifference(foundHelpfulCodeStep);
+      this.showCodeDifference(foundHelpfulCodeStep);
     }
     if (foundHelpfulTip !== undefined) {
-      this._displayHelpToast(foundHelpfulTip);
+      this.displayHelpToast(foundHelpfulTip);
     }
   }
 
-  private _showCodeDifference(foundHelpfulCodeStep: string) {
+  private showCodeDifference(foundHelpfulCodeStep: string) {
     this.helpPreviousCode = this.helpSuggestionCode;
     this.helpSuggestionCode = foundHelpfulCodeStep;
     this.codeHelpShown = true;
   }
 
-  private _displayHelpToast(helpMessageForCurrentStep: string) {
+  private displayHelpToast(helpMessageForCurrentStep: string) {
     if (
       helpMessageForCurrentStep !== undefined &&
       helpMessageForCurrentStep != ''

@@ -13,7 +13,7 @@ import { VideoService, VideosResponse } from '../../services/video.service';
   styleUrl: './videos.component.scss',
 })
 export class VideosComponent implements OnInit {
-  constructor(private videoService: VideoService, private _router: Router) {}
+  constructor(private videoService: VideoService, private router: Router) {}
 
   topics: Topic[] = [];
 
@@ -33,6 +33,6 @@ export class VideosComponent implements OnInit {
   }
 
   onVideoSelected(video: Video) {
-    this._router.navigateByUrl(`/demos/${video.id}`);
+    this.router.navigateByUrl(`/demos/${video.id}`);
   }
 }
