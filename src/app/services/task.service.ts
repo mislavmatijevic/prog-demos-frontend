@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { FullTask, Topic } from '../../types/models';
+import { FullTask, HelpStep, Topic } from '../../types/models';
 import { ApiService } from './api.service';
 
 export type TasksResponse = {
@@ -17,12 +17,6 @@ export type NewTestDefinition = {
   artefactSha256?: string;
 };
 
-export type NewHelpStepDefinition = {
-  step: number;
-  helperCode: string;
-  helperText: string;
-};
-
 export type NewTaskRequestBody = {
   idSubtopic: number;
   name: string;
@@ -33,7 +27,7 @@ export type NewTaskRequestBody = {
   isFinalBoss: boolean;
   solutionCode?: string;
   tests: NewTestDefinition[];
-  helpSteps: NewHelpStepDefinition[];
+  helpSteps: HelpStep[];
 };
 
 @Injectable({

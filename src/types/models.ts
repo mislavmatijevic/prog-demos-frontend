@@ -23,6 +23,12 @@ export interface BasicTask {
   name: string;
 }
 
+export type HelpStep = {
+  step: number;
+  helperCode: string;
+  helperText: string;
+};
+
 export interface FullTask {
   id: number;
   idSubtopic: number;
@@ -33,4 +39,5 @@ export interface FullTask {
   inputOutputExample: string;
   isFinalBoss: boolean;
   solutionCode: string;
+  helpSteps: Array<HelpStep>;
 }

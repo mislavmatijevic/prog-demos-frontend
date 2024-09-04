@@ -54,7 +54,7 @@ export class TaskPlaygroundComponent implements OnInit {
   mainEditorReady: boolean = false;
   maximizeCodeHeight: boolean = false;
 
-  helpStepGiven: number = 0;
+  helpStepIndex = 0;
   codeHelpShown: boolean = false;
   helpButtonRageTolerance = 5;
 
@@ -75,6 +75,7 @@ export class TaskPlaygroundComponent implements OnInit {
       next: (res: TaskResponse) => {
         this.task = res.task;
         this.mainCode = standardCppStarterCode;
+        this.task.helpSteps.sort((step1, step2) => step1.step - step2.step);
       },
       error: (error) => {
         console.log(error);
@@ -120,37 +121,38 @@ export class TaskPlaygroundComponent implements OnInit {
   }
 
   private showHelp() {
-    this.helpStepGiven++;
-    let foundHelpfulCodeStep = undefined;
-    let foundHelpfulTip = undefined;
-
-    if (this.helpStepGiven == 1) {
+    if (this.helpStepIndex == 0) {
       this.initialCodeForFirstStepHelpComparison();
+    } else if (this.helpStepIndex >= this.task.helpSteps.length) {
+      this.handleHelpButtonWhenNoMoreHelpAvailable();
+      return;
     }
 
-    foundHelpfulCodeStep = (this.task as any)[`step${this.helpStepGiven}Code`];
-    foundHelpfulTip = (this.task as any)[`helper${this.helpStepGiven}Text`];
-    const helpExistsForThisStep =
-      foundHelpfulCodeStep !== undefined || foundHelpfulTip !== undefined;
+    const thisHelpStep = this.task.helpSteps[this.helpStepIndex];
 
-    if (helpExistsForThisStep) {
-      this.handleDisplayingHelp(foundHelpfulCodeStep, foundHelpfulTip);
-    } else {
+    let foundHelpfulCodeStep = thisHelpStep.helperCode;
+    let foundHelpfulTip = thisHelpStep.helperText;
+
+    this.handleDisplayingHelp(foundHelpfulCodeStep, foundHelpfulTip);
+
+    this.helpStepIndex++;
+  }
+
+  handleHelpButtonWhenNoMoreHelpAvailable() {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'To je to od pomoći!',
+      detail: 'Ne mogu ti dati više pomoći, dalje moraš samostalno.',
+    });
+    this.helpButtonRageTolerance--;
+    if (this.helpButtonRageTolerance == 0) {
       this.messageService.add({
-        severity: 'error',
-        summary: 'To je to od pomoći!',
-        detail: 'Ne mogu ti dati više pomoći, dalje moraš samostalno.',
+        severity: 'info',
+        summary: 'Prestani klikati',
+        detail:
+          'Ok, pomoći ću ti tako da maknem gumb, pa da se fokusiraš na zadatak.',
+        life: 5000,
       });
-      this.helpButtonRageTolerance--;
-      if (this.helpButtonRageTolerance == 0) {
-        this.messageService.add({
-          severity: 'info',
-          summary: 'Prestani klikati',
-          detail:
-            'Ok, pomoći ću ti tako da maknem gumb, pa da se fokusiraš na zadatak.',
-          life: 5000,
-        });
-      }
     }
   }
 
@@ -166,10 +168,10 @@ export class TaskPlaygroundComponent implements OnInit {
     foundHelpfulCodeStep: string | undefined,
     foundHelpfulTip: string | undefined
   ) {
-    if (foundHelpfulCodeStep !== undefined) {
+    if (foundHelpfulCodeStep !== undefined && foundHelpfulCodeStep !== null) {
       this.showCodeDifference(foundHelpfulCodeStep);
     }
-    if (foundHelpfulTip !== undefined) {
+    if (foundHelpfulTip !== undefined && foundHelpfulTip !== null) {
       this.displayHelpToast(foundHelpfulTip);
     }
   }
@@ -181,10 +183,7 @@ export class TaskPlaygroundComponent implements OnInit {
   }
 
   private displayHelpToast(helpMessageForCurrentStep: string) {
-    if (
-      helpMessageForCurrentStep !== undefined &&
-      helpMessageForCurrentStep != ''
-    ) {
+    if (helpMessageForCurrentStep != '') {
       this.messageService.add({
         severity: 'info',
         summary: 'Moj savjet',

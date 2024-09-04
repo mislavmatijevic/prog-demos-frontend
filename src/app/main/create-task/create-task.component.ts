@@ -13,11 +13,10 @@ import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { SliderModule } from 'primeng/slider';
 import { standardCppStarterCode } from '../../../helpers/editor-helpers';
-import { Topic } from '../../../types/models';
+import { HelpStep, Topic } from '../../../types/models';
 import { EditorComponent } from '../../components/editor/editor.component';
 import { NewHelpStepDefinitionComponent } from '../../components/new-help-step-definition/new-help-step-definition.component';
 import {
-  NewHelpStepDefinition,
   NewTaskRequestBody,
   NewTestDefinition,
   TaskService,
@@ -68,7 +67,7 @@ export class CreateTaskComponent implements OnInit {
   solutionCode = new FormControl('');
 
   codeEditorsVisible = false;
-  definedHelpSteps: Array<NewHelpStepDefinition> = [];
+  definedHelpSteps: Array<HelpStep> = [];
 
   onSubmit() {
     if (
@@ -87,7 +86,7 @@ export class CreateTaskComponent implements OnInit {
       const tests: Array<NewTestDefinition> =
         this.fillTestsFromInputAndOutputTextAreas();
 
-      const helpSteps: NewHelpStepDefinition[] = this.definedHelpSteps;
+      const helpSteps: Array<HelpStep> = this.definedHelpSteps;
 
       const newTask: NewTaskRequestBody = {
         idSubtopic: this.selectedSubtopic.value.id,
