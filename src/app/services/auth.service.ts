@@ -55,21 +55,29 @@ export class AuthService {
 
   register(username: string, email: string, password: string) {
     const registrationResponse =
-      this.apiService.post<RegistrationFailureResponse>('/auth/register', {
-        username,
-        email,
-        password,
-      });
+      this.apiService.post<RegistrationFailureResponse>(
+        '/auth/register',
+        {
+          username,
+          email,
+          password,
+        },
+        false
+      );
 
     return registrationResponse;
   }
 
   login(identifier: string, password: string): Observable<LoginResponse> {
     const loginResponse = this.apiService
-      .post<LoginResponse>('/auth/login', {
-        identifier,
-        password,
-      })
+      .post<LoginResponse>(
+        '/auth/login',
+        {
+          identifier,
+          password,
+        },
+        false
+      )
       .pipe(
         tap({
           next: (res: LoginResponse) => {
@@ -97,15 +105,23 @@ export class AuthService {
   }
 
   activate(activationToken: string): Observable<{ username: string }> {
-    return this.apiService.post('/auth/activate', {
-      activationToken: activationToken,
-    });
+    return this.apiService.post(
+      '/auth/activate',
+      {
+        activationToken: activationToken,
+      },
+      false
+    );
   }
 
   requestPasswordReset(email: string): Observable<{ username: string }> {
-    return this.apiService.post('/auth/password/request-reset', {
-      email: email,
-    });
+    return this.apiService.post(
+      '/auth/password/request-reset',
+      {
+        email: email,
+      },
+      false
+    );
   }
 
   getUser(): User | null {

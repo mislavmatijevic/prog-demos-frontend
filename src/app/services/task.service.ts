@@ -51,8 +51,7 @@ export class TaskService {
   createTask(newTask: NewTaskRequestBody) {
     return this.apiService.post<TaskResponse>(
       `/tasks`,
-      newTask,
-      true
+      newTask
     ) as Observable<TaskResponse>;
   }
 }

@@ -25,11 +25,7 @@ export class ApiService {
     return this.httpClient.get<T>(uri) as Observable<T>;
   }
 
-  post<T>(
-    url: string,
-    body: any,
-    requiresAuth: boolean = false
-  ): Observable<T> {
+  post<T>(url: string, body: any, requiresAuth: boolean = true): Observable<T> {
     const uri = `${this.rootUrl}${url}`;
     let options = undefined;
     if (requiresAuth) {
