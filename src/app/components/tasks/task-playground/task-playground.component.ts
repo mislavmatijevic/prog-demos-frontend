@@ -210,7 +210,7 @@ export class TaskPlaygroundComponent implements OnInit {
   private animateCodeTransferToBits() {
     this.bitCode = this.mainCode!;
 
-    while (this.bitCode!.length! % 8 != 0) {
+    while (this.bitCode!.length! % 18 != 0) {
       this.bitCode += ' ';
     }
 
@@ -220,7 +220,7 @@ export class TaskPlaygroundComponent implements OnInit {
       this.bitAnimationHandler.push(
         setTimeout(() => {
           this.bitCode = this.transformToMockByteStream(this.bitCode, i);
-        }, 15 * i) as unknown as number
+        }, 5 * i) as unknown as number
       );
     }
   }
@@ -239,7 +239,7 @@ export class TaskPlaygroundComponent implements OnInit {
     const thisBit = (currentStream.charCodeAt(index) % 2).toString();
     stream = setCharAt(stream, index, thisBit);
 
-    if (index != 0 && index % 9 == 0) {
+    if (index != 0 && index % 18 == 0) {
       stream = setCharAt(stream, index, `\n`);
     }
 
@@ -262,8 +262,5 @@ export class TaskPlaygroundComponent implements OnInit {
       clearTimeout(this.bitAnimationHandler.pop());
     }
     this.isBeingTestedRemotely = false;
-    setTimeout(() => {
-      this.bitCode = '';
-    }, 100);
   }
 }

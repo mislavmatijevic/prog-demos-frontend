@@ -31,7 +31,7 @@ export class EditorComponent implements OnInit, OnChanges {
   @Input() isDiffEditor = false;
   @Output() onEditorReady = new EventEmitter();
 
-  editor!: editor.ICodeEditor;
+  mainEditor!: editor.ICodeEditor;
   diffEditor!: editor.IDiffEditor;
   editorModel: NgxEditorModel | null = null;
   initComplete = false;
@@ -51,18 +51,16 @@ export class EditorComponent implements OnInit, OnChanges {
   isActivelyHandlingBitcoding: boolean = false;
 
   ngOnInit(): void {
-    this.setCodeEditorModel();
+    this.editorOptions = {
+      theme: 'prog-demos-theme',
+      language: 'cpp',
+      minimap: { enabled: false },
+      scrollBeyondLastLine: false,
+      fontSize: 14,
+      automaticLayout: true,
+    };
 
-    if (!this.isDiffEditor) {
-      this.editorOptions = {
-        theme: 'prog-demos-theme',
-        language: 'cpp',
-        minimap: { enabled: false },
-        scrollBeyondLastLine: false,
-        fontSize: 14,
-        automaticLayout: true,
-      };
-    } else {
+    if (this.isDiffEditor) {
       this.diffOriginalModel = {
         code: this.newlinePipe.transform(this.originalCode),
         language: 'cpp',
@@ -71,15 +69,8 @@ export class EditorComponent implements OnInit, OnChanges {
         code: this.newlinePipe.transform(this.comparedCode),
         language: 'cpp',
       };
-      this.editorOptions = {
-        theme: 'prog-demos-theme',
-        language: 'cpp',
-        minimap: { enabled: false },
-        scrollBeyondLastLine: false,
-        fontSize: 14,
-        readonly: true,
-        automaticLayout: true,
-      };
+    } else {
+      this.setCodeEditorModel();
     }
   }
 
@@ -89,7 +80,7 @@ export class EditorComponent implements OnInit, OnChanges {
     }
 
     if (changes['isBeingBitcoded']) {
-      this.handleStartBitcoding();
+      this.handleBitcodingStateChange();
     }
 
     if (changes['bitCode'] && this.isActivelyHandlingBitcoding) {
@@ -97,16 +88,14 @@ export class EditorComponent implements OnInit, OnChanges {
     }
   }
 
-  private handleStartBitcoding() {
+  private handleBitcodingStateChange() {
     if (!this.isActivelyHandlingBitcoding && this.isBeingBitcoded) {
       this.isActivelyHandlingBitcoding = true;
       this.editorModel = {
         value: this.newlinePipe.transform(this.code),
         language: 'raw',
       };
-    }
-
-    if (this.isActivelyHandlingBitcoding && !this.isBeingBitcoded) {
+    } else if (this.isActivelyHandlingBitcoding && !this.isBeingBitcoded) {
       this.isActivelyHandlingBitcoding = false;
       this.setCodeEditorModel();
     }
@@ -124,9 +113,15 @@ export class EditorComponent implements OnInit, OnChanges {
         });
 
       if (!this.isDiffEditor) {
-        this.editor = $event;
+        this.mainEditor = $event;
       } else {
         this.diffEditor = $event;
+        this.diffEditor.updateOptions({
+          readOnly: true,
+          readOnlyMessage: {
+            value: 'Prouči ponuđenu pomoć!',
+          },
+        });
       }
 
       this.onEditorReady.emit();
@@ -142,12 +137,16 @@ export class EditorComponent implements OnInit, OnChanges {
   }
 
   private handleBitcoding() {
-    if (this.isBeingBitcoded && this.editor !== undefined) {
-      setTimeout(() => {
-        this.editor.getModel()?.setValue(this.bitCode);
+    if (this.isBeingBitcoded && this.mainEditor !== undefined) {
+      this.mainEditor.updateOptions({
+        readOnly: true,
+        readOnlyMessage: {
+          value: 'Strpi se, vratit ću ti kod!',
+        },
       });
+      this.mainEditor.getModel()?.setValue(this.bitCode);
     } else if (!this.isBeingBitcoded) {
-      this.editor.getModel()?.dispose();
+      this.mainEditor.getModel()?.dispose();
       this.setCodeEditorModel();
     }
   }
@@ -160,14 +159,14 @@ export class EditorComponent implements OnInit, OnChanges {
   }
 
   private enableEditorEvents() {
-    this.editor.onKeyDown((e: IKeyboardEvent) => {
+    this.mainEditor.onKeyDown((e: IKeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.code == 'KeyS') {
         e.preventDefault();
       }
     });
-    this.editor.onDidChangeModelContent((_: any) => {
+    this.mainEditor.onDidChangeModelContent((_: any) => {
       if (!this.isBeingBitcoded) {
-        this.code = this.editor.getValue();
+        this.code = this.mainEditor.getValue();
         this.codeChange.emit(this.code);
       }
     });
