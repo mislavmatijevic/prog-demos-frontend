@@ -72,3 +72,14 @@
 .loading-spinner-code {
   height: 100%;
 }
+
+.evaluating-spinner {
+  align-self: center;
+  position: absolute;
+  top: 50%;
+}
+
+.evaluating-text {
+  text-align: center;
+  color: $accent;
+}

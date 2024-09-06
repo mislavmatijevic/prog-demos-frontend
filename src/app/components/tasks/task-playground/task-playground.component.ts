@@ -65,6 +65,16 @@ export class TaskPlaygroundComponent implements OnInit {
 
   loginDialogVisible: boolean = false;
 
+  coolMessageIndex = -1;
+  coolMessages = [
+    'Da vidimo...',
+    'Hmmm...',
+    'Tako dakle...',
+    'Sad ću ja to...',
+    'Pričekaj malo!',
+    'Zanimljivo...',
+  ];
+
   ngOnInit() {
     const taskId = parseInt(this.route.snapshot.paramMap.get('taskId')!);
     this.fetchTask(taskId);
@@ -252,9 +262,26 @@ export class TaskPlaygroundComponent implements OnInit {
       .executeTask(this.task.id, this.mainCode!)
       .pipe(finalize(() => this.revertBitsAfterExecution()))
       .subscribe({
-        next: (value) => {},
-        error: (err) => {},
+        // TODO handle actual responses better
+        next: (value) => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Sjajno!',
+            detail: 'Čini se da je ovo ispravno rješenje, bravo!',
+          });
+        },
+        error: (err) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Ups',
+            detail: 'Čini se da tvoje rješenje još uvijek nije potpuno...',
+          });
+        },
       });
+
+    this.coolMessageIndex = Math.abs(
+      Math.trunc((Math.random() * 15) % this.coolMessages.length)
+    );
   }
 
   private revertBitsAfterExecution() {
