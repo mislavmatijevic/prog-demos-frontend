@@ -39,8 +39,10 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
             const newRequest = authService.getRequestWithAuthHeader(req);
             return next(newRequest);
           }),
-          catchError(() => {
-            router.navigateByUrl('/login');
+          catchError((err: HttpErrorResponse) => {
+            if (err.status === 403) {
+              router.navigateByUrl('/login');
+            }
             return throwError(() => errRes);
           })
         );

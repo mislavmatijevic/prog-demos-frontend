@@ -54,8 +54,9 @@
                 [pTooltip]="codeHelpShown ? 'Zatvori pomoć' : 'Pomozi mi!'" tooltipPosition="top" severity="info" />
             <p-button rounded="true" icon="pi pi-face-smile" pTooltip="Motiviraj me!" tooltipPosition="top"
                 severity="help" />
-            <p-button rounded="true" icon="pi pi-play" pTooltip="Testiraj!" (onClick)="executeCode()"
-                tooltipPosition="top" severity="contrast" />
+            <p-button [ngStyle]="{'visibility': isBeingTestedRemotely ? 'hidden' : 'visible' }" rounded="true"
+                icon="pi pi-play" pTooltip="Testiraj!" (onClick)="executeCode()" tooltipPosition="top"
+                severity="contrast" />
         </div>
     </div>
 </div>

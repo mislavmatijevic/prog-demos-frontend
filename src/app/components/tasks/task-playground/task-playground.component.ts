@@ -9,6 +9,7 @@ import { DividerModule } from 'primeng/divider';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TooltipModule } from 'primeng/tooltip';
+import { finalize } from 'rxjs';
 import { standardCppStarterCode } from '../../../../helpers/editor-helpers';
 import { FullTask } from '../../../../types/models';
 import { NewlinePipe } from '../../../pipes/newline.pipe';
@@ -55,7 +56,8 @@ export class TaskPlaygroundComponent implements OnInit {
   maximizeCodeHeight: boolean = false;
 
   bitCode: string = '';
-  isAnimatingBits: boolean = false;
+  isBeingTestedRemotely: boolean = false;
+  bitAnimationHandler: Array<number> = [];
 
   helpStepIndex = 0;
   codeHelpShown: boolean = false;
@@ -107,10 +109,18 @@ export class TaskPlaygroundComponent implements OnInit {
     }
   }
 
-  executeCode() {
+  async executeCode() {
     if (this.authService.isLoggedIn()) {
-      // TODO: await task execution
-      this.animateCodeTransferToBits();
+      if (this.mainCode !== undefined && this.mainCode !== '') {
+        this.animateCodeTransferToBits();
+        this.handleTaskExecution();
+      } else {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Neće ići',
+          detail: 'Ne mogu testirati prazan kod!',
+        });
+      }
     } else {
       this.loginDialogVisible = true;
     }
@@ -198,18 +208,20 @@ export class TaskPlaygroundComponent implements OnInit {
   }
 
   private animateCodeTransferToBits() {
-    const codeLength = this.mainCode!.length!;
     this.bitCode = this.mainCode!;
-    const lastBitIndex = codeLength / 2 - 1;
 
-    for (let i = 0; i <= lastBitIndex; i++) {
-      setTimeout(() => {
-        this.bitCode = this.transformToMockByteStream(this.bitCode, i);
+    while (this.bitCode!.length! % 8 != 0) {
+      this.bitCode += ' ';
+    }
 
-        if (i == lastBitIndex) {
-          this.bitCode = '';
-        }
-      }, 15 * i);
+    const codeLength = this.bitCode!.length!;
+
+    for (let i = 0; i <= codeLength; i++) {
+      this.bitAnimationHandler.push(
+        setTimeout(() => {
+          this.bitCode = this.transformToMockByteStream(this.bitCode, i);
+        }, 15 * i) as unknown as number
+      );
     }
   }
 
@@ -222,15 +234,36 @@ export class TaskPlaygroundComponent implements OnInit {
     const setCharAt = (str: string, index: number, replacement: string) =>
       str.substring(0, index - 1) +
       replacement +
-      str.substring(index + replacement.length);
+      str.substring(index + replacement.length - 1);
 
     const thisBit = (currentStream.charCodeAt(index) % 2).toString();
     stream = setCharAt(stream, index, thisBit);
 
-    if (index != 0 && index % 8 == 0) {
+    if (index != 0 && index % 9 == 0) {
       stream = setCharAt(stream, index, `\n`);
     }
 
     return stream;
+  }
+
+  private handleTaskExecution() {
+    this.isBeingTestedRemotely = true;
+    this.taskService
+      .executeTask(this.task.id, this.mainCode!)
+      .pipe(finalize(() => this.revertBitsAfterExecution()))
+      .subscribe({
+        next: (value) => {},
+        error: (err) => {},
+      });
+  }
+
+  private revertBitsAfterExecution() {
+    while (this.bitAnimationHandler.length > 0) {
+      clearTimeout(this.bitAnimationHandler.pop());
+    }
+    this.isBeingTestedRemotely = false;
+    setTimeout(() => {
+      this.bitCode = '';
+    }, 100);
   }
 }

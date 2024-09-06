@@ -30,6 +30,24 @@ export type NewTaskRequestBody = {
   helpSteps: HelpStep[];
 };
 
+export enum RegistrationErrorCode {
+  EXEC_ERR_CODE_NO_TESTS = 1,
+  EXEC_ERR_ARTEFACT_CONTENT_MISMATCH = 2,
+  EXEC_ERR_TEST_FAILED = 3,
+  EXEC_ERR_TIMEOUT = 4,
+}
+
+export type TaskExecutionResponse = {
+  success: boolean;
+  message: string;
+  errorCode: RegistrationErrorCode;
+  reason: {
+    testInput: string | undefined;
+    output: string | undefined;
+    expectedOutput: string | undefined;
+  };
+};
+
 @Injectable({
   providedIn: 'root',
 })
@@ -53,5 +71,11 @@ export class TaskService {
       `/tasks`,
       newTask
     ) as Observable<TaskResponse>;
+  }
+
+  executeTask(taskId: number, solutionCode: string) {
+    return this.apiService.post<TaskExecutionResponse>(`/tasks/${taskId}/run`, {
+      solutionCode,
+    }) as Observable<TaskExecutionResponse>;
   }
 }
