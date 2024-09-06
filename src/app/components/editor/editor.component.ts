@@ -8,7 +8,7 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { IKeyboardEvent } from 'monaco-editor';
+import { editor, IKeyboardEvent } from 'monaco-editor';
 import {
   DiffEditorModel,
   MonacoEditorModule,
@@ -31,7 +31,8 @@ export class EditorComponent implements OnInit, OnChanges {
   @Input() isDiffEditor = false;
   @Output() onEditorReady = new EventEmitter();
 
-  editor: any;
+  editor!: editor.ICodeEditor;
+  diffEditor!: editor.IDiffEditor;
   editorModel: NgxEditorModel | null = null;
   initComplete = false;
   editorOptions: any;
@@ -46,6 +47,8 @@ export class EditorComponent implements OnInit, OnChanges {
   @Output() codeChange = new EventEmitter<string>();
 
   @Input() bitCode: string = '';
+  @Input() isBeingBitcoded: boolean = false;
+  isActivelyHandlingBitcoding: boolean = false;
 
   ngOnInit(): void {
     this.setCodeEditorModel();
@@ -85,16 +88,27 @@ export class EditorComponent implements OnInit, OnChanges {
       this.code = changes['code'].currentValue;
     }
 
-    if (changes['bitCode'] !== undefined) {
-      this.bitCode = changes['bitCode'].currentValue;
-      if (this.bitCode !== '') {
-        this.editorModel = {
-          value: this.bitCode,
-          language: 'raw',
-        };
-      } else {
-        this.setCodeEditorModel();
-      }
+    if (changes['isBeingBitcoded']) {
+      this.handleStartBitcoding();
+    }
+
+    if (changes['bitCode'] && this.isActivelyHandlingBitcoding) {
+      this.handleBitcoding();
+    }
+  }
+
+  private handleStartBitcoding() {
+    if (!this.isActivelyHandlingBitcoding && this.isBeingBitcoded) {
+      this.isActivelyHandlingBitcoding = true;
+      this.editorModel = {
+        value: this.newlinePipe.transform(this.code),
+        language: 'raw',
+      };
+    }
+
+    if (this.isActivelyHandlingBitcoding && !this.isBeingBitcoded) {
+      this.isActivelyHandlingBitcoding = false;
+      this.setCodeEditorModel();
     }
   }
 
@@ -108,16 +122,33 @@ export class EditorComponent implements OnInit, OnChanges {
             $event._themeService.setTheme('prog-demos-theme');
           }
         });
-      this.editor = $event;
+
+      if (!this.isDiffEditor) {
+        this.editor = $event;
+      } else {
+        this.diffEditor = $event;
+      }
+
       this.onEditorReady.emit();
 
       if (this.isDiffEditor) {
         setTimeout(() => {
-          this.editor.goToDiff();
+          this.diffEditor.goToDiff('next');
         }, 100);
       } else {
         this.enableEditorEvents();
       }
+    }
+  }
+
+  private handleBitcoding() {
+    if (this.isBeingBitcoded && this.editor !== undefined) {
+      setTimeout(() => {
+        this.editor.getModel()?.setValue(this.bitCode);
+      });
+    } else if (!this.isBeingBitcoded) {
+      this.editor.getModel()?.dispose();
+      this.setCodeEditorModel();
     }
   }
 
@@ -135,8 +166,10 @@ export class EditorComponent implements OnInit, OnChanges {
       }
     });
     this.editor.onDidChangeModelContent((_: any) => {
-      this.code = this.editor.getValue();
-      this.codeChange.emit(this.code);
+      if (!this.isBeingBitcoded) {
+        this.code = this.editor.getValue();
+        this.codeChange.emit(this.code);
+      }
     });
   }
 }

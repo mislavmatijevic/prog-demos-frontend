@@ -37,7 +37,8 @@
         </div>
 
         <app-editor *ngIf="mainCode !== undefined" (onEditorReady)="onMainEditorReady()" [(code)]="mainCode"
-            [bitCode]="bitCode" [ngStyle]="{'width': maximizeCodeHeight ? '100%' : 'initial'}" />
+            [isBeingBitcoded]="bitCode != ''" [bitCode]="bitCode"
+            [ngStyle]="{'width': maximizeCodeHeight ? '100%' : 'initial'}" />
 
         <div *ngIf="codeHelpShown && mainCode !== undefined">
             <app-editor [isDiffEditor]="true" [originalCode]="helpPreviousCode" [(comparedCode)]="helpSuggestionCode"
