@@ -16,6 +16,7 @@ import { standardCppStarterCode } from '../../../helpers/editor-helpers';
 import { HelpStep, Topic } from '../../../types/models';
 import { EditorComponent } from '../../components/editor/editor.component';
 import { NewHelpStepDefinitionComponent } from '../../components/new-help-step-definition/new-help-step-definition.component';
+import { ComplexityEmojiPipe } from '../../pipes/complexity-emoji.pipe';
 import {
   NewTaskRequestBody,
   NewTestDefinition,
@@ -41,6 +42,7 @@ import { TopicsService } from '../../services/topics.service';
     AccordionModule,
     Button,
     NewHelpStepDefinitionComponent,
+    ComplexityEmojiPipe,
   ],
   templateUrl: './create-task.component.html',
   styleUrl: './create-task.component.scss',
@@ -169,23 +171,6 @@ export class CreateTaskComponent implements OnInit {
     });
 
     return tests;
-  }
-
-  getCurrentComplexityInEmojis(): string {
-    switch (this.complexityControl.value) {
-      case 1:
-        return '😎';
-      case 2:
-        return '🧐';
-      case 3:
-        return '😬';
-      case 4:
-        return '😵‍💫';
-      case 5:
-        return '🫠';
-      default:
-        return '';
-    }
   }
 
   addHelpStep() {

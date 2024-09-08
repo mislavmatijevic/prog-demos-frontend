@@ -1,11 +1,12 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { BasicTask, Subtopic } from '../../../../types/models';
+import { ComplexityEmojiPipe } from '../../../pipes/complexity-emoji.pipe';
 
 @Component({
   selector: 'app-tasks-in-subtopic',
   standalone: true,
-  imports: [ButtonModule],
+  imports: [ButtonModule, ComplexityEmojiPipe],
   templateUrl: './tasks-in-subtopic.component.html',
   styleUrl: './tasks-in-subtopic.component.scss',
 })
