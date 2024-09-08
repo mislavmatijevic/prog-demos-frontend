@@ -124,6 +124,17 @@ export class AuthService {
     );
   }
 
+  resetPassword(newPassword: string, resetToken: string): Observable<void> {
+    return this.apiService.post(
+      '/auth/password/reset',
+      {
+        newPassword,
+        resetToken,
+      },
+      false
+    );
+  }
+
   getUser(): User | null {
     const userFromLocalStorage = localStorage.getItem('user');
     if (!this.user && userFromLocalStorage !== null) {

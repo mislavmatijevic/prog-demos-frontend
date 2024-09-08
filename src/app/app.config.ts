@@ -20,10 +20,10 @@ export const appConfig: ApplicationConfig = {
       withInterceptors([
         httpCacheInterceptor({
           urlsToCache: [
-            '/videos/public',
+            'videos/public',
             'tasks',
             'tasks/.*',
-            'auth/password/request-reset',
+            'auth/password/.*',
           ],
           globalTTL: 60000,
         }),
