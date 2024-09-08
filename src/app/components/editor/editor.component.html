@@ -1,3 +1,5 @@
+<div #errorExplanationPopup class="error-explanation-popup"></div>
+
 <ngx-monaco-editor *ngIf="!isDiffEditor && editorModel" (onInit)="onReady($event)" [options]="editorOptions"
     [ngStyle]="ngStyle" [model]=editorModel />
 

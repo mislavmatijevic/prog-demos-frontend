@@ -1,14 +1,16 @@
 import { CommonModule } from '@angular/common';
 import {
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnChanges,
   OnInit,
   Output,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core';
-import { editor, IKeyboardEvent } from 'monaco-editor';
+import { editor, IDisposable, IKeyboardEvent } from 'monaco-editor';
 import {
   DiffEditorModel,
   MonacoEditorModule,
@@ -32,6 +34,9 @@ export type SyntaxError = {
 })
 export class EditorComponent implements OnInit, OnChanges {
   constructor(private newlinePipe: NewlinePipe) {}
+
+  @ViewChild('errorExplanationPopup')
+  errorExplanationPopup!: ElementRef<HTMLDivElement>;
 
   @Input() ngStyle: { [klass: string]: any } | null | undefined;
   @Input() isDiffEditor = false;
@@ -59,6 +64,8 @@ export class EditorComponent implements OnInit, OnChanges {
   isActivelyHandlingBitcoding: boolean = false;
 
   @Input() syntaxErrors: Array<SyntaxError> = [];
+
+  mouseMovementListener: IDisposable | null = null;
 
   ngOnInit(): void {
     this.editorOptions = {
@@ -103,44 +110,84 @@ export class EditorComponent implements OnInit, OnChanges {
         // This is not the best solution here for highlighting syntax errors.
         // The best solution would be calling the actual API for this: editor.setModelMarkers
         // However, the library I've used here (basically only viable solution for Angular) made that impossible.
-        setTimeout(() => {
-          this.decorations = this.mainEditor.getModel()?.deltaDecorations(
-            this.decorations,
-            this.syntaxErrors.map((error) => {
-              let problematicWord = this.mainEditor
-                .getModel()
-                ?.getWordAtPosition({
-                  column: error.column,
-                  lineNumber: error.line,
-                });
-              let isWholeLine = false;
-
-              if (problematicWord === null || problematicWord === undefined) {
-                isWholeLine = true;
-              }
-
-              return {
-                options: {
-                  className: 'editor__red-squiggle-lines',
-                  isWholeLine,
-                },
-                range: {
-                  startColumn: problematicWord?.startColumn ?? 0,
-                  endColumn: problematicWord?.endColumn ?? 0,
-                  startLineNumber: error.line,
-                  endLineNumber: error.line,
-                },
-              };
-            })
-          )!;
-
-          this.mainEditor.setPosition({
-            column: this.syntaxErrors[0].column,
-            lineNumber: this.syntaxErrors[0].line,
-          });
-        });
+        this.handleNewSyntaxErrors();
       }
     }
+  }
+
+  private handleNewSyntaxErrors() {
+    setTimeout(() => {
+      this.decorations = this.mainEditor.getModel()?.deltaDecorations(
+        this.decorations,
+        this.syntaxErrors.map((error) => {
+          const { isWholeLine, problematicWord } =
+            this.findWordCausingError(error);
+
+          return {
+            options: {
+              className: 'editor__red-squiggle-lines',
+              isWholeLine,
+            },
+            range: {
+              startColumn: problematicWord?.startColumn ?? 0,
+              endColumn: problematicWord?.endColumn ?? 0,
+              startLineNumber: error.line,
+              endLineNumber: error.line,
+            },
+          };
+        })
+      )!;
+
+      this.mainEditor.setPosition({
+        column: this.syntaxErrors[0].column,
+        lineNumber: this.syntaxErrors[0].line,
+      });
+
+      this.mouseMovementListener = this.mainEditor.onMouseMove(
+        this.debounceOnMouseMove((e: editor.IEditorMouseEvent) => {
+          const el = this.errorExplanationPopup.nativeElement;
+
+          const closestErrorFound = this.syntaxErrors.find((error) => {
+            const { isWholeLine, problematicWord } =
+              this.findWordCausingError(error);
+
+            console.log(error, problematicWord);
+
+            return (
+              error.line == e.target.position?.lineNumber! &&
+              (isWholeLine ||
+                (problematicWord?.startColumn! <= e.target.position?.column! &&
+                  problematicWord?.endColumn! >= e.target.position?.column!))
+            );
+          });
+
+          if (closestErrorFound !== undefined) {
+            el.style.visibility = 'visible';
+            el.style.opacity = '100%';
+            el.style.left = `${e.event.browserEvent.pageX}px`;
+            el.style.top = `${e.event.browserEvent.pageY}px`;
+            el.innerText = closestErrorFound?.message!;
+          } else {
+            el.style.opacity = '0%';
+            setTimeout(() => (el.style.visibility = 'hidden'), 500);
+          }
+        }, 300)
+      );
+    }, 250);
+  }
+
+  private findWordCausingError(error: SyntaxError) {
+    let problematicWord = this.mainEditor.getModel()?.getWordAtPosition({
+      column: error.column,
+      lineNumber: error.line,
+    });
+    let isWholeLine = false;
+
+    if (problematicWord === null || problematicWord === undefined) {
+      isWholeLine = true;
+    }
+
+    return { isWholeLine, problematicWord };
   }
 
   private handleBitcodingStateChange() {
@@ -220,11 +267,30 @@ export class EditorComponent implements OnInit, OnChanges {
       }
     });
     this.mainEditor.onDidChangeModelContent((_: any) => {
+      if (this.mouseMovementListener !== null) {
+        const el = this.errorExplanationPopup.nativeElement;
+        el.style.opacity = '0%';
+        setTimeout(() => (el.style.visibility = 'hidden'), 500);
+        this.mouseMovementListener.dispose();
+        this.mouseMovementListener = null;
+      }
+
       if (!this.isBeingBitcoded) {
         this.code = this.mainEditor.getValue();
         this.codeChange.emit(this.code);
         this.mainEditor.removeDecorations(this.decorations);
       }
     });
+  }
+
+  private debounceOnMouseMove(
+    func: (arg: editor.IEditorMouseEvent) => void,
+    wait: any
+  ): (e: editor.IEditorMouseEvent) => void {
+    let timeout: any;
+    return function (this: void, arg: editor.IEditorMouseEvent) {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func(arg), wait);
+    };
   }
 }
