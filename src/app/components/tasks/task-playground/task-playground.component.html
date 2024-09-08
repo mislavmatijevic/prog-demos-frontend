@@ -12,7 +12,7 @@
 </p-dialog>
 <div class="task__wrapper">
     <div class="task__wrapper-info__wrapper" *ngIf="task; else loadingTask"
-        [ngStyle]="{'width': maximizeCodeHeight ? '0%' : '50%', 'padding': maximizeCodeHeight ? '0' : '20px 20px'}">
+        [ngStyle]="{'width': maximizeCodeWidth ? '0%' : '50%', 'padding': maximizeCodeWidth ? '0' : '20px 20px'}">
         <h2>{{task.name}}</h2>
         <ul>
             <li>Ulaz: {{task.input}}</li>
@@ -31,23 +31,23 @@
     <div class="task__wrapper-input__wrapper">
         <div class="task__wrapper-input__wrapper-controls-top">
             <p-button (onClick)="expandCode()" text="true" icon="pi pi-code"
-                [pTooltip]="maximizeCodeHeight ? 'Prikaži zadatak' : 'Fokusiraj kod'" tooltipPosition="bottom" />
+                [pTooltip]="maximizeCodeWidth ? 'Prikaži zadatak' : 'Fokusiraj kod'" tooltipPosition="bottom" />
             <p-button (onClick)="copyCode()" text="true" icon="pi pi-copy" pTooltip="Kopiraj cijeli kod"
                 tooltipPosition="bottom" />
         </div>
 
         <app-editor *ngIf="mainCode !== undefined" (onEditorReady)="onMainEditorReady()" [(code)]="mainCode"
             [isBeingBitcoded]="isBeingTestedRemotely" [bitCode]="bitCode"
-            [ngStyle]="{'width': maximizeCodeHeight ? '100%' : 'initial'}" />
+            [ngStyle]="{'width': maximizeCodeWidth ? '100%' : 'initial'}" />
         <div *ngIf="isBeingTestedRemotely" class="evaluating-spinner">
             <p-progressSpinner [strokeWidth]="'10px'" ariaLabel="loading" [animationDuration]="'10s'" />
             <p class="evaluating-text" *ngIf="coolMessageIndex !== -1">{{coolMessages[coolMessageIndex]}}</p>
         </div>
 
 
-        <div *ngIf="codeHelpShown && mainCode !== undefined">
-            <app-editor [isDiffEditor]="true" [originalCode]="helpPreviousCode" [(comparedCode)]="helpSuggestionCode"
-                [ngStyle]="{'width': maximizeCodeHeight ? '100%' : 'initial'}" />
+        <div *ngIf="diffEditorShown && mainCode !== undefined">
+            <app-editor [isDiffEditor]="true" [originalCode]="diffEditorLeftState"
+                [(comparedCode)]="diffEditorRightSide" [ngStyle]="{'width': maximizeCodeWidth ? '100%' : 'initial'}" />
         </div>
 
         <div *ngIf="!mainEditorReady" class="loading-spinner loading-spinner-code">

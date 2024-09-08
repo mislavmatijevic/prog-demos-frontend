@@ -1,5 +1,6 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MessageService } from 'primeng/api';
@@ -18,6 +19,13 @@ import { TaskResponse, TaskService } from '../../../services/task.service';
 import { EditorComponent } from '../../editor/editor.component';
 import { LoginComponent } from '../../login/login.component';
 import { RegisterComponent } from '../../register/register.component';
+
+enum SolutionErrorCode {
+  EXEC_ERR_TEST_FAILED = 1,
+  EXEC_ERR_TIMEOUT = 2,
+  EXEC_ERR_KILLED = 3,
+  EXEC_ERR_ARTEFACT_CONTENT_MISMATCH = 4,
+}
 
 @Component({
   selector: 'app-task-playground',
@@ -49,17 +57,18 @@ export class TaskPlaygroundComponent implements OnInit {
   ) {}
 
   task!: FullTask;
-  helpPreviousCode: string = '';
-  helpSuggestionCode: string = '';
+  diffEditorLeftState: string = '';
+  diffEditorRightSide: string = '';
   mainCode: string | undefined = undefined;
   mainEditorReady: boolean = false;
-  maximizeCodeHeight: boolean = false;
+  maximizeCodeWidth: boolean = false;
 
   bitCode: string = '';
   isBeingTestedRemotely: boolean = false;
   bitAnimationHandler: Array<number> = [];
 
   helpStepIndex = 0;
+  diffEditorShown: boolean = false;
   codeHelpShown: boolean = false;
   helpButtonRageTolerance = 5;
 
@@ -99,7 +108,7 @@ export class TaskPlaygroundComponent implements OnInit {
   }
 
   expandCode() {
-    this.maximizeCodeHeight = !this.maximizeCodeHeight;
+    this.maximizeCodeWidth = !this.maximizeCodeWidth;
   }
 
   copyCode() {
@@ -145,6 +154,11 @@ export class TaskPlaygroundComponent implements OnInit {
   }
 
   private showHelp() {
+    if (this.diffEditorShown) {
+      this.diffEditorShown = false;
+      this.changeDetectorRef.detectChanges();
+    }
+
     if (this.helpStepIndex == 0) {
       this.initialCodeForFirstStepHelpComparison();
     } else if (this.helpStepIndex >= this.task.helpSteps.length) {
@@ -182,10 +196,11 @@ export class TaskPlaygroundComponent implements OnInit {
 
   private hideHelp() {
     this.codeHelpShown = false;
+    this.diffEditorShown = false;
   }
 
   private initialCodeForFirstStepHelpComparison() {
-    this.helpSuggestionCode = standardCppStarterCode;
+    this.diffEditorRightSide = standardCppStarterCode;
   }
 
   private handleDisplayingHelp(
@@ -193,17 +208,18 @@ export class TaskPlaygroundComponent implements OnInit {
     foundHelpfulTip: string | undefined
   ) {
     if (foundHelpfulCodeStep !== undefined && foundHelpfulCodeStep !== null) {
-      this.showCodeDifference(foundHelpfulCodeStep);
+      this.showCodeDifferenceFromHelpStep(foundHelpfulCodeStep);
     }
     if (foundHelpfulTip !== undefined && foundHelpfulTip !== null) {
       this.displayHelpToast(foundHelpfulTip);
     }
   }
 
-  private showCodeDifference(foundHelpfulCodeStep: string) {
-    this.helpPreviousCode = this.helpSuggestionCode;
-    this.helpSuggestionCode = foundHelpfulCodeStep;
+  private showCodeDifferenceFromHelpStep(foundHelpfulCodeStep: string) {
+    this.diffEditorLeftState = this.diffEditorRightSide;
+    this.diffEditorRightSide = foundHelpfulCodeStep;
     this.codeHelpShown = true;
+    this.diffEditorShown = true;
   }
 
   private displayHelpToast(helpMessageForCurrentStep: string) {
@@ -262,8 +278,10 @@ export class TaskPlaygroundComponent implements OnInit {
       .executeTask(this.task.id, this.mainCode!)
       .pipe(finalize(() => this.revertBitsAfterExecution()))
       .subscribe({
-        // TODO handle actual responses better
         next: (value) => {
+          // TODO handle actual response better
+          this.forceHideDiffEditor();
+
           this.messageService.add({
             severity: 'success',
             summary: 'Sjajno!',
@@ -271,17 +289,111 @@ export class TaskPlaygroundComponent implements OnInit {
           });
         },
         error: (err) => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Ups',
-            detail: 'Čini se da tvoje rješenje još uvijek nije potpuno...',
-          });
+          if (err instanceof HttpErrorResponse) {
+            switch (err.status) {
+              case 422:
+                this.handleSolutionEvaluationFailure(
+                  err.error.errorCode,
+                  err.error.reason
+                );
+                break;
+
+              case 500:
+                this.messageService.add({
+                  severity: 'error',
+                  summary: 'Dogodila se pogreška u sustavu!',
+                  detail:
+                    'Testiranje zadatka nije uspjelo iz nepoznatog razloga! ' +
+                    'Ja ću pogledati o čemu je riječ, a ti u međuvremenu lokalno testiraj.',
+                  life: 30000,
+                });
+                break;
+
+              default:
+                this.messageService.add({
+                  severity: 'error',
+                  summary: 'Ups',
+                  detail: 'Čini se da nije moguće testirati tvoje rješenje.',
+                });
+                break;
+            }
+          }
         },
       });
 
     this.coolMessageIndex = Math.abs(
       Math.trunc((Math.random() * 15) % this.coolMessages.length)
     );
+  }
+
+  private handleSolutionEvaluationFailure(
+    errorCode: SolutionErrorCode,
+    reasonFailed?: any
+  ) {
+    switch (errorCode) {
+      case SolutionErrorCode.EXEC_ERR_TEST_FAILED: {
+        const actualReason = reasonFailed as {
+          testInput: string;
+          output: string;
+          expectedOutput: string;
+        };
+
+        this.forceHideDiffEditor();
+
+        this.diffEditorLeftState = actualReason.output ?? '';
+        this.diffEditorRightSide = actualReason.expectedOutput;
+        this.diffEditorShown = true;
+
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Rješenje nije proizvelo očekivani rezultat!',
+          detail: `Kada se tvoje rješenje testira s unosom "${actualReason.testInput}", izlaz tvog programa se ne podudara s očekivanim za taj ulaz.`,
+          life: 120000,
+        });
+        break;
+      }
+      case SolutionErrorCode.EXEC_ERR_TIMEOUT: {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Izvršavanje trajalo predugo!',
+          detail:
+            'Vjerojatan uzrok problema jest neka beskonačna petlja koja ti se potkrala. Provjeri sve petlje još jednom!',
+          life: 120000,
+        });
+        break;
+      }
+      case SolutionErrorCode.EXEC_ERR_KILLED: {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Izvršavanje prisilno obustavljeno!',
+          detail:
+            'Vjerojatan uzrok problema je tzv. "memory leak". Najvjerojatnije imaš neku petlju u kojoj alociraš beskonačno mnogo prostora. ' +
+            'Moj savjet je da pretražiš sva mjesta gdje koristiš naredbu "new" i osiguraš da se ona ne izvršava beskonačno.',
+          life: 120000,
+        });
+        break;
+      }
+      case SolutionErrorCode.EXEC_ERR_ARTEFACT_CONTENT_MISMATCH: {
+        const actualReason = reasonFailed as { testInput: string };
+
+        this.messageService.add({
+          severity: 'error',
+          detail: `Nisu se stvorile odgovarajuće datoteke za dani unos: ${actualReason.testInput}`,
+        });
+        break;
+      }
+      default:
+        break;
+    }
+  }
+
+  private forceHideDiffEditor() {
+    if (this.codeHelpShown) {
+      this.hideHelp();
+    } else if (this.diffEditorShown) {
+      this.diffEditorShown = false;
+    }
+    this.changeDetectorRef.detectChanges();
   }
 
   private revertBitsAfterExecution() {
