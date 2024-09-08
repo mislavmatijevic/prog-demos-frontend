@@ -16,15 +16,16 @@ import { FullTask } from '../../../../types/models';
 import { NewlinePipe } from '../../../pipes/newline.pipe';
 import { AuthService } from '../../../services/auth.service';
 import { TaskResponse, TaskService } from '../../../services/task.service';
-import { EditorComponent } from '../../editor/editor.component';
+import { EditorComponent, SyntaxError } from '../../editor/editor.component';
 import { LoginComponent } from '../../login/login.component';
 import { RegisterComponent } from '../../register/register.component';
 
 enum SolutionErrorCode {
-  EXEC_ERR_TEST_FAILED = 1,
-  EXEC_ERR_TIMEOUT = 2,
-  EXEC_ERR_KILLED = 3,
-  EXEC_ERR_ARTEFACT_CONTENT_MISMATCH = 4,
+  EXEC_ERR_BAD_SYNTAX = 1,
+  EXEC_ERR_TEST_FAILED = 2,
+  EXEC_ERR_TIMEOUT = 3,
+  EXEC_ERR_KILLED = 4,
+  EXEC_ERR_ARTEFACT_CONTENT_MISMATCH = 5,
 }
 
 @Component({
@@ -66,6 +67,8 @@ export class TaskPlaygroundComponent implements OnInit {
   bitCode: string = '';
   isBeingTestedRemotely: boolean = false;
   bitAnimationHandler: Array<number> = [];
+
+  syntaxErrors: Array<SyntaxError> = [];
 
   helpStepIndex = 0;
   diffEditorShown: boolean = false;
@@ -291,6 +294,8 @@ export class TaskPlaygroundComponent implements OnInit {
         error: (err) => {
           if (err instanceof HttpErrorResponse) {
             switch (err.status) {
+              case 403: // token refresh should be in progress
+                break;
               case 422:
                 this.handleSolutionEvaluationFailure(
                   err.error.errorCode,
@@ -331,25 +336,12 @@ export class TaskPlaygroundComponent implements OnInit {
     reasonFailed?: any
   ) {
     switch (errorCode) {
+      case SolutionErrorCode.EXEC_ERR_BAD_SYNTAX: {
+        this.handleBadSyntax(reasonFailed);
+        break;
+      }
       case SolutionErrorCode.EXEC_ERR_TEST_FAILED: {
-        const actualReason = reasonFailed as {
-          testInput: string;
-          output: string;
-          expectedOutput: string;
-        };
-
-        this.forceHideDiffEditor();
-
-        this.diffEditorLeftState = actualReason.output ?? '';
-        this.diffEditorRightSide = actualReason.expectedOutput;
-        this.diffEditorShown = true;
-
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Rješenje nije proizvelo očekivani rezultat!',
-          detail: `Kada se tvoje rješenje testira s unosom "${actualReason.testInput}", izlaz tvog programa se ne podudara s očekivanim za taj ulaz.`,
-          life: 120000,
-        });
+        this.handleTestFailure(reasonFailed);
         break;
       }
       case SolutionErrorCode.EXEC_ERR_TIMEOUT: {
@@ -385,6 +377,29 @@ export class TaskPlaygroundComponent implements OnInit {
       default:
         break;
     }
+  }
+
+  handleBadSyntax(syntaxErrors: Array<SyntaxError>) {
+    this.syntaxErrors = syntaxErrors;
+  }
+
+  private handleTestFailure(reasonFailed: {
+    testInput: string;
+    output: string;
+    expectedOutput: string;
+  }) {
+    this.forceHideDiffEditor();
+
+    this.diffEditorLeftState = reasonFailed.output ?? '';
+    this.diffEditorRightSide = reasonFailed.expectedOutput;
+    this.diffEditorShown = true;
+
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Rješenje nije proizvelo očekivani rezultat!',
+      detail: `Kada se tvoje rješenje testira s unosom "${reasonFailed.testInput}", izlaz tvog programa se ne podudara s očekivanim za taj ulaz.`,
+      life: 120000,
+    });
   }
 
   private forceHideDiffEditor() {

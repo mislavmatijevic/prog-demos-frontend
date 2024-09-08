@@ -95,3 +95,38 @@ textarea {
 div.divider {
   border-top: 1px solid $grey;
 }
+
+.editor__red-squiggle-lines {
+  position: relative;
+  display: inline-block;
+  padding: 0 0 5px 0;
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(
+      to right,
+      transparent,
+      red 20%,
+      transparent 40%,
+      red 60%,
+      transparent 80%
+    );
+    background-size: 5px 200%;
+
+    animation: squiggle 30s infinite linear; /* Infinite animation */
+  }
+
+  @keyframes squiggle {
+    0% {
+      background-position-x: 0;
+    }
+    100% {
+      background-position-x: 100px;
+    }
+  }
+}

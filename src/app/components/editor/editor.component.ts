@@ -16,6 +16,12 @@ import {
 } from 'ngx-monaco-editor-v2';
 import { NewlinePipe } from '../../pipes/newline.pipe';
 
+export type SyntaxError = {
+  line: number;
+  column: number;
+  message: string;
+};
+
 @Component({
   selector: 'app-editor',
   standalone: true,
@@ -37,6 +43,8 @@ export class EditorComponent implements OnInit, OnChanges {
   initComplete = false;
   editorOptions: any;
 
+  decorations: Array<string> = [];
+
   @Input() originalCode: string = '';
   @Input() comparedCode: string = '';
   @Output() comparedCodeChange = new EventEmitter<string>();
@@ -49,6 +57,8 @@ export class EditorComponent implements OnInit, OnChanges {
   @Input() bitCode: string = '';
   @Input() isBeingBitcoded: boolean = false;
   isActivelyHandlingBitcoding: boolean = false;
+
+  @Input() syntaxErrors: Array<SyntaxError> = [];
 
   ngOnInit(): void {
     this.editorOptions = {
@@ -71,6 +81,7 @@ export class EditorComponent implements OnInit, OnChanges {
       };
     } else {
       this.setCodeEditorModel();
+      this.editorOptions.model = this.editorModel;
     }
   }
 
@@ -85,6 +96,47 @@ export class EditorComponent implements OnInit, OnChanges {
 
     if (changes['bitCode'] && this.isActivelyHandlingBitcoding) {
       this.handleBitcoding();
+    }
+
+    if (changes['syntaxErrors']) {
+      if (this.syntaxErrors.length > 0) {
+        // This is not the best solution here for highlighting syntax errors.
+        // The best solution would be calling the actual API for this: editor.setModelMarkers
+        // However, the library I've used here (basically only viable solution for Angular) made that impossible.
+        setTimeout(() => {
+          this.decorations = this.mainEditor.getModel()?.deltaDecorations(
+            this.decorations,
+            this.syntaxErrors.map((error) => {
+              let problematicWord = this.mainEditor
+                .getModel()
+                ?.getWordAtPosition({
+                  column: error.column,
+                  lineNumber: error.line,
+                });
+              let isWholeLine = false;
+
+              console.log(problematicWord);
+
+              if (problematicWord === null || problematicWord === undefined) {
+                isWholeLine = true;
+              }
+
+              return {
+                options: {
+                  className: 'editor__red-squiggle-lines',
+                  isWholeLine,
+                },
+                range: {
+                  startColumn: problematicWord?.startColumn ?? 0,
+                  endColumn: problematicWord?.endColumn ?? 0,
+                  startLineNumber: error.line,
+                  endLineNumber: error.line,
+                },
+              };
+            }, 500)
+          )!;
+        });
+      }
     }
   }
 
@@ -168,6 +220,7 @@ export class EditorComponent implements OnInit, OnChanges {
       if (!this.isBeingBitcoded) {
         this.code = this.mainEditor.getValue();
         this.codeChange.emit(this.code);
+        this.mainEditor.removeDecorations(this.decorations);
       }
     });
   }

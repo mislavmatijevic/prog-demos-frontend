@@ -37,7 +37,7 @@
         </div>
 
         <app-editor *ngIf="mainCode !== undefined" (onEditorReady)="onMainEditorReady()" [(code)]="mainCode"
-            [isBeingBitcoded]="isBeingTestedRemotely" [bitCode]="bitCode"
+            [isBeingBitcoded]="isBeingTestedRemotely" [bitCode]="bitCode" [syntaxErrors]="syntaxErrors"
             [ngStyle]="{'width': maximizeCodeWidth ? '100%' : 'initial'}" />
         <div *ngIf="isBeingTestedRemotely" class="evaluating-spinner">
             <p-progressSpinner [strokeWidth]="'10px'" ariaLabel="loading" [animationDuration]="'10s'" />
