@@ -115,8 +115,6 @@ export class EditorComponent implements OnInit, OnChanges {
                 });
               let isWholeLine = false;
 
-              console.log(problematicWord);
-
               if (problematicWord === null || problematicWord === undefined) {
                 isWholeLine = true;
               }
@@ -133,8 +131,13 @@ export class EditorComponent implements OnInit, OnChanges {
                   endLineNumber: error.line,
                 },
               };
-            }, 500)
+            })
           )!;
+
+          this.mainEditor.setPosition({
+            column: this.syntaxErrors[0].column,
+            lineNumber: this.syntaxErrors[0].line,
+          });
         });
       }
     }

@@ -99,7 +99,11 @@ div.divider {
 .editor__red-squiggle-lines {
   position: relative;
   display: inline-block;
+  min-width: 1em;
   padding: 0 0 5px 0;
+  background-color: rgba(255, 77, 77, 0.256);
+  border-radius: 5px;
+  filter: blur(0.5px);
 
   &::after {
     content: "";
@@ -118,7 +122,7 @@ div.divider {
     );
     background-size: 5px 200%;
 
-    animation: squiggle 30s infinite linear; /* Infinite animation */
+    animation: squiggle 30s infinite linear;
   }
 
   @keyframes squiggle {
