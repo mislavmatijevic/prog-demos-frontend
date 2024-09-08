@@ -24,7 +24,7 @@ export type NewTaskRequestBody = {
   input: string;
   output: string;
   inputOutputExample: string;
-  isFinalBoss: boolean;
+  isBossBattle: boolean;
   solutionCode?: string;
   tests: NewTestDefinition[];
   helpSteps: HelpStep[];

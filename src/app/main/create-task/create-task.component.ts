@@ -63,7 +63,7 @@ export class CreateTaskComponent implements OnInit {
   inputExplanationControl = new FormControl('');
   outputExplanationControl = new FormControl('');
   inputOutputExampleControl = new FormControl('');
-  isFinalBoss = new FormControl(false);
+  isBossBattle = new FormControl(false);
   solutionCode = new FormControl('');
 
   codeEditorsVisible = false;
@@ -81,7 +81,7 @@ export class CreateTaskComponent implements OnInit {
         this.outputControl.valid ||
         this.sha256Control.valid) &&
       this.inputOutputExampleControl.valid &&
-      (this.isFinalBoss.value || !this.isFinalBoss.value)
+      (this.isBossBattle.value || !this.isBossBattle.value)
     ) {
       const tests: Array<NewTestDefinition> =
         this.fillTestsFromInputAndOutputTextAreas();
@@ -95,7 +95,7 @@ export class CreateTaskComponent implements OnInit {
         input: this.inputExplanationControl.value!,
         output: this.outputExplanationControl.value!,
         inputOutputExample: this.inputOutputExampleControl.value!,
-        isFinalBoss: this.isFinalBoss.value!,
+        isBossBattle: this.isBossBattle.value!,
         solutionCode: this.solutionCode.value || undefined,
         tests,
         helpSteps,

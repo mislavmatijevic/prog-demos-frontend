@@ -37,7 +37,7 @@ export interface FullTask {
   input: string;
   output: string;
   inputOutputExample: string;
-  isFinalBoss: boolean;
+  isBossBattle: boolean;
   solutionCode: string;
   helpSteps: Array<HelpStep>;
 }

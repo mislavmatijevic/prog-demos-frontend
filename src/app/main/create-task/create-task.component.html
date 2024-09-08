@@ -80,19 +80,19 @@
 
         <div class="column">
             <div class="row centered">
-                <p-checkbox [(ngModel)]="isFinalBoss.value" [binary]="true" [formControl]="isFinalBoss"
-                    inputId="isFinalBoss" />
-                <label class="form-label" for="isFinalBoss">Final boss?</label>
+                <p-checkbox [(ngModel)]="isBossBattle.value" [binary]="true" [formControl]="isBossBattle"
+                    inputId="isBossBattle" />
+                <label class="form-label" for="isBossBattle">Boss battle?</label>
             </div>
             <small class="form-label">
-                <i>Final boss zadatak ne nudi pomoć i koristi razne dijelove gradiva iz lekcije.</i>
+                <i>Boss battle zadatak ne nudi pomoć i koristi razne dijelove gradiva iz lekcije.</i>
                 <i>S druge strane, običan zadatak mora ponuditi barem jedan korak pomoći, i rješenje.</i>
             </small>
         </div>
 
         <p-divider type="solid" />
 
-        <p-accordion *ngIf="!isFinalBoss.value">
+        <p-accordion *ngIf="!isBossBattle.value">
             <p>Pomoći su opcionalne, nemoj unijeti ondje gdje ne želiš pomoći. Međutim, barem jednu pomoć trebaš unijeti
                 (ili jedan korak u kodu, ili jedan pomoćni oblačić)!</p>
 
