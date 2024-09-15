@@ -114,7 +114,9 @@ export class CreateTaskComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Nije moguće stvoriti zadatak!',
-            detail: `Stvaranje zadatka nije uspjelo. (${err.status})`,
+            detail: `Stvaranje zadatka nije uspjelo. (${err.status}): ${
+              err.error?.message ?? JSON.stringify(err.error)
+            }`,
           });
         },
       });
