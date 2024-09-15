@@ -58,7 +58,8 @@
                 <div class="column">
                     <label class="form-label" for="test-outputs">Očekivani izlazi:</label>
                     <textarea pInputTextarea id="test-outputs" type="text" class="new-task-input__terminal"
-                        name="output" minlength="2" required [formControl]="outputControl" rows="5"></textarea>
+                        name="output" minlength="2" required [formControl]="outputControl"
+                        [rows]="inputControl.value?.split('\n')?.length ?? 1"></textarea>
                 </div>
             </div>
             <div class="column">
@@ -66,8 +67,8 @@
                     ovdje upiši za svaki unos u novu liniju SHA256 sažetak njihovih očekivanih sadržaja
                     (po abecednom redu naziva datoteka):</label>
                 <small>OPCIONALNO</small>
-                <textarea pInputTextarea id="sha256Control" rows="1" [formControl]="sha256Control"
-                    class="new-task-input__terminal"></textarea>
+                <textarea pInputTextarea id="sha256Control" [rows]="inputControl.value?.split('\n')?.length ?? 1"
+                    [formControl]="sha256Control" class="new-task-input__terminal"></textarea>
             </div>
         </div>
 
