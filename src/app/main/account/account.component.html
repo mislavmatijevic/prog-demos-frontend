@@ -1,4 +1,24 @@
 <h1>Račun</h1>
-<p>Ti si {{authService.getUser()?.username}}.</p>
+<div class="page-wrapper">
+    <div class="row">
+        <p>Ti si {{authService.getUser()?.username}}.</p>
+        <p-button (onClick)="signOut()" label="Odjava" type="submit" icon="pi pi-sign-out" />
+    </div>
 
-<p-button (onClick)="signOut()" label="Odjava" type="submit" icon="pi pi-sign-out" />
+    <p-progressSpinner *ngIf="solutionAttempts == null"></p-progressSpinner>
+
+    <div *ngIf="solutionAttempts !== null && solutionAttempts !== undefined">
+        <div class="total-stats">
+            <p-chart type="radar" [data]="getRadarData()" [options]="getRadarOptions()" />
+        </div>
+        <div class="statistics-wrapper">
+            <div class="statistics-wrapper__doughnuts">
+                <div *ngFor="let subtopicWithAttempts of solutionAttempts.solutionAttemptsPerSubtopic">
+                    <p-chart type="doughnut" *ngIf="subtopicWithAttempts.totalTasksInSubtopicCount > 0"
+                        [data]="getDataForCurrentAttempts(subtopicWithAttempts)"
+                        [options]="getOptionsForCurrentAttempts(subtopicWithAttempts)" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

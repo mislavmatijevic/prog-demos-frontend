@@ -1,0 +1,22 @@
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.row {
+  display: flex;
+  gap: 2rem;
+  align-self: start;
+}
+
+.statistics-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &__doughnuts {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}

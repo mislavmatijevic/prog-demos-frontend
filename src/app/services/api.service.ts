@@ -20,17 +20,19 @@ export class ApiService {
     }
   }
 
-  get<T>(url: string): Observable<T> {
+  get<T>(url: string, requiresAuth: boolean = false): Observable<T> {
     const uri = `${this.rootUrl}${url}`;
-    return this.httpClient.get<T>(uri) as Observable<T>;
+    let options = {
+      context: new HttpContext().set(APPEND_AUTHORIZATION, requiresAuth),
+    };
+    return this.httpClient.get<T>(uri, options) as Observable<T>;
   }
 
   post<T>(url: string, body: any, requiresAuth: boolean = true): Observable<T> {
     const uri = `${this.rootUrl}${url}`;
-    let options = undefined;
-    if (requiresAuth) {
-      options = { context: new HttpContext().set(APPEND_AUTHORIZATION, true) };
-    }
+    let options = {
+      context: new HttpContext().set(APPEND_AUTHORIZATION, requiresAuth),
+    };
     return this.httpClient.post<T>(uri, body, options);
   }
 }
