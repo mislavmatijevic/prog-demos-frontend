@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
-import { AuthService } from './auth.service';
 
 export type SolutionAttemptResponse = {
   solutionAttemptsPerSubtopic: Array<SolutionAttemptPerSubtopic>;
@@ -21,10 +20,7 @@ export type SolutionAttemptPerSubtopic = {
   providedIn: 'root',
 })
 export class StatisticsService {
-  constructor(
-    private apiService: ApiService,
-    private authService: AuthService
-  ) {}
+  constructor(private apiService: ApiService) {}
 
   getSolutionAttempts(): Observable<SolutionAttemptResponse> {
     return this.apiService.get('/statistics/solution-attempts', true);
