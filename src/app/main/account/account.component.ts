@@ -28,10 +28,21 @@ export class AccountComponent implements OnInit {
   ) {}
   solutionAttempts: SolutionAttemptResponse | undefined | null = null;
 
+  radarData!: object;
+  radarOptions!: object;
+  private dataPerAttempts!: Map<SolutionAttemptPerSubtopic, object>;
+  private optionsPerAttempts!: Map<SolutionAttemptPerSubtopic, object>;
+
   ngOnInit(): void {
     this.statisticsService.getSolutionAttempts().subscribe({
       next: (response) => {
         this.solutionAttempts = response;
+        this.radarData = this.getRadarData();
+        this.radarOptions = this.getRadarOptions();
+        this.dataPerAttempts = new Map();
+        this.optionsPerAttempts = new Map();
+        this.createDataForSolutionAttempts();
+        this.createOptionsForSolutionAttempts();
       },
       error: () => {
         this.solutionAttempts = undefined;
@@ -96,39 +107,53 @@ export class AccountComponent implements OnInit {
     };
   }
 
-  getOptionsForCurrentAttempts(
+  getDataForCurrentAttempt(
     attemptPerSubtopic: SolutionAttemptPerSubtopic
   ): object {
-    return {
-      responsive: true,
-      plugins: {
-        legend: {
-          position: 'top',
-          labels: {
-            color: 'orange',
-          },
-        },
-        title: {
-          display: true,
-          text: attemptPerSubtopic.subtopic.name,
-          color: 'orange',
-        },
-      },
-    };
+    return this.dataPerAttempts.get(attemptPerSubtopic)!;
   }
 
-  getDataForCurrentAttempts(
+  getOptionsForCurrentAttempt(
     attemptPerSubtopic: SolutionAttemptPerSubtopic
   ): object {
-    const completedCount = attemptPerSubtopic.successfullyCompletedTasksCount;
-    const totalCount = attemptPerSubtopic.totalTasksInSubtopicCount;
-    return {
-      labels: ['Riješeno zadataka', 'Preostalo zadataka'],
-      datasets: [
-        {
-          data: [completedCount, totalCount - completedCount],
-        },
-      ],
-    };
+    return this.optionsPerAttempts.get(attemptPerSubtopic)!;
+  }
+
+  private createDataForSolutionAttempts() {
+    this.solutionAttempts?.solutionAttemptsPerSubtopic.forEach(
+      (attemptPerSubtopic) => {
+        const completedCount =
+          attemptPerSubtopic.successfullyCompletedTasksCount;
+        const totalCount = attemptPerSubtopic.totalTasksInSubtopicCount;
+        this.dataPerAttempts.set(attemptPerSubtopic, {
+          labels: ['Riješeno zadataka', 'Preostalo zadataka'],
+          datasets: [
+            {
+              data: [completedCount, totalCount - completedCount],
+            },
+          ],
+        });
+      }
+    );
+  }
+
+  private createOptionsForSolutionAttempts() {
+    this.solutionAttempts?.solutionAttemptsPerSubtopic.forEach(
+      (attemptPerSubtopic) => {
+        this.optionsPerAttempts.set(attemptPerSubtopic, {
+          responsive: true,
+          plugins: {
+            legend: {
+              display: false,
+            },
+            title: {
+              display: true,
+              text: attemptPerSubtopic.subtopic.name,
+              color: 'orange',
+            },
+          },
+        });
+      }
+    );
   }
 }
