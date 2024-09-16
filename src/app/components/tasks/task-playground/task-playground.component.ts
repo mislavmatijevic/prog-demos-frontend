@@ -74,6 +74,8 @@ export class TaskPlaygroundComponent implements OnInit {
   diffEditorShown: boolean = false;
   codeHelpShown: boolean = false;
   helpButtonRageTolerance = 5;
+  nextHelpCooldownRemainingTime = 0;
+  helpCooldownIntervalHandler: number = -1;
 
   loginDialogVisible: boolean = false;
 
@@ -90,24 +92,12 @@ export class TaskPlaygroundComponent implements OnInit {
   ngOnInit() {
     const taskId = parseInt(this.route.snapshot.paramMap.get('taskId')!);
     this.fetchTask(taskId);
+    this.startHelpCooldown(5);
   }
 
   onMainEditorReady() {
     this.mainEditorReady = true;
     this.changeDetectorRef.detectChanges();
-  }
-
-  fetchTask(videoId: number) {
-    this.taskService.getSingleTask(videoId).subscribe({
-      next: (res: TaskResponse) => {
-        this.task = res.task;
-        this.mainCode = standardCppStarterCode;
-        this.task.helpSteps.sort((step1, step2) => step1.step - step2.step);
-      },
-      error: (error) => {
-        console.log(error);
-      },
-    });
   }
 
   expandCode() {
@@ -156,6 +146,31 @@ export class TaskPlaygroundComponent implements OnInit {
     this.loginDialogVisible = false;
   }
 
+  private fetchTask(videoId: number) {
+    this.taskService.getSingleTask(videoId).subscribe({
+      next: (res: TaskResponse) => {
+        this.task = res.task;
+        this.mainCode = standardCppStarterCode;
+        this.task.helpSteps.sort((step1, step2) => step1.step - step2.step);
+      },
+      error: (error) => {
+        console.log(error);
+      },
+    });
+  }
+
+  private startHelpCooldown(seconds: number) {
+    this.nextHelpCooldownRemainingTime = seconds;
+
+    this.helpCooldownIntervalHandler = setInterval(() => {
+      if (this.nextHelpCooldownRemainingTime == 0) {
+        clearTimeout(this.helpCooldownIntervalHandler);
+      } else {
+        this.nextHelpCooldownRemainingTime--;
+      }
+    }, 1000) as unknown as number;
+  }
+
   private showHelp() {
     if (this.diffEditorShown) {
       this.diffEditorShown = false;
@@ -177,6 +192,7 @@ export class TaskPlaygroundComponent implements OnInit {
     this.handleDisplayingHelp(foundHelpfulCodeStep, foundHelpfulTip);
 
     this.helpStepIndex++;
+    this.startHelpCooldown(this.helpStepIndex * 10);
   }
 
   handleHelpButtonWhenNoMoreHelpAvailable() {

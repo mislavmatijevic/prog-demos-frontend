@@ -56,6 +56,7 @@
 
         <div class="task__wrapper-input__wrapper-controls-bottom">
             <p-button *ngIf="helpButtonRageTolerance != 0" rounded="true"
+                [disabled]="!codeHelpShown && nextHelpCooldownRemainingTime !== 0"
                 [icon]="codeHelpShown ? 'pi pi-times' : 'pi pi-lightbulb'" (onClick)="toggleHelp()"
                 [pTooltip]="codeHelpShown ? 'Zatvori pomoć' : 'Pomozi mi!'" tooltipPosition="top" severity="info" />
             <p-button rounded="true" icon="pi pi-face-smile" pTooltip="Motiviraj me!" tooltipPosition="top"
