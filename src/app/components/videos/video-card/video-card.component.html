@@ -1,7 +1,9 @@
-<div class="video-wrapper" (click)="onVideoSelected()">
+<div class="video-wrapper">
     <div class="video-title">
         <div class="full-height"></div>
-        <h3>{{video.name}}</h3>
+        <h3 class="video-title__text">{{video.name}}</h3>
     </div>
-    <img class="video-image" src="https://i.ytimg.com/vi_webp/{{video.identifier}}/hqdefault.webp" alt="">
+    <a class="video-link" [href]="'https://www.youtube.com/watch?v=' + video.identifier" target="_blank">
+        <img class="video-image" src="https://i.ytimg.com/vi_webp/{{video.identifier}}/hqdefault.webp" alt="">
+    </a>
 </div>

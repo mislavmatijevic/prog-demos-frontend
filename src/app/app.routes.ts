@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { TaskPlaygroundComponent } from './components/tasks/task-playground/task-playground.component';
-import { VideoPlaybackComponent } from './components/videos/video-playback/video-playback.component';
 import { authGuard } from './guards/auth.guard';
 import { noAuthGuard } from './guards/no-auth.guard';
 import { specialTypeAuthGuard } from './guards/special-type-auth.guard';
@@ -22,10 +21,6 @@ export const routes: Routes = [
   {
     path: 'demos',
     component: VideosComponent,
-  },
-  {
-    path: 'demos/:videoId',
-    component: VideoPlaybackComponent,
   },
   {
     path: 'prog',

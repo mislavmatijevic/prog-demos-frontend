@@ -2,31 +2,31 @@
 
 .video-wrapper {
   max-width: 300px;
-  max-height: fit-content;
+  height: 170px;
   box-shadow: $accent 0px 3px 8px;
 
   .video-title {
     position: relative;
     height: auto;
+
+    &__text {
+      top: 100px;
+      width: 100%;
+      text-align: center;
+      position: absolute;
+
+      font-size: medium;
+
+      color: $accent;
+      background-color: transparentize($color: $dark-accent, $amount: 0.25);
+      pointer-events: none;
+
+      z-index: 10;
+    }
   }
 
   .full-height {
     height: 100%;
-  }
-
-  h3 {
-    top: 100px;
-    width: 100%;
-    text-align: center;
-    position: absolute;
-
-    font-size: medium;
-
-    color: $accent;
-    background-color: transparentize($color: $dark-accent, $amount: 0.25);
-    pointer-events: none;
-
-    z-index: 10;
   }
 
   &:hover {
@@ -41,6 +41,11 @@
       filter: saturate(150%);
     }
   }
+}
+
+.video-link {
+  height: fit-content;
+  transform: translateY(-13px);
 }
 
 .video-image {
