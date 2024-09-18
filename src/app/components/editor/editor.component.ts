@@ -151,8 +151,6 @@ export class EditorComponent implements OnInit, OnChanges {
             const { isWholeLine, problematicWord } =
               this.findWordCausingError(error);
 
-            console.log(error, problematicWord);
-
             return (
               error.line == e.target.position?.lineNumber! &&
               (isWholeLine ||

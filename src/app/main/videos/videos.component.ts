@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 import { Topic, Video } from '../../../types/models';
 import { VideoCardComponent } from '../../components/videos/video-card/video-card.component';
 import { VideoService, VideosResponse } from '../../services/video.service';
@@ -13,7 +14,11 @@ import { VideoService, VideosResponse } from '../../services/video.service';
   styleUrl: './videos.component.scss',
 })
 export class VideosComponent implements OnInit {
-  constructor(private videoService: VideoService, private router: Router) {}
+  constructor(
+    private videoService: VideoService,
+    private router: Router,
+    private messageService: MessageService
+  ) {}
 
   topics: Topic[] = [];
 
@@ -27,7 +32,14 @@ export class VideosComponent implements OnInit {
         this.topics = res.topics;
       },
       error: (error) => {
-        console.log(error);
+        console.error(error);
+
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Pogreška prilikom dohvaćanja',
+          detail:
+            'Nešto je pošlo po krivu tijekom dohvaćanja video zapisa. Pokušaj ponovno kasnije!',
+        });
       },
     });
   }

@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 import { BasicTask, Topic } from '../../../types/models';
 import { TasksInSubtopicComponent } from '../../components/tasks/tasks-in-subtopic/tasks-in-subtopic.component';
 import { TaskService, TasksResponse } from '../../services/task.service';
@@ -13,7 +14,11 @@ import { TaskService, TasksResponse } from '../../services/task.service';
   styleUrl: './tasks.component.scss',
 })
 export class TasksComponent implements OnInit {
-  constructor(private taskService: TaskService, private router: Router) {}
+  constructor(
+    private taskService: TaskService,
+    private router: Router,
+    private messageService: MessageService
+  ) {}
 
   topics: Topic[] = [];
 
@@ -27,7 +32,14 @@ export class TasksComponent implements OnInit {
         this.topics = res.topics;
       },
       error: (error) => {
-        console.log(error);
+        console.error(error);
+
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Pogreška prilikom dohvaćanja',
+          detail:
+            'Nešto je pošlo po krivu tijekom dohvaćanja zadataka. Pokušaj ponovno kasnije!',
+        });
       },
     });
   }

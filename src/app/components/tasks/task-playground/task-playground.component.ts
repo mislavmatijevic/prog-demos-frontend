@@ -154,7 +154,14 @@ export class TaskPlaygroundComponent implements OnInit {
         this.task.helpSteps.sort((step1, step2) => step1.step - step2.step);
       },
       error: (error) => {
-        console.log(error);
+        console.error(error);
+
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Pogreška prilikom učitavanja',
+          detail:
+            'Nešto je pošlo po krivu tijekom učitavanja zadatka. Pokušaj ponovno kasnije!',
+        });
       },
     });
   }

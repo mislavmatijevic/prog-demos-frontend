@@ -67,9 +67,6 @@ export class RegisterComponent {
               'Nažalost, registracija nije uspjela. Molim te, pokušaj malo kasnije.';
 
             if (errorResponse.status !== 0) {
-              console.log(errorResponse.status);
-              console.log(errorResponse.error);
-
               switch (
                 (errorResponse.error as RegistrationFailureResponse).errorCode
               ) {
