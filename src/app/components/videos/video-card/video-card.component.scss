@@ -1,8 +1,13 @@
 @import "../../../../styles/variables.scss";
 
 .video-wrapper {
+  @media screen and (max-width: $smallWidth) {
+    max-width: 175px;
+    height: 110px;
+  }
   max-width: 300px;
   height: 170px;
+
   box-shadow: $accent 0px 3px 8px;
 
   .video-title {
@@ -10,7 +15,11 @@
     height: auto;
 
     &__text {
+      @media screen and (max-width: $smallWidth) {
+        top: 0px;
+      }
       top: 100px;
+
       width: 100%;
       text-align: center;
       position: absolute;
@@ -44,11 +53,20 @@
 }
 
 .video-link {
+  @media screen and (max-width: $smallWidth) {
+    transform: none;
+  }
+
   height: fit-content;
   transform: translateY(-13px);
 }
 
 .video-image {
+  @media screen and (max-width: $smallWidth) {
+    max-width: 175px;
+    height: 110px;
+  }
+
   width: 250px;
   height: 170px;
 

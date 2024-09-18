@@ -32,6 +32,10 @@
     }
 
     &__input {
+      @media screen and (max-width: $smallWidth) {
+        width: 100%;
+      }
+
       background-color: $dark-accent;
       color: $orange;
     }

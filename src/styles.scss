@@ -25,11 +25,15 @@ app-root {
 }
 
 .main-space {
+  @media screen and (max-width: $smallWidth) {
+    padding: 0px 10px 10px;
+  }
+
+  padding: 0px 30px 30px;
+
   flex-grow: 1;
   max-height: 100%;
   max-width: 100%;
-
-  padding: 0px 30px 30px;
 
   width: fit-content;
   overflow-y: auto;
@@ -44,11 +48,19 @@ body {
 
 h1 {
   color: $orange;
+
+  @media screen and (max-width: $smallWidth) {
+    font-size: larger;
+  }
 }
 
 h2,
 h3 {
   color: $accent-light;
+
+  @media screen and (max-width: $smallWidth) {
+    font-size: large;
+  }
 }
 
 nav {

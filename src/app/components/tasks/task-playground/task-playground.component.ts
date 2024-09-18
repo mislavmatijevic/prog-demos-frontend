@@ -79,6 +79,8 @@ export class TaskPlaygroundComponent implements OnInit {
 
   loginDialogVisible: boolean = false;
 
+  isScreenWideEnoughForProgramming: boolean = false;
+
   coolMessageIndex = -1;
   coolMessages = [
     'Da vidimo...',
@@ -90,6 +92,8 @@ export class TaskPlaygroundComponent implements OnInit {
   ];
 
   ngOnInit() {
+    this.isScreenWideEnoughForProgramming = window.screen.width > 355;
+
     const taskId = parseInt(this.route.snapshot.paramMap.get('taskId')!);
     this.fetchTask(taskId);
     this.startHelpCooldown(5);

@@ -1,11 +1,21 @@
+@import "../../../styles/variables.scss";
+
 .register-page-wrapper {
   text-align: center;
 
   &__grid {
+    @media screen and (max-width: $smallWidth) {
+      grid-template-columns: 1fr;
+    }
+
+    @media screen and (max-width: $smallWidth) {
+      margin: 0 0;
+    }
+    margin: 0 10%;
+
     display: grid;
     grid-template-columns: 1fr 1fr;
     align-items: center;
-    margin: 0 10%;
   }
 
   &__info {

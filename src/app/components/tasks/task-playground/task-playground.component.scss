@@ -2,8 +2,18 @@
 
 .task__wrapper {
   display: flex;
+  @media screen and (max-width: $smallWidth) {
+    flex-direction: column;
+  }
 
   &-info__wrapper {
+    @media screen and (max-width: $smallWidth) {
+      max-width: 100%;
+      height: fit-content;
+    }
+    max-width: 50%;
+    height: 95vh;
+
     display: flex;
     flex-direction: column;
 
@@ -12,7 +22,6 @@
     background-color: $dark-accent;
     box-shadow: $secondary 0px 1px 20px, $secondary 0px 0px 0px 3px;
     margin-bottom: 20px;
-    height: 95vh;
     overflow-y: auto;
 
     .console-output {
@@ -28,6 +37,19 @@
   }
 
   &-input__wrapper {
+    @media screen and (max-width: $minProgrammingWidth) {
+      display: none;
+      &:after {
+        content: "Nije moguće";
+      }
+    }
+    @media screen and (max-width: $smallWidth) {
+      width: 100%;
+      height: 55vh;
+    }
+    width: 50%;
+    height: 95vh;
+
     display: flex;
     flex-direction: column;
 
@@ -35,8 +57,6 @@
     padding: 20px 0px;
     box-shadow: $secondary 0px 1px 20px, $secondary 0px 0px 0px 3px;
     margin-bottom: 20px;
-    height: 95vh;
-    width: 50%;
     min-width: 300px;
     flex-grow: 1;
 
@@ -61,6 +81,12 @@
   }
 }
 
+.expand-code-btn {
+  @media screen and (max-width: $smallWidth) {
+    display: none;
+  }
+}
+
 .loading-spinner {
   width: 100%;
   display: flex;
@@ -82,4 +108,8 @@
 .evaluating-text {
   text-align: center;
   color: $accent;
+}
+
+.small-width-error-message {
+  color: red;
 }

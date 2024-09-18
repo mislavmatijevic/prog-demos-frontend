@@ -1,10 +1,21 @@
 @import "../../../styles/variables.scss";
 
 .navigation-drawer {
+  @media screen and (max-height: $smallHeight) {
+    gap: 50px;
+  }
+  gap: 100px;
+
+  @media screen and (max-width: $smallWidth) {
+    max-width: 100px;
+    transition: width 0.1s linear;
+  }
+  max-width: 200px;
+  transition: width 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
+
   display: flex;
   flex-direction: column;
   justify-content: stretch;
-  gap: 100px;
   height: 100%;
   box-shadow: $orange 0px 1px 20px, $orange 0px 0px 0px 3px;
 
@@ -19,8 +30,6 @@
   background-size: 200% 200%;
   animation: gradientAnimation 40s ease infinite;
 
-  transition: width 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
-
   &__header {
     display: flex;
     justify-content: space-evenly;
@@ -33,14 +42,25 @@
       gap: 10px;
       text-wrap: nowrap;
       img {
+        @media screen and (max-width: $smallWidth), (max-height: $smallHeight) {
+          width: 40px;
+        }
         width: 80px;
         cursor: pointer;
       }
       span {
+        @media screen and (max-width: $smallWidth) {
+          font-size: x-small;
+        }
         font-size: large;
       }
     }
     &__button {
+      @media screen and (max-width: $smallWidth) {
+        top: -10px;
+        left: -10px;
+        transition: transform 0.05s linear;
+      }
       position: absolute;
       top: 10px;
       transition: transform 0.55s cubic-bezier(0.075, 0.82, 0.165, 1);
@@ -64,6 +84,16 @@
 }
 
 .navigation {
+  @media screen and (max-width: $smallWidth) {
+    margin-left: 10px;
+    gap: 50px;
+  }
+
+  @media screen and (max-width: $smallWidth) and (max-height: $smallHeight) {
+    margin-left: 10px;
+    gap: 25px;
+  }
+
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -76,6 +106,14 @@
     background-color: $dark-accent;
     box-shadow: $orange 0px 1px 20px, $orange 0px 0px 0px 3px;
 
+    @media screen and (max-height: $smallHeight) {
+      font-size: large;
+    }
+
+    @media screen and (max-width: $smallWidth) {
+      font-size: small;
+    }
+
     &:hover {
       color: $primary;
     }
@@ -87,6 +125,10 @@
 }
 
 .synthwave-sun {
+  @media screen and (max-width: $smallWidth), (max-height: $smallHeight) {
+    display: none;
+  }
+
   position: absolute;
   bottom: 0;
   width: 300px;
@@ -112,6 +154,10 @@
 }
 
 .sun-wrapper {
+  @media screen and (max-width: $smallWidth), (max-height: $smallHeight) {
+    display: none;
+  }
+
   position: absolute;
   bottom: -300px;
   left: -25px;
