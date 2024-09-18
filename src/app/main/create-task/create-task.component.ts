@@ -66,7 +66,6 @@ export class CreateTaskComponent implements OnInit {
   outputExplanationControl = new FormControl('');
   inputOutputExampleControl = new FormControl('');
   isBossBattle = new FormControl(false);
-  solutionCode = new FormControl('');
 
   codeEditorsVisible = false;
   definedHelpSteps: Array<HelpStep> = [];
@@ -98,7 +97,6 @@ export class CreateTaskComponent implements OnInit {
         output: this.outputExplanationControl.value!,
         inputOutputExample: this.inputOutputExampleControl.value!,
         isBossBattle: this.isBossBattle.value!,
-        solutionCode: this.solutionCode.value || undefined,
         tests,
         helpSteps,
       };
@@ -137,7 +135,6 @@ export class CreateTaskComponent implements OnInit {
         if (response.topics.length == 1) {
           this.selectedTopic.setValue(response.topics[0]);
         }
-        this.setupTemplateCode();
         this.enableEditors();
         this.addHelpStep();
       },
@@ -152,10 +149,6 @@ export class CreateTaskComponent implements OnInit {
 
   enableEditors() {
     this.codeEditorsVisible = true;
-  }
-
-  setupTemplateCode() {
-    this.solutionCode.setValue(standardCppStarterCode);
   }
 
   fillTestsFromInputAndOutputTextAreas(): NewTestDefinition[] {
@@ -179,7 +172,7 @@ export class CreateTaskComponent implements OnInit {
     if (this.definedHelpSteps.length < 10) {
       this.definedHelpSteps.push({
         step: this.definedHelpSteps.length + 1,
-        helperCode: this.solutionCode.value ?? '',
+        helperCode: standardCppStarterCode,
         helperText: '',
       });
     } else {

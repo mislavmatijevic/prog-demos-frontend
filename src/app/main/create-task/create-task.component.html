@@ -103,14 +103,6 @@
             </p-accordionTab>
             <p-button rounded="true" severity="danger" (onClick)="removeHelpStep()" type="button"
                 icon="pi pi-minus-circle" *ngIf="definedHelpSteps.length > 1" />
-
-            <p-accordionTab header="Konačno rješenje">
-                <div class="column">
-                    <span>Najbolje konačno rješenje:</span>
-                    <app-editor class="editor" *ngIf="codeEditorsVisible && solutionCode.value !== null"
-                        [(code)]="solutionCode.value" />
-                </div>
-            </p-accordionTab>
         </p-accordion>
 
         <p-button label="Stvori novi zadatak" type="submit" icon="pi pi-file-plus" />

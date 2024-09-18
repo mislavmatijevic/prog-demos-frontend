@@ -38,6 +38,5 @@ export interface FullTask {
   output: string;
   inputOutputExample: string;
   isBossBattle: boolean;
-  solutionCode: string;
   helpSteps: Array<HelpStep>;
 }
