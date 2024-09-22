@@ -109,10 +109,10 @@
     @media screen and (max-height: $smallHeight) {
       font-size: large;
     }
-
     @media screen and (max-width: $smallWidth) {
       font-size: small;
     }
+    font-size: 1.5rem;
 
     &:hover {
       color: $primary;
@@ -150,7 +150,7 @@
   cursor: pointer;
 
   overflow: hidden;
-  z-index: 999;
+  z-index: 10;
 }
 
 .sun-wrapper {
@@ -172,5 +172,34 @@
     background: radial-gradient(circle, transparent 70%, $orange 40%);
     filter: blur(12px);
     pointer-events: none;
+  }
+}
+
+footer {
+  @media screen and (max-width: $smallWidth) {
+    max-width: 100px;
+  }
+  max-width: 200px;
+
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+
+  left: 0;
+  padding: 0 10px;
+  text-align: center;
+  font-size: 12pt;
+
+  border-top: 1pt $orange solid;
+  background-color: $dark-accent;
+  transition: transform 0.55s cubic-bezier(0.075, 0.82, 0.165, 1);
+
+  z-index: 20;
+
+  a {
+    color: $orange;
+    &:hover {
+      color: $primary;
+    }
   }
 }

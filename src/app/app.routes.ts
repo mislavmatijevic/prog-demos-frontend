@@ -8,6 +8,7 @@ import { ActivationComponent } from './main/activation/activation.component';
 import { CreateTaskComponent } from './main/create-task/create-task.component';
 import { LoginPageComponent } from './main/login-page/login-page.component';
 import { PasswordResetComponent } from './main/password-reset/password-reset.component';
+import { PrivacyComponent } from './main/privacy/privacy.component';
 import { RegisterPageComponent } from './main/register-page/register-page.component';
 import { TasksComponent } from './main/tasks/tasks.component';
 import { VideosComponent } from './main/videos/videos.component';
@@ -58,5 +59,9 @@ export const routes: Routes = [
     path: 'password-reset/:resetToken',
     canActivate: [noAuthGuard],
     component: PasswordResetComponent,
+  },
+  {
+    path: 'privacy',
+    component: PrivacyComponent,
   },
 ];

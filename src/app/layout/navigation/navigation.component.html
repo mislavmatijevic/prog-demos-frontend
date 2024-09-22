@@ -24,3 +24,6 @@
             class="outer-sun-ring"></div>
     </div>
 </section>
+<footer [ngStyle]="{'transform': isCollapsed ? 'translateX(-100%)' : 'none'}">
+    <a [routerLink]="['/privacy']">Politika privatnosti</a>
+</footer>
