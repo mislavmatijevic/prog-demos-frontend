@@ -17,7 +17,7 @@
   flex-direction: column;
   justify-content: stretch;
   height: 100%;
-  box-shadow: $orange 0px 1px 20px, $orange 0px 0px 0px 3px;
+  box-shadow: $tertiary 0px 1px 20px, $tertiary 0px 0px 0px 3px;
 
   overflow: hidden;
 
@@ -102,9 +102,9 @@
   &-link {
     padding: 5px;
     text-align: left;
-    color: $orange;
+    color: $tertiary;
     background-color: $dark-accent;
-    box-shadow: $orange 0px 1px 20px, $orange 0px 0px 0px 3px;
+    box-shadow: $tertiary 0px 1px 20px, $tertiary 0px 0px 0px 3px;
 
     @media screen and (max-height: $smallHeight) {
       font-size: large;
@@ -115,11 +115,11 @@
     font-size: 1.5rem;
 
     &:hover {
-      color: $primary;
+      color: $highlighted;
     }
 
     &__active {
-      color: $primary;
+      color: $highlighted;
     }
   }
 }
@@ -138,9 +138,9 @@
 
   background: radial-gradient(
     circle,
-    darken($orange, 30%),
+    darken($tertiary, 30%),
     darken($primary, 30%),
-    darken($orange, 50%)
+    darken($tertiary, 50%)
   );
   background-size: 500% 500%;
   animation: gradientAnimation 60s ease infinite;
@@ -169,7 +169,7 @@
 
     transition: transform 0.55s cubic-bezier(0.075, 0.82, 0.165, 1);
 
-    background: radial-gradient(circle, transparent 70%, $orange 40%);
+    background: radial-gradient(circle, transparent 70%, $tertiary 40%);
     filter: blur(12px);
     pointer-events: none;
   }
@@ -190,14 +190,14 @@ footer {
   text-align: center;
   font-size: 12pt;
 
-  border-top: 1pt $orange solid;
+  border-top: 1pt $tertiary solid;
   background-color: $dark-accent;
   transition: transform 0.55s cubic-bezier(0.075, 0.82, 0.165, 1);
 
   z-index: 20;
 
   a {
-    color: $orange;
+    color: $tertiary;
     &:hover {
       color: $primary;
     }

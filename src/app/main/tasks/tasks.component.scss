@@ -1,5 +1,10 @@
 @import "../../../styles/variables.scss";
 
+h2,
+h3 {
+  color: $tertiary;
+}
+
 .topic {
   padding: 30px;
   background: linear-gradient(

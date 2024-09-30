@@ -39,12 +39,12 @@
   }
 
   &:hover {
-    box-shadow: $primary 0px 3px 8px;
+    box-shadow: $tertiary 0px 3px 8px;
 
     cursor: pointer;
 
     h3 {
-      color: $primary;
+      color: $highlighted;
     }
     .video-image {
       filter: saturate(150%);
