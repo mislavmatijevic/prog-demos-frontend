@@ -5,9 +5,9 @@
         <p-button (onClick)="signOut()" label="Odjava" type="submit" icon="pi pi-sign-out" />
     </div>
 
-    <p-progressSpinner *ngIf="solutionAttempts == null"></p-progressSpinner>
+    <p-progressSpinner *ngIf="solutionAttempts === null"></p-progressSpinner>
 
-    <div class="statistics-wrapper" *ngIf="solutionAttempts !== null && solutionAttempts !== undefined">
+    <div class="statistics-wrapper" *ngIf="solutionAttempts !== null">
         <div class="total-stats">
             <p-chart type="radar" [responsive]="true" [data]="radarData" [options]="radarOptions" />
         </div>

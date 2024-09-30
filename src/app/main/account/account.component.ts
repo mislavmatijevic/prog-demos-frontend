@@ -26,7 +26,7 @@ export class AccountComponent implements OnInit {
     private statisticsService: StatisticsService,
     private messageService: MessageService
   ) {}
-  solutionAttempts: SolutionAttemptResponse | undefined | null = null;
+  solutionAttempts: SolutionAttemptResponse | null = null;
 
   radarData!: object;
   radarOptions!: object;
@@ -45,7 +45,7 @@ export class AccountComponent implements OnInit {
         this.createOptionsForSolutionAttempts();
       },
       error: () => {
-        this.solutionAttempts = undefined;
+        this.solutionAttempts = null;
         this.messageService.add({
           severity: 'error',
           detail: 'Nije uspio dohvat statistike o rješavanju zadataka.',
