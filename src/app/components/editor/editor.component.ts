@@ -65,6 +65,8 @@ export class EditorComponent implements OnInit, OnChanges {
 
   @Input() syntaxErrors: Array<SyntaxError> = [];
 
+  @Output() onSave = new EventEmitter<string>();
+
   mouseMovementListener: IDisposable | null = null;
 
   ngOnInit(): void {
@@ -262,6 +264,7 @@ export class EditorComponent implements OnInit, OnChanges {
     this.mainEditor.onKeyDown((e: IKeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.code == 'KeyS') {
         e.preventDefault();
+        this.onSave.emit(this.code);
       }
     });
     this.mainEditor.onDidChangeModelContent((_: any) => {

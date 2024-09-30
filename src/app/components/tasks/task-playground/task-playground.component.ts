@@ -92,6 +92,8 @@ export class TaskPlaygroundComponent implements OnInit {
     'Zanimljivo...',
   ];
 
+  getCurrentTaskSaveKey = () => `playground-code-${this.task.id}`;
+
   ngOnInit() {
     this.isScreenWideEnoughForProgramming = window.screen.width > 355;
 
@@ -151,11 +153,19 @@ export class TaskPlaygroundComponent implements OnInit {
     this.loginDialogVisible = false;
   }
 
+  saveCurrentCode(currentCode: string) {
+    localStorage.setItem(this.getCurrentTaskSaveKey(), currentCode);
+    this.messageService.add({
+      severity: 'success',
+      detail: 'Trenutni kod spremljen!',
+    });
+  }
+
   private fetchTask(videoId: number) {
     this.taskService.getSingleTask(videoId).subscribe({
       next: (res: TaskResponse) => {
         this.task = res.task;
-        this.mainCode = standardCppStarterCode;
+        this.setStartingCodeInEditor();
         this.task.helpSteps.sort((step1, step2) => step1.step - step2.step);
       },
       error: (error) => {
@@ -169,6 +179,15 @@ export class TaskPlaygroundComponent implements OnInit {
         });
       },
     });
+  }
+
+  private setStartingCodeInEditor() {
+    const savedCode = localStorage.getItem(this.getCurrentTaskSaveKey());
+    if (savedCode !== null) {
+      this.mainCode = savedCode;
+    } else {
+      this.mainCode = standardCppStarterCode;
+    }
   }
 
   private startHelpCooldown(seconds: number) {
