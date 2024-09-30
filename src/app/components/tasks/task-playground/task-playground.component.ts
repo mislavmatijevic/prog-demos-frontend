@@ -1,7 +1,7 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
@@ -47,7 +47,7 @@ enum SolutionErrorCode {
   templateUrl: './task-playground.component.html',
   styleUrl: './task-playground.component.scss',
 })
-export class TaskPlaygroundComponent implements OnInit {
+export class TaskPlaygroundComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private taskService: TaskService,
@@ -56,6 +56,9 @@ export class TaskPlaygroundComponent implements OnInit {
     private authService: AuthService,
     private changeDetectorRef: ChangeDetectorRef
   ) {}
+  ngOnDestroy(): void {
+    this.saveCurrentCode(this.mainCode!);
+  }
 
   task!: FullTask;
   diffEditorLeftState: string = '';
@@ -153,12 +156,16 @@ export class TaskPlaygroundComponent implements OnInit {
     this.loginDialogVisible = false;
   }
 
-  saveCurrentCode(currentCode: string) {
-    localStorage.setItem(this.getCurrentTaskSaveKey(), currentCode);
+  saveAndNotify(currentCode: string) {
+    this.saveCurrentCode(currentCode);
     this.messageService.add({
       severity: 'success',
       detail: 'Trenutni kod spremljen!',
     });
+  }
+
+  private saveCurrentCode(currentCode: string) {
+    localStorage.setItem(this.getCurrentTaskSaveKey(), currentCode);
   }
 
   private fetchTask(videoId: number) {
