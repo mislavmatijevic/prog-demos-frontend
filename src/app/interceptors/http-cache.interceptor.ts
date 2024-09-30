@@ -16,6 +16,7 @@ type CachedRequest = {
 };
 
 const requests = new Map<string, CachedRequest>();
+const logoutUrlRegex = new RegExp(`.*/auth/logout$`);
 
 export const httpCacheInterceptor = (options?: {
   urlsToCache?: string[];
@@ -25,6 +26,11 @@ export const httpCacheInterceptor = (options?: {
   const { urlsToCache = [], ttls, globalTTL } = options ?? {};
 
   const fn: HttpInterceptorFn = (req, next) => {
+    if (logoutUrlRegex.test(req.url)) {
+      requests.clear();
+      return next(req);
+    }
+
     const getPreviousRequestLikeThis = () => requests.get(key);
     const checkRequestTTL = (req: CachedRequest) => {
       return req.ttl && req.ttl > new Date().getTime();
