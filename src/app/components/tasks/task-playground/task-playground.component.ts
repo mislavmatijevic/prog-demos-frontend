@@ -60,6 +60,7 @@ export class TaskPlaygroundComponent implements OnInit {
   task!: FullTask;
   diffEditorLeftState: string = '';
   diffEditorRightSide: string = '';
+  previouslyGivenCodeHelp: string = '';
   mainCode: string | undefined = undefined;
   mainEditorReady: boolean = false;
   maximizeCodeWidth: boolean = false;
@@ -189,7 +190,7 @@ export class TaskPlaygroundComponent implements OnInit {
     }
 
     if (this.helpStepIndex == 0) {
-      this.initialCodeForFirstStepHelpComparison();
+      this.previouslyGivenCodeHelp = standardCppStarterCode;
     } else if (this.helpStepIndex >= this.task.helpSteps.length) {
       this.handleHelpButtonWhenNoMoreHelpAvailable();
       return;
@@ -229,10 +230,6 @@ export class TaskPlaygroundComponent implements OnInit {
     this.diffEditorShown = false;
   }
 
-  private initialCodeForFirstStepHelpComparison() {
-    this.diffEditorRightSide = standardCppStarterCode;
-  }
-
   private handleDisplayingHelp(
     foundHelpfulCodeStep: string | undefined,
     foundHelpfulTip: string | undefined
@@ -246,7 +243,8 @@ export class TaskPlaygroundComponent implements OnInit {
   }
 
   private showCodeDifferenceFromHelpStep(foundHelpfulCodeStep: string) {
-    this.diffEditorLeftState = this.diffEditorRightSide;
+    this.diffEditorLeftState = this.previouslyGivenCodeHelp;
+    this.diffEditorRightSide = foundHelpfulCodeStep;
     this.diffEditorRightSide = foundHelpfulCodeStep;
     this.codeHelpShown = true;
     this.diffEditorShown = true;
