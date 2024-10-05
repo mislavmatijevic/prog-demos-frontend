@@ -102,7 +102,6 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
 
     const taskId = parseInt(this.route.snapshot.paramMap.get('taskId')!);
     this.fetchTask(taskId);
-    this.startHelpCooldown(5);
   }
 
   onMainEditorReady() {
