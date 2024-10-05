@@ -26,6 +26,7 @@
             <label for="password" class="register-form__row__label">Lozinka</label>
         </p-floatLabel>
     </div>
+    <small>Stvaranjem računa prihvaćaš <a href="/privacy">Politiku privatnosti</a>.</small>
     <p-button *ngIf="!registrationInProgress" label="Registracija" type="submit" icon="pi pi-user-plus" />
     <p-progressSpinner *ngIf="registrationInProgress" />
 </form>
