@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Router, RouterOutlet } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { NavigationComponent } from './layout/navigation/navigation.component';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -12,6 +13,22 @@ import { NavigationComponent } from './layout/navigation/navigation.component';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+  constructor(private authService: AuthService, private router: Router) {}
+
   title = 'prog-demos-frontend';
+
+  ngOnInit(): void {
+    if (this.authService.isLoggedIn()) {
+      this.checkIfRefreshTokenExpired();
+    }
+  }
+
+  private checkIfRefreshTokenExpired() {
+    this.authService.refreshTokens().subscribe({
+      error: () => {
+        this.router.navigateByUrl('/login');
+      },
+    });
+  }
 }
