@@ -68,11 +68,11 @@ nav {
 }
 
 a {
-  color: $primary;
+  color: $tertiary;
   text-decoration: none;
 
   &:hover {
-    color: $tertiary;
+    color: $highlighted;
   }
 }
 
