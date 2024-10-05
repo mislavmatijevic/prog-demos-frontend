@@ -5,17 +5,18 @@ import { Pipe, PipeTransform } from '@angular/core';
   standalone: true,
 })
 export class ComplexityEmojiPipe implements PipeTransform {
-  transform(taskComplexity: string | number | null): string {
-    switch (taskComplexity) {
-      case 1:
+  transform(taskComplexity: string | number): string {
+    if (taskComplexity === null) return '';
+    switch (taskComplexity?.toString()) {
+      case '1':
         return '😎';
-      case 2:
+      case '2':
         return '🧐';
-      case 3:
+      case '3':
         return '😬';
-      case 4:
+      case '4':
         return '😵‍💫';
-      case 5:
+      case '5':
         return '🫠';
       default:
         return '';
