@@ -144,7 +144,7 @@ export class AuthService {
   }
 
   refreshTokens(): Observable<RefreshResponse> {
-    if (!this.isLoggedIn) throwError(() => 'Not logged in!');
+    if (!this.isLoggedIn()) throwError(() => 'Not logged in!');
     const accessToken = this.getAccessToken();
     const refreshToken = this.getRefreshToken();
 
