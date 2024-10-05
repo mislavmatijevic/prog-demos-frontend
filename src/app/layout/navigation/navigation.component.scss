@@ -39,20 +39,24 @@
     &__logo {
       display: flex;
       align-items: center;
+      @media screen and (max-width: $smallWidth) {
+        gap: 1px;
+      }
       gap: 10px;
       text-wrap: nowrap;
       img {
         @media screen and (max-width: $smallWidth), (max-height: $smallHeight) {
-          width: 40px;
+          width: 35px;
         }
         width: 80px;
         cursor: pointer;
       }
       span {
+        color: $primary;
         @media screen and (max-width: $smallWidth) {
           font-size: x-small;
         }
-        font-size: large;
+        font-size: medium;
       }
     }
     &__button {
