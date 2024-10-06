@@ -17,10 +17,18 @@ export interface Video {
   identifier: string;
 }
 
+export interface TaskExecution {
+  tokens: number;
+  complexity: number;
+  totalScore: number;
+}
+
 export interface BasicTask {
   id: number;
-  complexity: string;
   name: string;
+  complexity: string;
+  isBossBattle: boolean;
+  bestSuccessfulSubmission: TaskExecution | undefined;
 }
 
 export type HelpStep = {

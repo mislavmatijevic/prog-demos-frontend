@@ -1,4 +1,4 @@
-<div class="task-card-wrapper">
+<div [ngClass]="{'task-card-wrapper': true, 'task-card-completed': task.bestSuccessfulSubmission !== undefined}">
     <div class="header">
         <span class="header__title">Kompleksnost </span>
         <span class="header__emoji" [ngStyle]="{ color: task.complexity | complexityColor }">{{

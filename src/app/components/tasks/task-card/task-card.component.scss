@@ -37,3 +37,11 @@
     font-size: large;
   }
 }
+
+.task-card-completed {
+  box-shadow: yellowgreen 0px 1px 20px, green 0px 0px 0px 1px;
+
+  .header {
+    border-bottom-color: lightgreen;
+  }
+}

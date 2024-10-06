@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { FullTask, HelpStep, Topic } from '../../types/models';
 import { ApiService } from './api.service';
+import { AuthService } from './auth.service';
 
 export type TasksResponse = {
   topics: Array<Topic>;
@@ -52,11 +53,15 @@ export type TaskExecutionResponse = {
   providedIn: 'root',
 })
 export class TaskService {
-  constructor(private apiService: ApiService) {}
+  constructor(
+    private apiService: ApiService,
+    private authService: AuthService
+  ) {}
 
   getTasksPerTopics(): Observable<TasksResponse> {
     return this.apiService.get<TasksResponse>(
-      '/tasks'
+      '/tasks',
+      this.authService.isLoggedIn()
     ) as Observable<TasksResponse>;
   }
 
