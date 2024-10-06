@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import confetti from 'canvas-confetti';
 import { MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
@@ -332,7 +333,6 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
       .pipe(finalize(() => this.revertBitsAfterExecution()))
       .subscribe({
         next: (value) => {
-          // TODO handle actual response better
           this.forceHideDiffEditor();
 
           this.messageService.add({
@@ -340,6 +340,8 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
             summary: 'Sjajno!',
             detail: 'Čini se da je ovo ispravno rješenje, bravo!',
           });
+
+          this.popConfetti();
         },
         error: (err) => {
           if (err instanceof HttpErrorResponse) {
@@ -466,5 +468,37 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
       clearTimeout(this.bitAnimationHandler.pop());
     }
     this.isBeingTestedRemotely = false;
+  }
+
+  private popConfetti() {
+    confetti.reset();
+
+    confetti({
+      colors: ['#02c59b'],
+      shapes: [
+        confetti.shapeFromText({ text: '0', scalar: 1, color: '#ff007f' }),
+        confetti.shapeFromText({ text: '1', scalar: 1, color: '#ff007f' }),
+        confetti.shapeFromText({ text: '0', scalar: 1, color: '#00d4ff' }),
+        confetti.shapeFromText({ text: '1', scalar: 1, color: '#00d4ff' }),
+        confetti.shapeFromText({ text: '0', scalar: 1, color: '#7f00ff' }),
+        confetti.shapeFromText({ text: '1', scalar: 1, color: '#7f00ff' }),
+        confetti.shapeFromText({ text: '+', scalar: 1, color: '#adedfa' }),
+        confetti.shapeFromText({ text: 'int', scalar: 1, color: '#adedfa' }),
+        confetti.shapeFromText({ text: '+', scalar: 1, color: '#ffcc7f' }),
+        confetti.shapeFromText({ text: 'for', scalar: 1, color: '#ffcc7f' }),
+        confetti.shapeFromText({ text: '+', scalar: 1, color: '#ff8c00' }),
+        confetti.shapeFromText({ text: 'std', scalar: 1, color: '#ff8c00' }),
+        'circle',
+        'square',
+      ],
+      scalar: 3,
+      drift: 0.5,
+      gravity: 0.2,
+      spread: 360,
+      particleCount: 300,
+      origin: { y: 0.5 },
+      ticks: 500,
+      startVelocity: 50,
+    });
   }
 }
