@@ -25,10 +25,8 @@ export class AppComponent implements OnInit {
   }
 
   private checkIfRefreshTokenExpired() {
-    this.authService.refreshTokens().subscribe({
-      error: () => {
-        this.router.navigateByUrl('/login');
-      },
-    });
+    if (this.authService.ensureRefreshTokenStillValid()) {
+      this.router.navigateByUrl('/login');
+    }
   }
 }

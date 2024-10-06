@@ -23,25 +23,28 @@ type User = {
 
 type LoginResponse = {
   user: User;
-  tokens: {
-    accessToken: string;
-    refreshToken: {
-      value: string;
-      expiresAt: string;
-    };
-  };
+  tokens: TokensBody;
+};
+
+type TokensBody = {
+  accessToken: string;
+  refreshToken: RefreshTokenBody;
+};
+
+type RefreshTokenBody = {
+  value: string;
+  expiresAt: string;
 };
 
 type RefreshResponse = {
   success: boolean;
-  accessToken: string;
-  refreshToken: {
-    value: string;
-    expiresAt: string;
-  };
+  tokens: TokensBody;
 };
 
 const specialTypes = ['creator', 'admin'];
+const accessTokenStorageKey = 'accessToken';
+const refreshTokenValueStorageKey = 'refreshTokenValue';
+const refreshTokenExpiryStorageKey = 'refreshTokenExpiry';
 
 @Injectable({
   providedIn: 'root',
@@ -82,10 +85,7 @@ export class AuthService {
         tap({
           next: (res: LoginResponse) => {
             this.setUser(res.user);
-            this.setTokens(
-              res.tokens.accessToken,
-              res.tokens.refreshToken.value
-            );
+            this.setTokens(res.tokens);
             this.isLoggedIn.set(true);
             this.isSpecialType.set(this.checkIfSpecialType());
           },
@@ -156,7 +156,7 @@ export class AuthService {
       .pipe(
         tap({
           next: (res: RefreshResponse) => {
-            this.setTokens(res.accessToken, res.refreshToken.value);
+            this.setTokens(res.tokens);
             this.isLoggedIn.set(true);
             this.isSpecialType.set(this.checkIfSpecialType());
           },
@@ -176,15 +176,33 @@ export class AuthService {
     return authorizedRequest;
   }
 
+  ensureRefreshTokenStillValid(): boolean {
+    const refreshTokenExpiry = localStorage.getItem(
+      refreshTokenExpiryStorageKey
+    );
+    if (refreshTokenExpiry === null) return false;
+
+    const currentTime = new Date();
+    const expiryTime = new Date(refreshTokenExpiry!);
+
+    const isExpired = currentTime > expiryTime;
+    if (isExpired) {
+      this.clearAllLoginData();
+    }
+
+    return isExpired;
+  }
+
   isLoggedIn = signal(this.getAccessToken() !== null);
 
   isSpecialType = signal(this.checkIfSpecialType());
 
   private clearAllLoginData() {
     this.accessToken = null;
-    localStorage.removeItem('accessToken');
+    localStorage.removeItem(accessTokenStorageKey);
     this.refreshToken = null;
-    localStorage.removeItem('refreshToken');
+    localStorage.removeItem(refreshTokenValueStorageKey);
+    localStorage.removeItem(refreshTokenExpiryStorageKey);
     this.isLoggedIn.set(false);
     this.isSpecialType.set(false);
   }
@@ -194,11 +212,16 @@ export class AuthService {
     return user?.type !== undefined && specialTypes.includes(user?.type);
   }
 
-  private setTokens(accessToken: string, refreshToken: string): void {
-    this.accessToken = accessToken;
-    localStorage.setItem('accessToken', accessToken);
-    this.refreshToken = refreshToken;
-    localStorage.setItem('refreshToken', refreshToken);
+  private setTokens(tokens: TokensBody): void {
+    const accessTokenValue = tokens.accessToken;
+    const refreshTokenValue = tokens.refreshToken.value;
+    const refreshTokenExpiryTime = tokens.refreshToken.expiresAt;
+
+    this.accessToken = accessTokenValue;
+    localStorage.setItem(accessTokenStorageKey, accessTokenValue);
+    this.refreshToken = refreshTokenValue;
+    localStorage.setItem(refreshTokenValueStorageKey, refreshTokenValue);
+    localStorage.setItem(refreshTokenExpiryStorageKey, refreshTokenExpiryTime);
   }
 
   private setUser(user: User): void {
@@ -208,14 +231,14 @@ export class AuthService {
 
   private getAccessToken(): string | null {
     if (!this.accessToken) {
-      this.accessToken = localStorage.getItem('accessToken');
+      this.accessToken = localStorage.getItem(accessTokenStorageKey);
     }
     return this.accessToken;
   }
 
   private getRefreshToken(): string | null {
     if (!this.refreshToken) {
-      this.refreshToken = localStorage.getItem('refreshToken');
+      this.refreshToken = localStorage.getItem(refreshTokenValueStorageKey);
     }
     return this.refreshToken;
   }
