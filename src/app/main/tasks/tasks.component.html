@@ -4,8 +4,8 @@
     <div class="topic__task-grid">
         <section class="topic__task-grid__subtopic" *ngFor="let subtopic of topic.subtopics">
             <h3>{{subtopic.name}}</h3>
-            <div class="topic__task-grid__subtopic__grid">
-                <app-task-card *ngFor="let task of subtopic.tasks" [task]=task
+            <div class="topic__task-grid__subtopic__grid" *ngIf="subtopic.tasks">
+                <app-task-card *ngFor="let task of sort(subtopic.tasks)" [task]=task
                     (onSelected)="onTaskSelected($event)"></app-task-card>
             </div>
         </section>
