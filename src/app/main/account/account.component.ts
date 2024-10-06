@@ -47,6 +47,7 @@ export class AccountComponent implements OnInit {
       error: () => {
         this.solutionAttempts = null;
         this.messageService.add({
+          key: 'central',
           severity: 'error',
           detail: 'Nije uspio dohvat statistike o rješavanju zadataka.',
         });

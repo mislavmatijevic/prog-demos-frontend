@@ -40,6 +40,7 @@ export class RequestResetPasswordDialogComponent {
       this.authService.requestPasswordReset(this.email.value!).subscribe({
         complete: () => {
           this.messageService.add({
+            key: 'central',
             severity: 'success',
             summary: 'Zahtjev je poslan!',
             detail:
@@ -61,6 +62,7 @@ export class RequestResetPasswordDialogComponent {
               break;
           }
           this.messageService.add({
+            key: 'general',
             severity: 'error',
             summary: 'Zahtjev za novom lozinkom nije uspio.',
             detail: errorMessage,
@@ -69,6 +71,7 @@ export class RequestResetPasswordDialogComponent {
       });
     } else {
       this.messageService.add({
+        key: 'general',
         severity: 'error',
         detail: 'Hm, ne čini se da je to ispravan email...',
       });

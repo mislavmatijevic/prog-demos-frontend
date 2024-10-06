@@ -117,6 +117,7 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
   copyCode() {
     this.clipboard.copy(this.mainCode!);
     this.messageService.add({
+      key: 'general',
       severity: 'success',
       detail: 'Kod kopiran',
       life: 1000,
@@ -138,6 +139,7 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
         this.handleTaskExecution();
       } else {
         this.messageService.add({
+          key: 'central',
           severity: 'error',
           summary: 'Neće ići',
           detail: 'Ne mogu testirati prazan kod!',
@@ -159,6 +161,7 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
   saveAndNotify(currentCode: string) {
     this.saveCurrentCode(currentCode);
     this.messageService.add({
+      key: 'general',
       severity: 'success',
       detail: 'Trenutni kod spremljen!',
     });
@@ -179,6 +182,7 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
         console.error(error);
 
         this.messageService.add({
+          key: 'central',
           severity: 'error',
           summary: 'Pogreška prilikom učitavanja',
           detail:
@@ -235,6 +239,7 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
 
   handleHelpButtonWhenNoMoreHelpAvailable() {
     this.messageService.add({
+      key: 'central',
       severity: 'error',
       summary: 'To je to od pomoći!',
       detail: 'Ne mogu ti dati više pomoći, dalje moraš samostalno.',
@@ -242,6 +247,7 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
     this.helpButtonRageTolerance--;
     if (this.helpButtonRageTolerance == 0) {
       this.messageService.add({
+        key: 'central',
         severity: 'info',
         summary: 'Prestani klikati',
         detail:
@@ -279,10 +285,11 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
   private displayHelpToast(helpMessageForCurrentStep: string) {
     if (helpMessageForCurrentStep != '') {
       this.messageService.add({
+        key: 'central',
         severity: 'info',
         summary: 'Moj savjet',
         detail: helpMessageForCurrentStep,
-        life: 30000,
+        life: 90000,
       });
     }
   }
@@ -336,6 +343,7 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
           this.forceHideDiffEditor();
 
           this.messageService.add({
+            key: 'central',
             severity: 'success',
             summary: 'Sjajno!',
             detail: 'Čini se da je ovo ispravno rješenje, bravo!',
@@ -357,6 +365,7 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
 
               case 500:
                 this.messageService.add({
+                  key: 'central',
                   severity: 'error',
                   summary: 'Dogodila se pogreška u sustavu!',
                   detail:
@@ -368,6 +377,7 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
 
               default:
                 this.messageService.add({
+                  key: 'central',
                   severity: 'error',
                   summary: 'Ups',
                   detail: 'Čini se da nije moguće testirati tvoje rješenje.',
@@ -398,6 +408,7 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
       }
       case SolutionErrorCode.EXEC_ERR_TIMEOUT: {
         this.messageService.add({
+          key: 'central',
           severity: 'error',
           summary: 'Izvršavanje trajalo predugo!',
           detail:
@@ -408,6 +419,7 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
       }
       case SolutionErrorCode.EXEC_ERR_KILLED: {
         this.messageService.add({
+          key: 'central',
           severity: 'error',
           summary: 'Izvršavanje prisilno obustavljeno!',
           detail:
@@ -421,6 +433,7 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
         const actualReason = reasonFailed as { testInput: string };
 
         this.messageService.add({
+          key: 'central',
           severity: 'error',
           detail: `Nisu se stvorile odgovarajuće datoteke za dani unos: ${actualReason.testInput}`,
         });
@@ -447,6 +460,7 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
     this.diffEditorShown = true;
 
     this.messageService.add({
+      key: 'central',
       severity: 'error',
       summary: 'Rješenje nije proizvelo očekivani rezultat!',
       detail: `Kada se tvoje rješenje testira s unosom "${reasonFailed.testInput}", izlaz tvog programa se ne podudara s očekivanim za taj ulaz.`,

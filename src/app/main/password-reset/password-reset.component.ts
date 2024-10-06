@@ -59,6 +59,7 @@ export class PasswordResetComponent implements OnInit {
         .subscribe({
           complete: () => {
             this.messageService.add({
+              key: 'central',
               severity: 'success',
               detail: 'Nova lozinka uspješno postavljena!',
             });
@@ -78,6 +79,7 @@ export class PasswordResetComponent implements OnInit {
             }
 
             this.messageService.add({
+              key: 'central',
               severity: 'error',
               detail: errorMessage + ' Ponovno zatraži promjenu lozinke.',
             });
@@ -85,6 +87,7 @@ export class PasswordResetComponent implements OnInit {
         });
     } else {
       this.messageService.add({
+        key: 'general',
         severity: 'error',
         detail: 'Provjeri još jednom unesene podatke.',
       });

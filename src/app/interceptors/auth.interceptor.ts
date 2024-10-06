@@ -28,6 +28,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
           messageService = inject(MessageService);
         }
         messageService.add({
+          key: 'general',
           severity: 'error',
           detail: 'Ne čini se da imaš prava pristupiti ovome!',
         });

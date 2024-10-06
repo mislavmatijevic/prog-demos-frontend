@@ -54,6 +54,7 @@ export class RegisterComponent {
           complete: () => {
             this.registrationInProgress = false;
             this.messageService.add({
+              key: 'central',
               severity: 'info',
               detail: 'Poslan ti je mail za dovršetak registracije!',
               life: 60000,
@@ -81,6 +82,7 @@ export class RegisterComponent {
             }
 
             this.messageService.add({
+              key: 'general',
               severity: 'error',
               summary: 'Registracija nije uspjela!',
               detail: message,
@@ -99,6 +101,7 @@ export class RegisterComponent {
         errorMessage = 'Lozinka mora biti duža.';
       }
       this.messageService.add({
+        key: 'general',
         severity: 'error',
         summary: 'Provjeri još jednom podatke za registraciju!',
         detail: errorMessage,

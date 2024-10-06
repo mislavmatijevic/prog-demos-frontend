@@ -35,6 +35,7 @@ export class VideosComponent implements OnInit {
         console.error(error);
 
         this.messageService.add({
+          key: 'central',
           severity: 'error',
           summary: 'Pogreška prilikom dohvaćanja',
           detail:

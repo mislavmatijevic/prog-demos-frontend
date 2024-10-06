@@ -104,12 +104,14 @@ export class CreateTaskComponent implements OnInit {
       this.taskService.createTask(newTask).subscribe({
         complete: () => {
           this.messageService.add({
+            key: 'general',
             severity: 'success',
             summary: 'Novi zadatak stvoren!',
           });
         },
         error: (err: HttpErrorResponse) => {
           this.messageService.add({
+            key: 'general',
             severity: 'error',
             summary: 'Nije moguće stvoriti zadatak!',
             detail: `Stvaranje zadatka nije uspjelo. (${err.status}): ${
@@ -120,6 +122,7 @@ export class CreateTaskComponent implements OnInit {
       });
     } else {
       this.messageService.add({
+        key: 'general',
         severity: 'error',
         summary: 'Nije moguće stvoriti zadatak!',
         detail:
@@ -140,6 +143,7 @@ export class CreateTaskComponent implements OnInit {
       },
       error: () => {
         this.messageService.add({
+          key: 'central',
           severity: 'error',
           detail: 'Nažalost, dohvat tema nije uspio. Pokušaj ponovno kasnije.',
         });
@@ -177,6 +181,7 @@ export class CreateTaskComponent implements OnInit {
       });
     } else {
       this.messageService.add({
+        key: 'central',
         severity: 'error',
         summary: 'Ne mogu dodati više pomoći na zadatak!',
       });

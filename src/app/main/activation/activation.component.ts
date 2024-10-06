@@ -40,6 +40,7 @@ export class ActivationComponent implements OnInit {
         complete: () => {
           this.isActivationCompleted = this.isActivationSuccessful = true;
           this.messageService.add({
+            key: 'general',
             severity: 'success',
             detail: 'Aktivacija uspješna!',
             life: 30000,
@@ -49,6 +50,7 @@ export class ActivationComponent implements OnInit {
           this.isActivationCompleted = true;
           this.isActivationSuccessful = false;
           this.messageService.add({
+            key: 'general',
             severity: 'error',
             detail: 'Aktivacija neuspješna.',
             life: 30000,

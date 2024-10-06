@@ -45,6 +45,7 @@ export class NavigationComponent {
       if (!this.stopClickingSunMessageShown) {
         sunContainer.style.cursor = 'initial';
         this.messageService.add({
+          key: 'general',
           severity: 'error',
           summary: 'Sve ima svoje granice',
           detail:

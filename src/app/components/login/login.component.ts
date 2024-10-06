@@ -50,6 +50,7 @@ export class LoginComponent {
           complete: () => {
             this.loginInProgress = false;
             this.messageService.add({
+              key: 'general',
               severity: 'success',
               detail: `Pozdrav, ${this.authService.getUser()!.username}!`,
             });
@@ -59,6 +60,7 @@ export class LoginComponent {
             this.loginInProgress = false;
 
             this.messageService.add({
+              key: 'general',
               severity: 'error',
               summary: 'Prijava nije uspjela!',
               detail:
@@ -68,6 +70,7 @@ export class LoginComponent {
         });
     } else {
       this.messageService.add({
+        key: 'general',
         severity: 'info',
         detail: 'Unesi ispravne korisničke podatke.',
       });
