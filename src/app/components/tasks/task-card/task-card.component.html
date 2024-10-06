@@ -1,0 +1,16 @@
+<div class="task-card-wrapper">
+    <div class="header">
+        <span class="header__title">Kompleksnost </span>
+        <span class="header__emoji" [ngStyle]="{ color: task.complexity | complexityColor }">{{
+            task.complexity | complexityEmoji
+            }}</span>
+        <span class="header__description" [ngStyle]="{ color: task.complexity | complexityColor }">
+            {{ task.complexity | complexityDescription }}
+        </span>
+    </div>
+    <div class="body">
+        <p>{{ task.name }}</p>
+        <p-button icon="pi pi-code" label="Otvori zadatak" (onClick)="openTask()"></p-button>
+    </div>
+    <div class="footer"></div>
+</div>

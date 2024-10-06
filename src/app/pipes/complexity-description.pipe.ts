@@ -1,23 +1,23 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'complexityEmoji',
+  name: 'complexityDescription',
   standalone: true,
 })
-export class ComplexityEmojiPipe implements PipeTransform {
+export class ComplexityDescriptionPipe implements PipeTransform {
   transform(taskComplexity: string | number): string {
     if (taskComplexity === null) return '';
     switch (taskComplexity?.toString()) {
       case '1':
-        return '😎';
+        return 'Laganica za početnike';
       case '2':
-        return '🤠';
+        return 'Zadatak za vježbu';
       case '3':
-        return '🧐';
+        return 'Zadatak za razmišljanje';
       case '4':
-        return '😵‍💫';
+        return 'Vrtoglavi zadatak';
       case '5':
-        return '🫠';
+        return 'Za najizdržljivije';
       default:
         return '';
     }

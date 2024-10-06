@@ -3,13 +3,13 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { BasicTask, Topic } from '../../../types/models';
-import { TasksInSubtopicComponent } from '../../components/tasks/tasks-in-subtopic/tasks-in-subtopic.component';
+import { TaskCardComponent } from '../../components/tasks/task-card/task-card.component';
 import { TaskService, TasksResponse } from '../../services/task.service';
 
 @Component({
   selector: 'app-tasks',
   standalone: true,
-  imports: [CommonModule, TasksInSubtopicComponent],
+  imports: [CommonModule, TaskCardComponent],
   templateUrl: './tasks.component.html',
   styleUrl: './tasks.component.scss',
 })

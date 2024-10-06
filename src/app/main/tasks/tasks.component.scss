@@ -6,7 +6,11 @@ h3 {
 }
 
 .topic {
+  @media screen and (max-width: $smallWidth) {
+    padding: 10px;
+  }
   padding: 30px;
+
   background: linear-gradient(
     50deg,
     darken($primary, 40%),

@@ -1,0 +1,39 @@
+@import "../../../../styles/variables.scss";
+
+.task-card-wrapper {
+  display: flex;
+  flex-direction: column;
+
+  background-color: $dark-accent;
+  padding: 10px;
+  gap: 20px;
+
+  box-shadow: $primary 0px 1px 20px, $tertiary 0px 0px 0px 1px;
+
+  @media screen and (max-width: $smallWidth) {
+    width: 200px;
+  }
+  width: 350px;
+
+  .header {
+    display: flex;
+    justify-content: space-around;
+    gap: 1em;
+
+    background-color: $dark;
+    border-bottom: 1px $primary solid;
+
+    &__title,
+    &__description {
+      @media screen and (max-width: $smallWidth) {
+        display: none;
+      }
+    }
+  }
+
+  .body {
+    text-align: center;
+    font-family: monospace;
+    font-size: large;
+  }
+}
