@@ -23,10 +23,10 @@ export class TasksComponent implements OnInit {
   topics: Topic[] = [];
 
   ngOnInit() {
-    this.fetchVideos();
+    this.fetchTasks();
   }
 
-  fetchVideos() {
+  fetchTasks() {
     this.taskService.getTasksPerTopics().subscribe({
       next: (res: TasksResponse) => {
         this.topics = res.topics;
