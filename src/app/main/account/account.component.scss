@@ -1,3 +1,5 @@
+@import "../../../styles/variables.scss";
+
 .page-wrapper {
   display: flex;
   flex-direction: column;
@@ -6,14 +8,64 @@
 
 .row {
   display: flex;
-  gap: 2rem;
-  align-self: start;
+  flex-direction: column;
+  width: fit-content;
+  background-color: $dark-accent;
+  box-shadow: $tertiary 0px 1px 20px, $tertiary 0px 0px 0px 2px;
+  gap: 1em;
+  margin-bottom: 2em;
+  padding: 10px;
+
+  .row-text {
+    font-family: monospace;
+    font-size: x-large;
+    text-align: center;
+    margin: 0;
+  }
+
+  .username {
+    animation: usernameColorAnimation 30s linear infinite;
+
+    @keyframes usernameColorAnimation {
+      0% {
+        color: $tertiary;
+      }
+      3% {
+        color: $primary;
+      }
+      5% {
+        color: $highlighted;
+      }
+      100% {
+        color: $tertiary;
+      }
+    }
+  }
+
+  .total-score {
+    animation: scoreColorAnimation 30s ease infinite;
+
+    @keyframes scoreColorAnimation {
+      1% {
+        color: $tertiary;
+      }
+      4% {
+        color: $primary;
+      }
+      5% {
+        color: $highlighted;
+      }
+      100% {
+        color: $tertiary;
+      }
+    }
+  }
 }
 
 .statistics-wrapper {
-  display: grid;
-  grid-template-columns: 10;
-  grid-template-rows: 10;
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
 
   &__doughnuts {
     display: flex;

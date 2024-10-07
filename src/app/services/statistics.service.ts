@@ -2,6 +2,10 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
 
+export type TotalScoreResponse = {
+  totalScore: number;
+};
+
 export type SolutionAttemptResponse = {
   solutionAttemptsPerSubtopic: Array<SolutionAttemptPerSubtopic>;
 };
@@ -21,6 +25,10 @@ export type SolutionAttemptPerSubtopic = {
 })
 export class StatisticsService {
   constructor(private apiService: ApiService) {}
+
+  getTotalScore(): Observable<TotalScoreResponse> {
+    return this.apiService.get('/statistics/total-score', true);
+  }
 
   getSolutionAttempts(): Observable<SolutionAttemptResponse> {
     return this.apiService.get('/statistics/solution-attempts', true);

@@ -1,15 +1,16 @@
 <h1>Račun</h1>
+<p-button (onClick)="signOut()" label="Odjava" type="submit" icon="pi pi-sign-out" severity="danger" />
 <div class="page-wrapper">
     <div class="row">
-        <p>Ti si {{authService.getUser()?.username}}.</p>
-        <p-button (onClick)="signOut()" label="Odjava" type="submit" icon="pi pi-sign-out" />
+        <p class="row-text username">{{authService.getUser()?.username}}</p>
+        <p class="row-text total-score">{{totalScore}} XP</p>
     </div>
 
     <p-progressSpinner *ngIf="solutionAttempts === null"></p-progressSpinner>
 
     <div class="statistics-wrapper" *ngIf="solutionAttempts !== null">
         <div class="total-stats">
-            <p-chart type="radar" [responsive]="true" [data]="radarData" [options]="radarOptions" />
+            <p-chart type="radar" [responsive]="true" [height]="'60vh'" [data]="radarData" [options]="radarOptions" />
         </div>
         <div>
             <div class="statistics-wrapper__doughnuts">

@@ -26,6 +26,7 @@ export class AccountComponent implements OnInit {
     private statisticsService: StatisticsService,
     private messageService: MessageService
   ) {}
+  totalScore: number = 0;
   solutionAttempts: SolutionAttemptResponse | null = null;
 
   radarData!: object;
@@ -34,6 +35,20 @@ export class AccountComponent implements OnInit {
   private optionsPerAttempts!: Map<SolutionAttemptPerSubtopic, object>;
 
   ngOnInit(): void {
+    this.statisticsService.getTotalScore().subscribe({
+      next: (response) => {
+        this.totalScore = response.totalScore;
+      },
+      error: () => {
+        this.solutionAttempts = null;
+        this.messageService.add({
+          key: 'central',
+          severity: 'error',
+          detail: 'Nije uspio dohvat ukupnog broja bodova.',
+        });
+      },
+    });
+
     this.statisticsService.getSolutionAttempts().subscribe({
       next: (response) => {
         this.solutionAttempts = response;
