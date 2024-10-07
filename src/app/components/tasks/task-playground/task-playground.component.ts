@@ -4,7 +4,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import confetti from 'canvas-confetti';
-import { MessageService } from 'primeng/api';
+import { Message, MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { DividerModule } from 'primeng/divider';
@@ -57,9 +57,6 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private changeDetectorRef: ChangeDetectorRef
   ) {}
-  ngOnDestroy(): void {
-    this.saveCurrentCode(this.mainCode!);
-  }
 
   task!: FullTask;
   diffEditorLeftState: string = '';
@@ -96,13 +93,24 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
     'Zanimljivo...',
   ];
 
-  getCurrentTaskSaveKey = () => `playground-code-${this.task.id}`;
+  getTaskStorageKey = () => `playground-code-${this.task.id}`;
 
   ngOnInit() {
     this.isScreenWideEnoughForProgramming = window.screen.width > 355;
 
     const taskId = parseInt(this.route.snapshot.paramMap.get('taskId')!);
     this.fetchTask(taskId);
+
+    if (!this.authService.isLoggedIn()) {
+      window.addEventListener('beforeunload', function (e) {
+        e.preventDefault();
+        this.confirm();
+      });
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.saveCurrentCode(this.mainCode!);
   }
 
   onMainEditorReady() {
@@ -160,15 +168,28 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
 
   saveAndNotify(currentCode: string) {
     this.saveCurrentCode(currentCode);
-    this.messageService.add({
+    let messages: Array<Message> = [];
+
+    messages.push({
       key: 'general',
       severity: 'success',
       detail: 'Trenutni kod spremljen!',
     });
+    if (!this.authService.isLoggedIn()) {
+      messages.push({
+        key: 'general',
+        severity: 'warn',
+        detail:
+          'Samo prijavljenim korisnicima napredak ostaje pohranjen i nakon zatvaranja stranice.',
+        life: 10000,
+      });
+    }
+
+    this.messageService.addAll(messages);
   }
 
   private saveCurrentCode(currentCode: string) {
-    localStorage.setItem(this.getCurrentTaskSaveKey(), currentCode);
+    this.currentStorage().setItem(this.getTaskStorageKey(), currentCode);
   }
 
   private fetchTask(videoId: number) {
@@ -193,7 +214,7 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
   }
 
   private setStartingCodeInEditor() {
-    const savedCode = localStorage.getItem(this.getCurrentTaskSaveKey());
+    const savedCode = this.currentStorage().getItem(this.getTaskStorageKey());
     if (savedCode !== null) {
       this.mainCode = savedCode;
     } else {
@@ -514,5 +535,9 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
       ticks: 500,
       startVelocity: 50,
     });
+  }
+
+  private currentStorage(): Storage {
+    return this.authService.isLoggedIn() ? localStorage : sessionStorage;
   }
 }
