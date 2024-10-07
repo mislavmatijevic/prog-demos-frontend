@@ -10,6 +10,10 @@ import { RouterModule } from '@angular/router';
 })
 export class PrivacyComponent {
   scrollToElementWithId(elementId: string) {
-    document.getElementById(elementId)?.scrollIntoView(false);
+    document.getElementById(elementId)?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'end',
+      inline: 'nearest',
+    });
   }
 }

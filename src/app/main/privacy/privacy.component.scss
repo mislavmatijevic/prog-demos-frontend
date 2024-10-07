@@ -1,3 +1,19 @@
+@import "../../../styles/variables.scss";
+
 a {
   cursor: pointer;
+}
+
+.key-points-list {
+  &__highlighted {
+    color: $accent;
+  }
+
+  li {
+    margin: 20px;
+  }
+}
+
+h4 {
+  color: $accent;
 }
