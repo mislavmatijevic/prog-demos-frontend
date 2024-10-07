@@ -1,35 +1,32 @@
-export interface Topic {
+export interface Identifiable {
   id: number;
   name: string;
-  subtopics: Array<Subtopic>;
 }
 
-export interface Subtopic {
-  id: number;
-  name: string;
+export type Topic = Identifiable & {
+  subtopics: Array<Subtopic>;
+};
+
+export type Subtopic = Identifiable & {
   videos: Array<Video>;
   tasks: Array<BasicTask>;
-}
+};
 
-export interface Video {
-  id: number;
-  name: string;
+export type Video = Identifiable & {
   identifier: string;
-}
+};
 
-export interface TaskExecution {
+export interface TaskScore {
   tokens: number;
   complexity: number;
   totalScore: number;
 }
 
-export interface BasicTask {
-  id: number;
-  name: string;
+export type BasicTask = Identifiable & {
   complexity: string;
   isBossBattle: boolean;
-  bestSuccessfulSubmission: TaskExecution | undefined;
-}
+  bestSuccessfulSubmission: TaskScore | undefined;
+};
 
 export type HelpStep = {
   step: number;
@@ -37,14 +34,17 @@ export type HelpStep = {
   helperText: string;
 };
 
-export interface FullTask {
-  id: number;
+export type FullTask = Identifiable & {
   idSubtopic: number;
-  name: string;
   complexity: string;
   input: string;
   output: string;
   inputOutputExample: string;
   isBossBattle: boolean;
+  subtopic: {
+    id: number;
+    name: string;
+  };
   helpSteps: Array<HelpStep>;
-}
+  allTimeBestScore: TaskScore;
+};
