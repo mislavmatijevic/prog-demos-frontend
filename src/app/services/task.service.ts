@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { FullTask, HelpStep, Topic } from '../../types/models';
+import { FullTask, HelpStep, TaskScore, Topic } from '../../types/models';
+import { SyntaxError } from '../components/editor/editor.component';
 import { ApiService } from './api.service';
 import { AuthService } from './auth.service';
 
@@ -31,22 +32,35 @@ export type NewTaskRequestBody = {
   helpSteps: HelpStep[];
 };
 
-export enum RegistrationErrorCode {
-  EXEC_ERR_CODE_NO_TESTS = 1,
-  EXEC_ERR_ARTEFACT_CONTENT_MISMATCH = 2,
-  EXEC_ERR_TEST_FAILED = 3,
-  EXEC_ERR_TIMEOUT = 4,
+export enum SolutionErrorCode {
+  EXEC_ERR_BAD_SYNTAX = 1,
+  EXEC_ERR_TEST_FAILED = 2,
+  EXEC_ERR_TIMEOUT = 3,
+  EXEC_ERR_KILLED = 4,
+  EXEC_ERR_ARTEFACT_CONTENT_MISMATCH = 5,
 }
 
-export type TaskExecutionResponse = {
+export type SuccessfulTaskExecutionResponse = {
   success: boolean;
   message: string;
-  errorCode: RegistrationErrorCode;
-  reason: {
-    testInput: string | undefined;
-    output: string | undefined;
-    expectedOutput: string | undefined;
+  score: TaskScore;
+};
+
+export interface ExecutionFailureReasonTests {
+  testInput: string;
+}
+
+export type ExecutionFailureReasonOutputMismatch =
+  ExecutionFailureReasonTests & {
+    output: string;
+    expectedOutput: string;
   };
+
+export type FailedTaskExecutionResponse = {
+  errorCode: SolutionErrorCode;
+  reason: ExecutionFailureReasonTests &
+    ExecutionFailureReasonOutputMismatch &
+    Array<SyntaxError>;
 };
 
 @Injectable({
@@ -79,8 +93,11 @@ export class TaskService {
   }
 
   executeTask(taskId: number, solutionCode: string) {
-    return this.apiService.post<TaskExecutionResponse>(`/tasks/${taskId}/run`, {
-      solutionCode,
-    }) as Observable<TaskExecutionResponse>;
+    return this.apiService.post<SuccessfulTaskExecutionResponse>(
+      `/tasks/${taskId}/run`,
+      {
+        solutionCode,
+      }
+    ) as Observable<SuccessfulTaskExecutionResponse>;
   }
 }

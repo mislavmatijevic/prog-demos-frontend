@@ -16,18 +16,17 @@ import { standardCppStarterCode } from '../../../../helpers/editor-helpers';
 import { FullTask } from '../../../../types/models';
 import { NewlinePipe } from '../../../pipes/newline.pipe';
 import { AuthService } from '../../../services/auth.service';
-import { TaskResponse, TaskService } from '../../../services/task.service';
+import {
+  ExecutionFailureReasonOutputMismatch,
+  ExecutionFailureReasonTests,
+  FailedTaskExecutionResponse,
+  SolutionErrorCode,
+  TaskResponse,
+  TaskService,
+} from '../../../services/task.service';
 import { EditorComponent, SyntaxError } from '../../editor/editor.component';
 import { LoginComponent } from '../../login/login.component';
 import { RegisterComponent } from '../../register/register.component';
-
-enum SolutionErrorCode {
-  EXEC_ERR_BAD_SYNTAX = 1,
-  EXEC_ERR_TEST_FAILED = 2,
-  EXEC_ERR_TIMEOUT = 3,
-  EXEC_ERR_KILLED = 4,
-  EXEC_ERR_ARTEFACT_CONTENT_MISMATCH = 5,
-}
 
 @Component({
   selector: 'app-task-playground',
@@ -374,14 +373,12 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
         },
         error: (err) => {
           if (err instanceof HttpErrorResponse) {
+            var errorRes = err.error as FailedTaskExecutionResponse;
             switch (err.status) {
               case 403: // token refresh should be in progress
                 break;
               case 422:
-                this.handleSolutionEvaluationFailure(
-                  err.error.errorCode,
-                  err.error.reason
-                );
+                this.handleSolutionEvaluationFailure(errorRes);
                 break;
 
               case 500:
@@ -414,50 +411,26 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
     );
   }
 
-  private handleSolutionEvaluationFailure(
-    errorCode: SolutionErrorCode,
-    reasonFailed?: any
-  ) {
-    switch (errorCode) {
+  private handleSolutionEvaluationFailure(error: FailedTaskExecutionResponse) {
+    switch (error.errorCode) {
       case SolutionErrorCode.EXEC_ERR_BAD_SYNTAX: {
-        this.handleBadSyntax(reasonFailed);
+        this.handleBadSyntax(error.reason);
         break;
       }
       case SolutionErrorCode.EXEC_ERR_TEST_FAILED: {
-        this.handleTestFailure(reasonFailed);
-        break;
-      }
-      case SolutionErrorCode.EXEC_ERR_TIMEOUT: {
-        this.messageService.add({
-          key: 'central',
-          severity: 'error',
-          summary: 'Izvršavanje trajalo predugo!',
-          detail:
-            'Vjerojatan uzrok problema jest neka beskonačna petlja koja ti se potkrala. Provjeri sve petlje još jednom!',
-          life: 120000,
-        });
-        break;
-      }
-      case SolutionErrorCode.EXEC_ERR_KILLED: {
-        this.messageService.add({
-          key: 'central',
-          severity: 'error',
-          summary: 'Izvršavanje prisilno obustavljeno!',
-          detail:
-            'Vjerojatan uzrok problema je tzv. "memory leak". Najvjerojatnije imaš neku petlju u kojoj alociraš beskonačno mnogo prostora. ' +
-            'Moj savjet je da pretražiš sva mjesta gdje koristiš naredbu "new" i osiguraš da se ona ne izvršava beskonačno.',
-          life: 120000,
-        });
+        this.handleTestFailure(error.reason);
         break;
       }
       case SolutionErrorCode.EXEC_ERR_ARTEFACT_CONTENT_MISMATCH: {
-        const actualReason = reasonFailed as { testInput: string };
-
-        this.messageService.add({
-          key: 'central',
-          severity: 'error',
-          detail: `Nisu se stvorile odgovarajuće datoteke za dani unos: ${actualReason.testInput}`,
-        });
+        this.handleArtefactMismatch(error.reason);
+        break;
+      }
+      case SolutionErrorCode.EXEC_ERR_TIMEOUT: {
+        this.handleTimeout();
+        break;
+      }
+      case SolutionErrorCode.EXEC_ERR_KILLED: {
+        this.handleKilled();
         break;
       }
       default:
@@ -469,11 +442,9 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
     this.syntaxErrors = syntaxErrors;
   }
 
-  private handleTestFailure(reasonFailed: {
-    testInput: string;
-    output: string;
-    expectedOutput: string;
-  }) {
+  private handleTestFailure(
+    reasonFailed: ExecutionFailureReasonOutputMismatch
+  ) {
     this.forceHideDiffEditor();
 
     this.diffEditorLeftState = reasonFailed.output ?? '';
@@ -485,6 +456,37 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
       severity: 'error',
       summary: 'Rješenje nije proizvelo očekivani rezultat!',
       detail: `Kada se tvoje rješenje testira s unosom "${reasonFailed.testInput}", izlaz tvog programa se ne podudara s očekivanim za taj ulaz.`,
+      life: 120000,
+    });
+  }
+
+  private handleArtefactMismatch(reason: ExecutionFailureReasonTests) {
+    this.messageService.add({
+      key: 'central',
+      severity: 'error',
+      detail: `Nisu se stvorile odgovarajuće datoteke za dani unos: ${reason.testInput}`,
+    });
+  }
+
+  private handleTimeout() {
+    this.messageService.add({
+      key: 'central',
+      severity: 'error',
+      summary: 'Izvršavanje trajalo predugo!',
+      detail:
+        'Vjerojatan uzrok problema jest neka beskonačna petlja koja ti se potkrala. Provjeri sve petlje još jednom!',
+      life: 120000,
+    });
+  }
+
+  private handleKilled() {
+    this.messageService.add({
+      key: 'central',
+      severity: 'error',
+      summary: 'Izvršavanje prisilno obustavljeno!',
+      detail:
+        'Vjerojatan uzrok problema je tzv. "memory leak". Najvjerojatnije imaš neku petlju u kojoj alociraš beskonačno mnogo prostora. ' +
+        'Moj savjet je da pretražiš sva mjesta gdje koristiš naredbu "new" i osiguraš da se ona ne izvršava beskonačno.',
       life: 120000,
     });
   }
