@@ -1,5 +1,11 @@
 @import "../../../../styles/variables.scss";
 
+h2 {
+  text-align: center;
+  border-top: 1px solid transparentize($color: $secondary, $amount: 0.75);
+  padding-top: 20px;
+}
+
 .task__wrapper {
   display: flex;
   @media screen and (max-width: $smallWidth) {
@@ -32,6 +38,10 @@
       pre {
         text-wrap: wrap;
       }
+    }
+
+    .results {
+      margin-top: auto;
     }
   }
 

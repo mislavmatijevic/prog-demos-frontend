@@ -1,0 +1,13 @@
+@import "../../../../styles/variables.scss";
+
+.scores-header {
+  color: $tertiary;
+}
+
+.charts {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2em;
+}

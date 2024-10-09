@@ -13,7 +13,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TooltipModule } from 'primeng/tooltip';
 import { finalize } from 'rxjs';
 import { standardCppStarterCode } from '../../../../helpers/editor-helpers';
-import { FullTask } from '../../../../types/models';
+import { FullTask, TaskScore } from '../../../../types/models';
 import { NewlinePipe } from '../../../pipes/newline.pipe';
 import { AuthService } from '../../../services/auth.service';
 import {
@@ -27,6 +27,7 @@ import {
 import { EditorComponent, SyntaxError } from '../../editor/editor.component';
 import { LoginComponent } from '../../login/login.component';
 import { RegisterComponent } from '../../register/register.component';
+import { TaskScoreGraphComponent } from '../task-score-graph/task-score-graph.component';
 
 @Component({
   selector: 'app-task-playground',
@@ -43,6 +44,7 @@ import { RegisterComponent } from '../../register/register.component';
     RegisterComponent,
     ProgressSpinnerModule,
     EditorComponent,
+    TaskScoreGraphComponent,
   ],
   templateUrl: './task-playground.component.html',
   styleUrl: './task-playground.component.scss',
@@ -79,8 +81,10 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
   helpCooldownIntervalHandler: number = -1;
 
   loginDialogVisible: boolean = false;
+  scoresDialogVisible: boolean = false;
 
   isScreenWideEnoughForProgramming: boolean = false;
+  userAchievedScore: TaskScore | null = null;
 
   coolMessageIndex = -1;
   coolMessages = [
@@ -361,6 +365,8 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (value) => {
           this.forceHideDiffEditor();
+          this.userAchievedScore = value.score;
+          this.scoresDialogVisible = true;
 
           this.messageService.add({
             key: 'central',

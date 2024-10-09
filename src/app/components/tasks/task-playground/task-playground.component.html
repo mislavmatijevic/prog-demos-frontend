@@ -22,6 +22,11 @@
         <div class="console-output">
             <pre>{{task.inputOutputExample|newline}}</pre>
         </div>
+        <div class="results" *ngIf="userAchievedScore !== null">
+            <h2>Usporedba rješenja ovoga zadatka</h2>
+            <app-task-score-graph [(visible)]="scoresDialogVisible" [userScore]="userAchievedScore"
+                [averageScore]="task.averageScore" [bestScore]="task.allTimeBestScore"></app-task-score-graph>
+        </div>
     </div>
     <ng-template #loadingTask>
         <div class="loading-spinner">

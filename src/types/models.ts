@@ -46,5 +46,6 @@ export type FullTask = Identifiable & {
     name: string;
   };
   helpSteps: Array<HelpStep>;
+  averageScore: TaskScore;
   allTimeBestScore: TaskScore;
 };
