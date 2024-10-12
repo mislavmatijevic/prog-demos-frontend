@@ -3,6 +3,7 @@ import { Router, RouterOutlet } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { NavigationComponent } from './layout/navigation/navigation.component';
+import { PreloaderService } from './preloader.service';
 import { AuthService } from './services/auth.service';
 
 @Component({
@@ -14,11 +15,16 @@ import { AuthService } from './services/auth.service';
   styleUrl: './app.component.scss',
 })
 export class AppComponent implements OnInit {
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private preloaderService: PreloaderService
+  ) {}
 
   title = 'prog-demos-frontend';
 
   ngOnInit(): void {
+    this.preloaderService.hide();
     if (this.authService.isLoggedIn()) {
       this.checkIfRefreshTokenExpired();
     }

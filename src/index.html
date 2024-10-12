@@ -1,13 +1,107 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <title>ProgDemosFrontend</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <style>
+    #preloader {
+      color: white;
+      background-color: black;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      height: 100%;
+      font-size: 40px;
+      word-wrap: break-word;
+      font-family: 'Courier New', monospace;
+    }
+  </style>
 </head>
+
 <body>
+  <div id="preloader"></div>
   <app-root></app-root>
 </body>
+
 </html>
+
+<script>
+  const setupPreloader = () => {
+    const preloader = document.getElementById('preloader');
+
+    const mockSentences = [
+      {
+        mockTask: "Učitavanje stranice... ",
+        mockResult: "     0%"
+      },
+      {
+        mockTask: "==========",
+        mockResult: "================= 100%"
+      },
+      {
+        mockTask: "",
+        mockResult: "Konfiguracija uspješno učitana!"
+      },
+      {
+        mockTask: "Priprema video zapisa... ",
+        mockResult: "OK."
+      },
+      {
+        mockTask: "Priprema zadataka... ",
+        mockResult: "    OK."
+      },
+      {
+        mockTask: "[NOVA PORUKA od prog_demos]: ",
+        mockResult: "Još se malo strpi!"
+      },
+      {
+        mockTask: "Priprema ",
+        mockResult: ""
+      }
+    ];
+
+    let delayBetweenSentences = 500;
+
+    const displaySentences = async () => {
+      for (const sentenceObj of mockSentences) {
+        await slowlyDisplaySentence(sentenceObj.mockTask, delayBetweenSentences);
+        await slowlyDisplaySentence(sentenceObj.mockResult, delayBetweenSentences);
+        preloader.innerText += '\n';
+      }
+      while (true) {
+        await slowlyDisplaySentence(".", delayBetweenSentences);
+      }
+    }
+
+    const slowlyDisplaySentence = (sentence, delay) => {
+      return new Promise(resolve => {
+        let sentenceIndex = 0;
+        const intervalHandler = setInterval(() => {
+          if (sentenceIndex < sentence.length) {
+            const currentChar = sentence.charAt(sentenceIndex++);
+            preloader.innerText += currentChar === ' ' ? '\u00A0' : currentChar;
+          } else {
+            clearInterval(intervalHandler);
+            preloader.setAttribute("intervalHandler", intervalHandler)
+            const timeoutHandlerSentence = setTimeout(resolve, delay);
+            preloader.setAttribute("timeoutHandlerSentence", timeoutHandlerSentence)
+          }
+        }, 10);
+        preloader.setAttribute("intervalHandler", intervalHandler)
+      });
+    }
+
+    const timeoutHandler = setTimeout(() => {
+      displaySentences();
+    }, 10);
+    preloader.setAttribute("timeoutHandler", timeoutHandler)
+  }
+
+  setupPreloader();
+</script>
