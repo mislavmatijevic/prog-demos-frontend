@@ -1,0 +1,11 @@
+services:
+  prog-demos-frontend:
+    build:
+      context: .
+      dockerfile: Docker/Dockerfile
+    ports:
+      - "4200:4200"
+    environment:
+      - NGINX_HOST=localhost
+      - NGINX_PORT=4200
+    restart: unless-stopped
