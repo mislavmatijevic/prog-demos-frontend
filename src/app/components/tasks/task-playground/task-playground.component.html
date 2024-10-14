@@ -43,7 +43,8 @@
 
         <app-editor *ngIf="mainCode !== undefined" (onEditorReady)="onMainEditorReady()" [(code)]="mainCode"
             [isBeingBitcoded]="isBeingTestedRemotely" [bitCode]="bitCode" [syntaxErrors]="syntaxErrors"
-            [ngStyle]="{'width': maximizeCodeWidth ? '100%' : 'initial'}" (onSave)="saveAndNotify($event)" />
+            [ngStyle]="{'width': maximizeCodeWidth ? '100%' : 'initial'}" (onSave)="saveAndNotify($event)"
+            (onExecute)="executeCode()" />
         <div *ngIf="isBeingTestedRemotely" class="evaluating-spinner">
             <p-progressSpinner [strokeWidth]="'10px'" ariaLabel="loading" [animationDuration]="'10s'" />
             <p class="evaluating-text" *ngIf="coolMessageIndex !== -1">{{coolMessages[coolMessageIndex]}}</p>
@@ -65,7 +66,7 @@
                 [icon]="codeHelpShown ? 'pi pi-times' : 'pi pi-lightbulb'" (onClick)="toggleHelp()"
                 [pTooltip]="codeHelpShown ? 'Zatvori pomoć' : 'Pomozi mi!'" tooltipPosition="top" severity="info" />
             <p-button [ngStyle]="{'visibility': isBeingTestedRemotely ? 'hidden' : 'visible' }" rounded="true"
-                icon="pi pi-play" pTooltip="Testiraj!" (onClick)="executeCode()" tooltipPosition="top"
+                icon="pi pi-play" pTooltip="Testiraj! (Ctrl+Enter)" (onClick)="executeCode()" tooltipPosition="top"
                 severity="contrast" />
         </div>
     </div>

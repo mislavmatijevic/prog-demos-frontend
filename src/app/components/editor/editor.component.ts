@@ -66,6 +66,7 @@ export class EditorComponent implements OnInit, OnChanges {
   @Input() syntaxErrors: Array<SyntaxError> = [];
 
   @Output() onSave = new EventEmitter<string>();
+  @Output() onExecute = new EventEmitter<string>();
 
   mouseMovementListener: IDisposable | null = null;
 
@@ -265,6 +266,10 @@ export class EditorComponent implements OnInit, OnChanges {
       if ((e.metaKey || e.ctrlKey) && e.code == 'KeyS') {
         e.preventDefault();
         this.onSave.emit(this.code);
+      }
+      if ((e.metaKey || e.ctrlKey) && e.code == 'Enter') {
+        e.preventDefault();
+        this.onExecute.emit(this.code);
       }
     });
     this.mainEditor.onDidChangeModelContent((_: any) => {
