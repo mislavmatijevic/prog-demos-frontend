@@ -34,18 +34,12 @@ export type HelpStep = {
   helperText: string;
 };
 
-export type FullTask = Identifiable & {
-  idSubtopic: number;
-  complexity: string;
+export type FullTask = BasicTask & {
   input: string;
   output: string;
   inputOutputExample: string;
-  isBossBattle: boolean;
-  subtopic: {
-    id: number;
-    name: string;
-  };
+  subtopic: Identifiable;
   helpSteps: Array<HelpStep>;
-  averageScore: TaskScore;
   allTimeBestScore: TaskScore;
+  averageScore: TaskScore;
 };
