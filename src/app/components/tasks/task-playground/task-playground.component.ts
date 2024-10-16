@@ -16,6 +16,7 @@ import { standardCppStarterCode } from '../../../../helpers/editor-helpers';
 import { FullTask, TaskScore } from '../../../../types/models';
 import { NewlinePipe } from '../../../pipes/newline.pipe';
 import { AuthService } from '../../../services/auth.service';
+import { TaskHelpStepService } from '../../../services/task-help-step.service';
 import {
   ExecutionFailureReasonOutputMismatch,
   ExecutionFailureReasonTests,
@@ -56,7 +57,8 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
     private clipboard: Clipboard,
     private messageService: MessageService,
     private authService: AuthService,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private taskHelpStepService: TaskHelpStepService
   ) {}
 
   task!: FullTask;
@@ -73,7 +75,7 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
 
   syntaxErrors: Array<SyntaxError> = [];
 
-  helpStepIndex = 0;
+  nextHelpStep = 0;
   diffEditorShown: boolean = false;
   codeHelpShown: boolean = false;
   helpButtonRageTolerance = 5;
@@ -200,7 +202,6 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
       next: (res: TaskResponse) => {
         this.task = res.task;
         this.setStartingCodeInEditor();
-        this.task.helpSteps.sort((step1, step2) => step1.step - step2.step);
       },
       error: (error) => {
         console.error(error);
@@ -243,22 +244,34 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
       this.changeDetectorRef.detectChanges();
     }
 
-    if (this.helpStepIndex == 0) {
+    if (this.nextHelpStep == 0) {
       this.previouslyGivenCodeHelp = standardCppStarterCode;
-    } else if (this.helpStepIndex >= this.task.helpSteps.length) {
-      this.handleHelpButtonWhenNoMoreHelpAvailable();
-      return;
+      this.nextHelpStep = 1;
     }
 
-    const thisHelpStep = this.task.helpSteps[this.helpStepIndex];
+    this.taskHelpStepService
+      .getHelpStep(this.task.id, this.nextHelpStep)
+      .subscribe({
+        next: (receivedResponse) => {
+          if (!receivedResponse.success) {
+            this.handleHelpButtonWhenNoMoreHelpAvailable();
+            return;
+          }
 
-    let foundHelpfulCodeStep = thisHelpStep.helperCode;
-    let foundHelpfulTip = thisHelpStep.helperText;
+          const nextHelpStep = receivedResponse.helpStep;
 
-    this.handleDisplayingHelp(foundHelpfulCodeStep, foundHelpfulTip);
+          let foundHelpfulCodeStep = nextHelpStep.helperCode;
+          let foundHelpfulTip = nextHelpStep.helperText;
 
-    this.helpStepIndex++;
-    this.startHelpCooldown(this.helpStepIndex * 10);
+          this.handleDisplayingHelp(foundHelpfulCodeStep, foundHelpfulTip);
+          this.startHelpCooldown(this.nextHelpStep * 10);
+
+          this.nextHelpStep++;
+        },
+        error: () => {
+          this.handleHelpButtonWhenNoMoreHelpAvailable();
+        },
+      });
   }
 
   handleHelpButtonWhenNoMoreHelpAvailable() {

@@ -39,7 +39,6 @@ export type FullTask = BasicTask & {
   output: string;
   inputOutputExample: string;
   subtopic: Identifiable;
-  helpSteps: Array<HelpStep>;
   allTimeBestScore: TaskScore;
   averageScore: TaskScore;
 };
