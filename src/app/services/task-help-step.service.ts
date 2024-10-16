@@ -18,7 +18,7 @@ type HelpStepIdentifier = {
 })
 export class TaskHelpStepService {
   constructor(private apiService: ApiService) {}
-  storedHelpSteps: Map<string, HelpStep> = new Map();
+  private storedHelpSteps: Map<string, HelpStep> = new Map();
 
   getHelpStep(
     taskId: number,
@@ -43,6 +43,14 @@ export class TaskHelpStepService {
 
   findHelpStep(identifier: HelpStepIdentifier): HelpStep | undefined {
     return this.storedHelpSteps.get(this.getUniqueHelpStepKey(identifier));
+  }
+
+  getAllStoredHelpSteps(): Array<HelpStep> {
+    const allStoredSteps: Array<HelpStep> = [];
+    this.storedHelpSteps.forEach((value) => {
+      allStoredSteps.push(value);
+    });
+    return allStoredSteps;
   }
 
   private storeHelpStep(taskId: number, helpStep: HelpStep) {
