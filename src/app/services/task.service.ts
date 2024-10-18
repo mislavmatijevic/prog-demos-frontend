@@ -81,7 +81,8 @@ export class TaskService {
 
   getSingleTask(taskId: number): Observable<TaskResponse> {
     return this.apiService.get<TaskResponse>(
-      `/tasks/${taskId}`
+      `/tasks/${taskId}`,
+      true
     ) as Observable<TaskResponse>;
   }
 

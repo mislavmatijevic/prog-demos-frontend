@@ -201,6 +201,9 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
     this.taskService.getSingleTask(videoId).subscribe({
       next: (res: TaskResponse) => {
         this.task = res.task;
+        if (this.task.bestSuccessfulSubmission) {
+          this.userAchievedScore = this.task.bestSuccessfulSubmission;
+        }
         this.setStartingCodeInEditor();
       },
       error: (error) => {
