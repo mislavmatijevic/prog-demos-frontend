@@ -33,6 +33,9 @@
 <script>
   const setupPreloader = () => {
     const preloader = document.getElementById('preloader');
+    if (preloader == null) {
+      return
+    }
 
     const mockSentences = [
       {
