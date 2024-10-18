@@ -10,7 +10,6 @@
   <style>
     #preloader {
       color: white;
-      background-color: black;
       position: absolute;
       top: 0;
       left: 0;
@@ -37,20 +36,40 @@
 
     const mockSentences = [
       {
-        mockTask: "Učitavanje stranice... ",
-        mockResult: "     0%"
+        mockTask: "Povezivanje sa poslužiteljem...       ",
+        mockResult: "0%"
       },
       {
         mockTask: "==========",
-        mockResult: "================= 100%"
+        mockResult: "=================           100%"
       },
       {
         mockTask: "",
-        mockResult: "Konfiguracija uspješno učitana!"
+        mockResult: "Povezano!"
       },
       {
-        mockTask: "Priprema video zapisa... ",
-        mockResult: "OK."
+        mockTask: "Smišljanje teških zadataka...         ",
+        mockResult: "0%"
+      },
+      {
+        mockTask: "=========================",
+        mockResult: "==           100%"
+      },
+      {
+        mockTask: "Ruganje lošim rješenjima...           ",
+        mockResult: "0%"
+      },
+      {
+        mockTask: "========",
+        mockResult: "===================           100%"
+      },
+      {
+        mockTask: "HAHA",
+        mockResult: "HAHA"
+      },
+      {
+        mockTask: "Analiza osjećaja nakon ruganja... ",
+        mockResult: "OK, sram me."
       },
       {
         mockTask: "Priprema zadataka... ",
@@ -58,10 +77,10 @@
       },
       {
         mockTask: "[NOVA PORUKA od prog_demos]: ",
-        mockResult: "Još se malo strpi!"
+        mockResult: "Bome ti se ovo dugo učitava?"
       },
       {
-        mockTask: "Priprema ",
+        mockTask: "Otvaranje aplikacije ",
         mockResult: ""
       }
     ];
@@ -103,5 +122,5 @@
     preloader.setAttribute("timeoutHandler", timeoutHandler)
   }
 
-  setupPreloader();
+  setTimeout(() => setupPreloader(), 500);
 </script>
