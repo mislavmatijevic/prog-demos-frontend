@@ -1,0 +1,14 @@
+@import "../../../../../styles/variables.scss";
+
+.success-dialog-body {
+  background-color: $dark;
+  box-shadow: $score 0px 1px 15px, $score 0px 0px 0px 1px;
+  padding: 1em 2em;
+
+  transition: scale 0.05s linear;
+
+  cursor: pointer;
+  &:hover {
+    scale: 1.1;
+  }
+}

@@ -11,6 +11,9 @@
     <app-register (registrationSuccessful)="handleRegistrationSuccessful()"></app-register>
 </p-dialog>
 
+<app-success-dialog *ngIf="userAchievedScore?.totalScore" [(visible)]="successDialogVisible"
+    [scoreNumber]="userAchievedScore?.totalScore!" />
+
 <div class="task__wrapper">
     <div class="task__wrapper-info__wrapper" *ngIf="task; else loadingTask"
         [ngStyle]="{'width': maximizeCodeWidth ? '0%' : '100%', 'padding': maximizeCodeWidth ? '0' : '20px 20px'}">

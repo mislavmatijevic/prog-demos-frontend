@@ -1,0 +1,7 @@
+<p-dialog [(visible)]="visible" (click)="closeDialog()">
+    <ng-template pTemplate="headless">
+        <div class="success-dialog-body">
+            <p [innerHTML]="scoreNumber | progDemosHead"></p>
+        </div>
+    </ng-template>
+</p-dialog>

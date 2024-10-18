@@ -138,3 +138,22 @@ div.divider {
     }
   }
 }
+
+.skill-points {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 2em;
+  color: $score;
+  max-width: fit-content;
+  &__icon {
+    max-height: 1.5em;
+  }
+
+  @media screen and (max-width: $smallWidth) {
+    font-size: 1em;
+    &__icon {
+      max-height: 2em;
+    }
+  }
+}
