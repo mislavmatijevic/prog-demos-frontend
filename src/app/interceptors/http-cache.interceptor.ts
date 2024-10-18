@@ -18,6 +18,7 @@ type CachedRequest = {
 const requests = new Map<string, CachedRequest>();
 const loginUrlRegex = new RegExp(`.*/auth/login$`);
 const logoutUrlRegex = new RegExp(`.*/auth/logout$`);
+const runTaskUrlSufix = '/run';
 
 export const httpCacheInterceptor = (options?: {
   urlsToCache?: string[];
@@ -94,6 +95,11 @@ export const httpCacheInterceptor = (options?: {
               if (!req) return;
 
               if (res instanceof HttpResponse) {
+                if (res.url?.endsWith(runTaskUrlSufix)) {
+                  requests.clear();
+                  return;
+                }
+
                 req.didSucceed = true;
                 req.successData = res;
                 req.ttl = getTTL();

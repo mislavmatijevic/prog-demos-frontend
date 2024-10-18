@@ -24,7 +24,7 @@ export const appConfig: ApplicationConfig = {
             'tasks',
             'tasks/.*',
             'auth/password/.*',
-            'statistics/solution-attempts',
+            'statistics/.*',
           ],
           globalTTL: 60000,
         }),
