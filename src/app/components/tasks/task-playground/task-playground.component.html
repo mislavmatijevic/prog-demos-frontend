@@ -14,8 +14,8 @@
 <app-success-dialog *ngIf="userAchievedScore?.totalScore" [(visible)]="successDialogVisible"
     [scoreNumber]="userAchievedScore?.totalScore!" />
 
-<div class="task__wrapper">
-    <div class="task__wrapper-info__wrapper" *ngIf="task; else loadingTask"
+<div class="playground">
+    <div class="playground-info__wrapper" *ngIf="task; else loadingTask"
         [ngStyle]="{'width': maximizeCodeWidth ? '0%' : '100%', 'padding': maximizeCodeWidth ? '0' : '20px 20px'}">
         <h2>{{task.name}}</h2>
 
@@ -41,8 +41,8 @@
         </div>
     </ng-template>
 
-    <div *ngIf="isScreenWideEnoughForProgramming" class="task__wrapper-input__wrapper">
-        <div class="task__wrapper-input__wrapper-controls-top">
+    <div *ngIf="isScreenWideEnoughForProgramming" class="playground-input__wrapper">
+        <div class="playground-input__wrapper-controls-top">
             <p-button (onClick)="expandCode()" text="true" icon="pi pi-code" class="expand-code-btn"
                 [pTooltip]="maximizeCodeWidth ? 'Prikaži zadatak' : 'Fokusiraj kod'" tooltipPosition="bottom" />
             <p-button (onClick)="copyCode()" text="true" icon="pi pi-copy" pTooltip="Kopiraj cijeli kod"
@@ -67,7 +67,7 @@
             <p-progressSpinner ariaLabel="loading" />
         </div>
 
-        <div class="task__wrapper-input__wrapper-controls-bottom">
+        <div class="playground-input__wrapper-controls-bottom">
             <p-button *ngIf="helpButtonRageTolerance != 0" rounded="true"
                 [disabled]="!codeHelpShown && nextHelpCooldownRemainingTime !== 0"
                 [icon]="codeHelpShown ? 'pi pi-times' : 'pi pi-lightbulb'" (onClick)="toggleHelp()"
