@@ -6,14 +6,14 @@
   align-items: center;
 }
 
-.row {
+.score-row {
   display: flex;
   flex-direction: column;
   width: fit-content;
   background-color: $dark-accent;
   box-shadow: $tertiary 0px 1px 20px, $tertiary 0px 0px 0px 2px;
   gap: 1em;
-  margin-bottom: 2em;
+  margin: 2em 0;
   padding: 10px;
 
   .row-text {

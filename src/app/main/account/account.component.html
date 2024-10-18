@@ -1,9 +1,9 @@
 <h1>Račun</h1>
 <p-button (onClick)="signOut()" label="Odjava" type="submit" icon="pi pi-sign-out" severity="danger" />
 <div class="page-wrapper">
-    <div class="row">
+    <div class="score-row">
         <p class="row-text username">{{authService.getUser()?.username}}</p>
-        <p class="row-text total-score">{{totalScore}} XP</p>
+        <p class="row-text total-score" [innerHTML]="totalScore | progDemosHead"></p>
     </div>
 
     <p-progressSpinner *ngIf="solutionAttempts === null"></p-progressSpinner>

@@ -5,6 +5,7 @@ import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { ChartModule } from 'primeng/chart';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ProgDemosHeadPipe } from '../../pipes/prog-demos-head.pipe';
 import { AuthService } from '../../services/auth.service';
 import {
   SolutionAttemptPerSubtopic,
@@ -15,7 +16,13 @@ import {
 @Component({
   selector: 'app-account',
   standalone: true,
-  imports: [CommonModule, ButtonModule, ProgressSpinnerModule, ChartModule],
+  imports: [
+    CommonModule,
+    ButtonModule,
+    ProgressSpinnerModule,
+    ChartModule,
+    ProgDemosHeadPipe,
+  ],
   templateUrl: './account.component.html',
   styleUrl: './account.component.scss',
 })
