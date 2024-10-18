@@ -22,7 +22,8 @@ export interface TaskScore {
   totalScore: number;
 }
 
-export type UserBestScore = TaskScore & {
+export type UserBestScore = {
+  score: TaskScore;
   submittedCode: string;
 };
 

@@ -209,7 +209,7 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
       next: (res: TaskResponse) => {
         this.task = res.task;
         if (this.task.bestSuccessfulSubmission) {
-          this.userAchievedScore = this.task.bestSuccessfulSubmission;
+          this.userAchievedScore = this.task.bestSuccessfulSubmission.score;
           this.loadSuccessfulSolutionBtnVisible = true;
         }
         this.setStartingCodeInEditor();
