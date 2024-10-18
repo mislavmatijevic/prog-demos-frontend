@@ -10,18 +10,22 @@
         rješenja s ostalima.</span>
     <app-register (registrationSuccessful)="handleRegistrationSuccessful()"></app-register>
 </p-dialog>
+
 <div class="task__wrapper">
     <div class="task__wrapper-info__wrapper" *ngIf="task; else loadingTask"
         [ngStyle]="{'width': maximizeCodeWidth ? '0%' : '100%', 'padding': maximizeCodeWidth ? '0' : '20px 20px'}">
         <h2>{{task.name}}</h2>
+
         <ul>
             <li>Ulaz: {{task.input}}</li>
             <li>Izlaz: {{task.output}}</li>
         </ul>
+
         <h2>Primjer:</h2>
         <div class="console-output">
             <pre>{{task.inputOutputExample|newline}}</pre>
         </div>
+
         <div class="results" *ngIf="userAchievedScore !== null">
             <h2>Usporedba rješenja ovoga zadatka</h2>
             <app-task-score-graph [(visible)]="scoresDialogVisible" [userScore]="userAchievedScore"
@@ -33,7 +37,8 @@
             <p-progressSpinner ariaLabel="loading" />
         </div>
     </ng-template>
-    <div *ngIf="isScreenWideEnoughForProgramming;" class="task__wrapper-input__wrapper">
+
+    <div *ngIf="isScreenWideEnoughForProgramming" class="task__wrapper-input__wrapper">
         <div class="task__wrapper-input__wrapper-controls-top">
             <p-button (onClick)="expandCode()" text="true" icon="pi pi-code" class="expand-code-btn"
                 [pTooltip]="maximizeCodeWidth ? 'Prikaži zadatak' : 'Fokusiraj kod'" tooltipPosition="bottom" />
@@ -50,7 +55,6 @@
             <p class="evaluating-text" *ngIf="coolMessageIndex !== -1">{{coolMessages[coolMessageIndex]}}</p>
         </div>
 
-
         <div *ngIf="diffEditorShown && mainCode !== undefined">
             <app-editor [isDiffEditor]="true" [originalCode]="diffEditorLeftState"
                 [(comparedCode)]="diffEditorRightSide" [ngStyle]="{'width': maximizeCodeWidth ? '100%' : 'initial'}" />
@@ -65,17 +69,23 @@
                 [disabled]="!codeHelpShown && nextHelpCooldownRemainingTime !== 0"
                 [icon]="codeHelpShown ? 'pi pi-times' : 'pi pi-lightbulb'" (onClick)="toggleHelp()"
                 [pTooltip]="codeHelpShown ? 'Zatvori pomoć' : 'Pomozi mi!'" tooltipPosition="top" severity="info" />
+            <p-button [ngStyle]="{'visibility': loadSuccessfulSolutionBtnVisible ? 'visible' : 'hidden' }"
+                rounded="true" icon="pi pi-cloud-download" pTooltip="Učitaj najbolje rješenje"
+                (onClick)="showBestCode()" tooltipPosition="top" severity="success" />
             <p-button [ngStyle]="{'visibility': isBeingTestedRemotely ? 'hidden' : 'visible' }" rounded="true"
                 icon="pi pi-play" pTooltip="Testiraj! (Ctrl+Enter)" (onClick)="executeCode()" tooltipPosition="top"
                 severity="contrast" />
         </div>
     </div>
+
     <div *ngIf="!isScreenWideEnoughForProgramming" class="small-width-error-message">
         <p>Nije moguće programirati u ovako malenom prozoru.</p>
         <p>
-            Pristupi zadatku na većem ekranu, i moći ćeš programirati i testirati svoje rješenje direktno na stranici.
+            Pristupi zadatku na većem ekranu, i moći ćeš programirati i testirati svoje rješenje direktno na
+            stranici.
         </p>
     </div>
 </div>
+
 <p-overlayPanel>
 </p-overlayPanel>

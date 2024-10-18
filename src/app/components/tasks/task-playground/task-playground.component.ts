@@ -87,6 +87,7 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
 
   isScreenWideEnoughForProgramming: boolean = false;
   userAchievedScore: TaskScore | null = null;
+  loadSuccessfulSolutionBtnVisible: boolean = false;
 
   coolMessageIndex = -1;
   coolMessages = [
@@ -193,6 +194,12 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
     this.messageService.addAll(messages);
   }
 
+  showBestCode() {
+    this.mainCode = undefined;
+    this.changeDetectorRef.detectChanges();
+    this.mainCode = this.task.bestSuccessfulSubmission?.submittedCode;
+  }
+
   private saveCurrentCode(currentCode: string) {
     this.currentStorage().setItem(this.getTaskStorageKey(), currentCode);
   }
@@ -203,6 +210,7 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
         this.task = res.task;
         if (this.task.bestSuccessfulSubmission) {
           this.userAchievedScore = this.task.bestSuccessfulSubmission;
+          this.loadSuccessfulSolutionBtnVisible = true;
         }
         this.setStartingCodeInEditor();
       },

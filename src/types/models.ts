@@ -22,10 +22,14 @@ export interface TaskScore {
   totalScore: number;
 }
 
+export type UserBestScore = TaskScore & {
+  submittedCode: string;
+};
+
 export type BasicTask = Identifiable & {
   complexity: string;
   isBossBattle: boolean;
-  bestSuccessfulSubmission: TaskScore | undefined;
+  bestSuccessfulSubmission: UserBestScore | undefined;
 };
 
 export type HelpStep = {
