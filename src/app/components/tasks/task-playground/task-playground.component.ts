@@ -83,7 +83,6 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
   helpCooldownIntervalHandler: number = -1;
 
   loginDialogVisible: boolean = false;
-  scoresDialogVisible: boolean = false;
 
   isScreenWideEnoughForProgramming: boolean = false;
   userAchievedScore: TaskScore | null = null;
@@ -390,7 +389,6 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
         next: (value) => {
           this.forceHideDiffEditor();
           this.userAchievedScore = value.score;
-          this.scoresDialogVisible = true;
 
           this.messageService.add({
             key: 'central',

@@ -1,12 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ChartModule } from 'primeng/chart';
 import { DialogModule } from 'primeng/dialog';
 import { TaskScore } from '../../../../types/models';
@@ -18,9 +10,7 @@ import { TaskScore } from '../../../../types/models';
   templateUrl: './task-score-graph.component.html',
   styleUrl: './task-score-graph.component.scss',
 })
-export class TaskScoreGraphComponent implements OnInit, OnChanges {
-  @Input() visible: boolean = false;
-  @Output() visibleChange = new EventEmitter<boolean>();
+export class TaskScoreGraphComponent implements OnInit {
   @Input({ required: true }) userScore!: TaskScore;
   @Input({ required: true }) averageScore!: TaskScore;
   @Input({ required: true }) bestScore!: TaskScore;
@@ -32,18 +22,6 @@ export class TaskScoreGraphComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.refreshStats();
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['visible'] !== undefined) {
-      this.refreshStats();
-      this.visibleChange.emit(this.visible);
-    }
-  }
-
-  handleVisibleChange(newState: boolean) {
-    this.visible = newState;
-    this.visibleChange.emit(this.visible);
   }
 
   private refreshStats() {

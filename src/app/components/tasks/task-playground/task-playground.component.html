@@ -28,8 +28,8 @@
 
         <div class="results" *ngIf="userAchievedScore !== null">
             <h2>Usporedba rješenja ovoga zadatka</h2>
-            <app-task-score-graph [(visible)]="scoresDialogVisible" [userScore]="userAchievedScore"
-                [averageScore]="task.averageScore" [bestScore]="task.allTimeBestScore"></app-task-score-graph>
+            <app-task-score-graph [userScore]="userAchievedScore" [averageScore]="task.averageScore"
+                [bestScore]="task.allTimeBestScore"></app-task-score-graph>
         </div>
     </div>
     <ng-template #loadingTask>
