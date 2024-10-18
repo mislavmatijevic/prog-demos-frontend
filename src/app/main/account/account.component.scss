@@ -9,6 +9,7 @@
 .score-row {
   display: flex;
   flex-direction: column;
+  align-items: center;
   width: fit-content;
   background-color: $dark-accent;
   box-shadow: $tertiary 0px 1px 20px, $tertiary 0px 0px 0px 2px;
