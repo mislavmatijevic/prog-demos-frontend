@@ -101,7 +101,7 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
   getTaskStorageKey = () => `playground-code-${this.task.id}`;
 
   ngOnInit() {
-    this.isScreenWideEnoughForProgramming = window.screen.width > 355;
+    this.isScreenWideEnoughForProgramming = window.innerWidth > 435;
 
     const taskId = parseInt(this.route.snapshot.paramMap.get('taskId')!);
     this.fetchTask(taskId);
