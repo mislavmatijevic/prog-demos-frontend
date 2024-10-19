@@ -6,13 +6,13 @@
         </div>
         <p-button (onClick)="toggleVisibility()"
             [ngStyle]="{'transform': isCollapsed ? 'translateX(7px)' : 'translateX(100px)'}"
-            class="navigation-drawer__header__button" [icon]="isCollapsed ? 'pi pi-directions' : 'pi pi-directions-alt'"
-            rounded="true"></p-button>
+            class="navigation-drawer__header__button"
+            [icon]="isCollapsed ? 'pi pi-angle-double-right' : 'pi pi-angle-double-left'" rounded="true"></p-button>
     </div>
     <div class="navigation">
         <a *ngFor="let navigationHeader of navigationHeaders" class="navigation-link"
-            [routerLink]="navigationHeader.link"
-            routerLinkActive="navigation-link__active">{{navigationHeader.name}}</a>
+            [routerLink]="navigationHeader.link" routerLinkActive="navigation-link__active"
+            [routerLinkActiveOptions]="{exact: true}">{{navigationHeader.name}}</a>
     </div>
 
     <div [ngStyle]="{'transform': isCollapsed ? 'translate(-100%, 100%)' : 'translate(-40%, 20%)'}"
