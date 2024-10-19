@@ -47,3 +47,9 @@ export type FullTask = BasicTask & {
   allTimeBestScore: TaskScore;
   averageScore: TaskScore;
 };
+
+export type News = {
+  title: string;
+  text: string;
+  time: string;
+};

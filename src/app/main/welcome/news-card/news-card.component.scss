@@ -1,0 +1,28 @@
+@import "../../../../styles/variables.scss";
+
+.news-card {
+  background: linear-gradient(50deg, $secondary, $dark-accent);
+  box-shadow: $primary 0px 1px 20px, $primary 0px 0px 0px 1px;
+
+  .title {
+    padding-top: 10px;
+    text-align: center;
+  }
+  .text {
+    @media screen and (max-width: $smallWidth) {
+      padding: 1px;
+    }
+    text-align: start;
+    padding: 0px 10px;
+  }
+  .time {
+    @media screen and (max-width: $smallWidth) {
+      padding: 1px;
+      text-align: start;
+    }
+    color: $tertiary;
+    text-align: end;
+    padding: 1em;
+    font-size: small;
+  }
+}

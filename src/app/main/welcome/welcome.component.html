@@ -6,7 +6,7 @@
 </h2>
 <p>Želim ti dobrodošlicu na svoju stranicu, prog_demos.com.</p>
 <div class="two-sections-grid">
-    <section class="grid-item">
+    <section>
         <div class="image-background-section">
             <div class="dimmed-text dim-abit">
                 <h2>Što je ova stranica?</h2>
@@ -54,8 +54,8 @@
                     Ništa me ne čini veselijim nego kada mi netko i dan danas zahvali na
                     pomoći pri učenju!
                 </p>
-                <small class="image-description">U pozadini fotka prvog responsea s backenda, prvi dan razvoja ovog
-                    projekta</small>
+                <small class="image-description">U pozadini je fotka prvog responsea s backenda, prvi dan razvoja ovog
+                    projekta.</small>
             </div>
         </div>
         <div class="showcase-section">
@@ -80,5 +80,8 @@
             </p>
         </div>
     </section>
-    <section class="news-section grid-item">News</section>
+    <section *ngIf="fetchedNews.length > 0" class="news-section">
+        <h2 class="news-section-title">Obavijesti</h2>
+        <app-news-card *ngFor="let newsItem of fetchedNews" [newsItem]="newsItem" />
+    </section>
 </div>
