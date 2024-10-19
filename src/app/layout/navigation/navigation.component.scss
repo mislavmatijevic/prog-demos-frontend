@@ -23,9 +23,9 @@
 
   background: linear-gradient(
     270deg,
-    darken($secondary, 10%),
+    darken($tertiary, 50%),
     darken($primary, 30%),
-    darken($secondary, 40%)
+    $secondary
   );
   background-size: 200% 200%;
   animation: gradientAnimation 40s ease infinite;

@@ -2,7 +2,7 @@
 
 h2 {
   text-align: center;
-  border-top: 1px solid transparentize($color: $secondary, $amount: 0.75);
+  border-top: 1px solid transparentize($color: $secondary-accent, $amount: 0.75);
   padding-top: 20px;
 }
 
@@ -13,6 +13,9 @@ h2 {
   }
 
   &-info__wrapper {
+    scrollbar-color: $secondary-accent $dark;
+    scrollbar-width: auto;
+
     @media screen and (max-width: $smallWidth) {
       max-width: 100%;
       height: fit-content;
