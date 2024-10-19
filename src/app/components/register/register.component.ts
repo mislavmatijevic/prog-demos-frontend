@@ -4,6 +4,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
+import { CheckboxModule } from 'primeng/checkbox';
 import { DividerModule } from 'primeng/divider';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
@@ -22,6 +23,7 @@ import {
     CommonModule,
     DividerModule,
     ButtonModule,
+    CheckboxModule,
     InputTextModule,
     FloatLabelModule,
     FormsModule,
@@ -43,9 +45,15 @@ export class RegisterComponent {
   email = new FormControl('');
   username = new FormControl('');
   password = new FormControl('');
+  checkedPrivacyPolicy: boolean = false;
 
   onSubmit() {
-    if (this.email.valid && this.username.valid && this.password.valid) {
+    if (
+      this.checkedPrivacyPolicy &&
+      this.email.valid &&
+      this.username.valid &&
+      this.password.valid
+    ) {
       this.registrationInProgress = true;
 
       this.authService

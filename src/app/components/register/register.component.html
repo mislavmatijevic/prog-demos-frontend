@@ -13,7 +13,7 @@
         <label for="email" class="register-form__row__label">Tvoj email za registraciju</label>
         <div class="register-form__row__group">
             <input pInputText id="email" type="text" class="form-control register-form__row__input" name="email"
-                minlength="4" required [formControl]="email" ngModel email />
+                minlength="4" required [formControl]="email" email />
             <small class="register-form__row__hint">
                 Email mi treba samo da ti pošaljem poveznicu za aktivaciju tvog novog računa.
             </small>
@@ -26,7 +26,9 @@
             <label for="password" class="register-form__row__label">Lozinka</label>
         </p-floatLabel>
     </div>
-    <small>Stvaranjem računa prihvaćaš <a href="/privacy">Politiku privatnosti</a>.</small>
+    <small>Pročitaj <a href="/privacy">Obavijest o privatnosti</a>.</small>
+    <p-checkbox id="agree-to-privacy-policy" name="agree-to-privacy-policy" label="Prihvaćam Obavijest o privatnosti."
+        required [(ngModel)]="checkedPrivacyPolicy" [binary]="true"></p-checkbox>
     <p-button *ngIf="!registrationInProgress" label="Registracija" type="submit" icon="pi pi-user-plus" />
     <p-progressSpinner *ngIf="registrationInProgress" />
 </form>
