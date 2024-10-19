@@ -1,0 +1,70 @@
+@import "../../../styles/variables.scss";
+
+.two-sections-grid {
+  @media screen and (max-width: $smallWidth) {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  gap: 7px;
+
+  margin-top: 2rem;
+}
+
+.showcase-section {
+  grid-row: 2;
+  grid-column: 1;
+
+  margin-top: 20px;
+  box-shadow: $secondary-accent 0px 1px 20px, $secondary 0px 0px 0px 3px;
+  padding: 10px;
+}
+
+.image-background-section {
+  grid-row: 1;
+  grid-column: 1;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: fit-content;
+
+  background-image: url("/assets/images/first_response.webp");
+  background-size: cover;
+  background-position: center;
+  background-color: $dark-accent;
+  box-shadow: $accent 0px 1px 20px, $accent 0px 0px 0px 2px;
+  min-height: 75vh;
+
+  .image-description {
+    @media screen and (max-width: $smallWidth) {
+      display: none;
+    }
+    display: inline-block;
+    color: transparentize($color: $tertiary, $amount: 0.1);
+    width: 100%;
+    text-align: end;
+    padding: 0 1rem;
+  }
+}
+
+.news-section {
+  grid-row: 1;
+  grid-column: 2;
+
+  background: linear-gradient(50deg, $secondary, $dark-accent);
+  box-shadow: $primary 0px 1px 20px, $primary 0px 0px 0px 1px;
+  height: fit-content;
+}
+
+.dimmed-text {
+  padding: 10px 10px;
+}
+
+.dim-abit {
+  background-color: transparentize($color: $dark-accent, $amount: 0.25);
+}
+.dim-alot {
+  background-color: transparentize($color: $dark, $amount: 0.1);
+}
