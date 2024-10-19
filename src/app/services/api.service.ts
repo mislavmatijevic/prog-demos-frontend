@@ -15,8 +15,7 @@ export class ApiService {
     if (isDevMode()) {
       this.rootUrl = 'http://localhost:8080';
     } else {
-      // TODO: Set to actual domain after domain is bought.
-      this.rootUrl = 'https://prog_demos.com';
+      this.rootUrl = 'https://api.progdemos.com';
     }
   }
 
