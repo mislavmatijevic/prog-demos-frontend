@@ -26,52 +26,52 @@ export class TaskScoreGraphComponent implements OnInit {
 
   private refreshStats() {
     this.complexityData = {
-      labels: ['Kompleksnost rješenja'],
+      labels: ['Kompleksnost ovog zadatka'],
       datasets: [
         {
-          label: 'Tvoje rješenje',
+          label: 'Kompleksnost tvog koda',
           data: [this.userScore.complexity],
         },
         {
-          label: 'Prosječna kompleksnost',
+          label: 'Prosjek ostalih korisnika',
           data: [this.averageScore.complexity],
         },
         {
-          label: 'Najbolja kompleksnost',
+          label: 'Najbolje predano rješenje',
           data: [this.bestScore.complexity],
         },
       ],
     };
     this.tokensData = {
-      labels: ['Količina koda u rješenjima'],
+      labels: ['Količina koda rješenja zadatka'],
       datasets: [
         {
           label: 'Tvoja količina koda',
           data: [this.userScore.tokens],
         },
         {
-          label: 'Prosječna količina koda',
+          label: 'Prosjek ostalih korisnika',
           data: [this.averageScore.tokens],
         },
         {
-          label: 'Najbolja kompleksnost',
+          label: 'Najbolje predano rješenje',
           data: [this.bestScore.tokens],
         },
       ],
     };
     this.scoresData = {
-      labels: ['Ostvaren XP'],
+      labels: ['Ostvaren XP na ovome zadatku'],
       datasets: [
         {
           label: 'Tvoji ostvareni bodovi',
           data: [this.userScore.totalScore],
         },
         {
-          label: 'Prosjek za ovaj zadatak',
+          label: 'Prosjek ostalih korisnika',
           data: [this.averageScore.totalScore],
         },
         {
-          label: 'Bodovi najboljeg rješenja',
+          label: 'Najbolje predano rješenje',
           data: [this.bestScore.totalScore],
         },
       ],
