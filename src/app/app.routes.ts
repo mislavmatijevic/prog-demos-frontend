@@ -18,50 +18,61 @@ export const routes: Routes = [
   {
     path: '',
     component: WelcomeComponent,
+    title: 'Prog Demos',
   },
   {
     path: 'demos',
     component: VideosComponent,
+    title: 'Prog Demos | Uči',
   },
   {
     path: 'prog',
     component: TasksComponent,
+    title: 'Prog Demos | Vježbaj',
   },
   {
     path: 'prog/:taskId',
     component: TaskPlaygroundComponent,
+    title: 'Učitavanje zadatka...',
   },
   {
     path: 'login',
     canActivate: [noAuthGuard],
     component: LoginPageComponent,
+    title: 'Prog Demos | Prijava',
   },
   {
     path: 'register',
     canActivate: [noAuthGuard],
     component: RegisterPageComponent,
+    title: 'Prog Demos | Registracija',
   },
   {
     path: 'account',
     canActivate: [authGuard],
     component: AccountComponent,
+    title: 'Prog Demos | Račun',
   },
   {
     path: 'activation',
     component: ActivationComponent,
+    title: 'Prog Demos | Aktivacija',
   },
   {
     path: 'create-task',
     canActivate: [authGuard, specialTypeAuthGuard],
     component: CreateTaskComponent,
+    title: 'Prog Demos | Stvaranje zadatka',
   },
   {
     path: 'password-reset/:resetToken',
     canActivate: [noAuthGuard],
     component: PasswordResetComponent,
+    title: 'Prog Demos | Obnova lozinke',
   },
   {
     path: 'privacy',
     component: PrivacyComponent,
+    title: 'Prog Demos | Obavijest o privatnosti',
   },
 ];

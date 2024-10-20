@@ -2,6 +2,7 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import confetti from 'canvas-confetti';
 import { Message, MessageService } from 'primeng/api';
@@ -60,7 +61,8 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
     private messageService: MessageService,
     private authService: AuthService,
     private changeDetectorRef: ChangeDetectorRef,
-    private taskHelpStepService: TaskHelpStepService
+    private taskHelpStepService: TaskHelpStepService,
+    private titleService: Title
   ) {}
 
   task!: FullTask;
@@ -217,6 +219,7 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
           this.loadSuccessfulSolutionBtnVisible = true;
         }
         this.setStartingCodeInEditor();
+        this.titleService.setTitle(this.task.name);
       },
       error: (error) => {
         console.error(error);
