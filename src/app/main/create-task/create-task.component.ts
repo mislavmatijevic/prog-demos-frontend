@@ -158,14 +158,17 @@ export class CreateTaskComponent implements OnInit {
   fillTestsFromInputAndOutputTextAreas(): NewTestDefinition[] {
     const inputs = this.inputControl.value!.split('\n');
     const outputs = this.outputControl.value!.split('\n');
-    const artefactSha256 = this.sha256Control.value!.split('\n');
+    const artefactsSha256 = this.sha256Control.value!.split('\n');
 
     const tests: NewTestDefinition[] = [];
     inputs.forEach((input, index) => {
+      const inputLines = input.replaceAll('\\n', '\n');
+      const outputLines = outputs[index].replaceAll('\\n', '\n');
+      const artefactSha256 = artefactsSha256[index];
       tests.push({
-        input,
-        expectedOutput: outputs[index],
-        artefactSha256: artefactSha256[index],
+        input: inputLines,
+        expectedOutput: outputLines,
+        artefactSha256,
       });
     });
 

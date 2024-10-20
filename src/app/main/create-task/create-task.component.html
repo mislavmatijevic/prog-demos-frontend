@@ -45,10 +45,14 @@
         <div class="column">
             <p>Razdvoji više različitih testnih ulaza i izlaza po linijama!</p>
             <small class="form-label">
-                <i>Upiši kompletni unos i kompletni očekivani izlaz, a ne samo rezultate obrade.</i>
+                <i>Upiši kompletni unos i kompletni očekivani izlaz, a ne samo rezultate obrade. </i>
                 <i>Ovo su vrijednosti koje će se promatrati na standardnom ulazu i izlazu tijekom testiranja
                     rješenja.</i>
             </small>
+            <strong>
+                Ako očekivani ulazi / izlazi sadržavaju više linija,
+                te linije odvoji znakom '\n' unutar istog retka!
+            </strong>
             <div class="row">
                 <div class="column">
                     <label class="form-label" for="test-inputs">Testni unosi:</label>
@@ -64,7 +68,8 @@
             </div>
             <div class="column">
                 <label class="form-label" for="sha256">Ako zadatak generira datoteke,
-                    ovdje upiši za svaki unos u novu liniju SHA256 sažetak njihovih očekivanih sadržaja
+                    ovdje upiši za svaki unos u <u><strong>novu liniju</strong></u>
+                    SHA256 sažetak njihovih očekivanih sadržaja
                     (po abecednom redu naziva datoteka):</label>
                 <small>OPCIONALNO</small>
                 <textarea pInputTextarea id="sha256Control" [rows]="inputControl.value?.split('\n')?.length ?? 1"
