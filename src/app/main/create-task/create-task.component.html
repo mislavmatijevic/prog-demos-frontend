@@ -98,9 +98,9 @@
                 (ili jedan korak u kodu, ili jedan pomoćni oblačić)!</p>
 
             <p-button rounded="true" severity="info" (onClick)="addHelpStep()" type="button" icon="pi pi-plus-circle" />
-            <p-accordionTab *ngFor="let helpStep of definedHelpSteps" [header]="helpStep.step + '. korak pomoći'">
-                <app-new-help-step-definition [(helpCode)]="helpStep.helperCode" [(helpHint)]="helpStep.helperText" />
-            </p-accordionTab>
+
+            <app-new-help-step-definition *ngFor="let helpStep of definedHelpSteps" [helpStep]="helpStep" />
+
             <p-button rounded="true" severity="danger" (onClick)="removeHelpStep()" type="button"
                 icon="pi pi-minus-circle" *ngIf="definedHelpSteps.length > 1" />
         </p-accordion>

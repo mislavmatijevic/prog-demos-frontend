@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AccordionModule } from 'primeng/accordion';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { HelpStep } from '../../../types/models';
 import { EditorComponent } from '../editor/editor.component';
 
 @Component({
@@ -20,18 +21,13 @@ import { EditorComponent } from '../editor/editor.component';
   styleUrl: './new-help-step-definition.component.scss',
 })
 export class NewHelpStepDefinitionComponent {
-  @Input({ required: true }) helpCode!: string;
-  @Output() helpCodeChange = new EventEmitter<string>();
-  @Input({ required: true }) helpHint!: string;
-  @Output() helpHintChange = new EventEmitter<string>();
+  @Input({ required: true }) helpStep!: HelpStep;
 
   onHelpCodeChange(newCode: string) {
-    this.helpCode = newCode;
-    this.helpCodeChange.emit(newCode);
+    this.helpStep.helperCode = newCode;
   }
 
   onHelpHintChange(newHint: string) {
-    this.helpHint = newHint;
-    this.helpHintChange.emit(newHint);
+    this.helpStep.helperText = newHint;
   }
 }
