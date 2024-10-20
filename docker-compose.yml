@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: Docker/Dockerfile
     ports:
-      - "4200:4200"
+      - "127.0.0.1:4200:4200"
     environment:
       - NGINX_HOST=localhost
       - NGINX_PORT=4200
