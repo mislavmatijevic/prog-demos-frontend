@@ -8,7 +8,7 @@
 
   @media screen and (max-width: $smallWidth) {
     max-width: 100px;
-    transition: width 0.1s linear;
+    transition: width 0.4s linear;
   }
   max-width: 200px;
   transition: width 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
@@ -56,16 +56,6 @@
         }
         font-size: medium;
       }
-    }
-    &__button {
-      @media screen and (max-width: $smallWidth) {
-        top: -10px;
-        left: -10px;
-        transition: transform 0.05s linear;
-      }
-      position: absolute;
-      top: 10px;
-      transition: transform 0.55s cubic-bezier(0.075, 0.82, 0.165, 1);
     }
   }
 }
@@ -183,6 +173,21 @@
     filter: blur(12px);
     pointer-events: none;
   }
+}
+
+.collapse-expand {
+  position: absolute;
+
+  @media screen and (max-width: $smallWidth) {
+    bottom: 150px;
+    left: 80px;
+  }
+  @media screen and (max-height: $smallHeight) {
+    bottom: 50px;
+  }
+  bottom: 200px;
+  left: 178px;
+  transition: transform 0.55s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
 footer {

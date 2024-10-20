@@ -91,6 +91,12 @@ export class NavigationComponent {
     }, 5020);
   }
 
+  // Hack made to decide how far to move the collapse-expand button.
+  returnZeroIfSmallWidth(): number {
+    const smallWidth = 850;
+    return window.innerWidth <= smallWidth ? 0 : 1;
+  }
+
   private displayAppropriateNavigations() {
     if (!this.authService.isLoggedIn()) {
       this.navigationHeaders.push({ name: 'Prijava', link: '/login' });

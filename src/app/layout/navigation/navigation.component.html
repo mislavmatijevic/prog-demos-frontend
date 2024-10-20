@@ -4,10 +4,6 @@
             <img routerLink="/" src="assets/images/prog_demos.png">
             <span>Prog Demos</span>
         </div>
-        <p-button (onClick)="toggleVisibility()"
-            [ngStyle]="{'transform': isCollapsed ? 'translateX(7px)' : 'translateX(100px)'}"
-            class="navigation-drawer__header__button"
-            [icon]="isCollapsed ? 'pi pi-angle-double-right' : 'pi pi-angle-double-left'" rounded="true"></p-button>
     </div>
     <div class="navigation">
         <a *ngFor="let navigationHeader of navigationHeaders" class="navigation-link"
@@ -22,6 +18,10 @@
             class="outer-sun-ring"></div>
     </div>
 </section>
+<p-button (onClick)="toggleVisibility()"
+    [ngStyle]="{'transform': isCollapsed ? 'translate('+(-90-100*returnZeroIfSmallWidth())+'px,20px)' : 'translate(0px,0px)'}"
+    class="collapse-expand" [icon]="isCollapsed ? 'pi pi-angle-double-right' : 'pi pi-angle-double-left'"
+    rounded="true"></p-button>
 <footer [ngStyle]="{'transform': isCollapsed ? 'translateX(-100%)' : 'none'}">
     <a [routerLink]="['/privacy']">Politika privatnosti</a>
 </footer>
