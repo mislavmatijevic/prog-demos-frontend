@@ -28,7 +28,9 @@ export class FormatTimePipe implements PipeTransform {
     const year = date.getFullYear();
 
     const getEnding = (num: number, letter1: string, letter2: string) =>
-      num % 10 == 0 || num % 10 > 4 ? letter1 : letter2;
+      num % 10 == 0 || (num % 100 >= 11 && num % 100 <= 14) || num % 10 > 4
+        ? letter1
+        : letter2;
 
     const maleNounEnding = (num: number) => getEnding(num, 'i', 'a');
     const femaleNounEnding = (num: number) => getEnding(num, 'a', 'e');
