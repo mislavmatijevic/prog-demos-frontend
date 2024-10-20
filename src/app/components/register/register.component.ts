@@ -64,7 +64,9 @@ export class RegisterComponent {
             this.messageService.add({
               key: 'central',
               severity: 'info',
-              detail: 'Poslan ti je mail za dovršetak registracije!',
+              summary: 'Poslan ti je mail za dovršetak registracije!',
+              detail:
+                'Ako ti uskoro ne dođe obavijest, provjeri neželjenu poštu (spam).',
               life: 60000,
             });
             this.registrationSuccessful.emit(true);
