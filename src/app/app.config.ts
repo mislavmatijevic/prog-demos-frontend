@@ -7,6 +7,7 @@ import {
   withInterceptors,
 } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { RECAPTCHA_V3_SITE_KEY } from 'ng-recaptcha-2';
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 import { routes } from './app.routes';
 import { authInterceptor } from './interceptors/auth.interceptor';
@@ -33,5 +34,9 @@ export const appConfig: ApplicationConfig = {
     ),
     importProvidersFrom(MonacoEditorModule.forRoot()),
     provideAnimations(),
+    {
+      provide: RECAPTCHA_V3_SITE_KEY,
+      useValue: '6LfXFWoqAAAAAKlAm0PU3qHqEisqNCUBBHyclOTR',
+    },
   ],
 };

@@ -6,6 +6,7 @@ import { ApiService } from './api.service';
 export enum RegistrationErrorCode {
   INFO_INVALID = 1,
   USERNAME_OR_EMAIL_TAKEN = 2,
+  EXEC_ERR_RECAPTCHA_REQUIRES_CHALLENGE = 3,
 }
 
 export type RegistrationFailureResponse = {
@@ -56,7 +57,12 @@ export class AuthService {
 
   constructor(private apiService: ApiService) {}
 
-  register(username: string, email: string, password: string) {
+  register(
+    username: string,
+    email: string,
+    password: string,
+    recaptchaToken: string
+  ) {
     const registrationResponse =
       this.apiService.post<RegistrationFailureResponse>(
         '/auth/register',
@@ -64,6 +70,7 @@ export class AuthService {
           username,
           email,
           password,
+          recaptchaToken,
         },
         false
       );

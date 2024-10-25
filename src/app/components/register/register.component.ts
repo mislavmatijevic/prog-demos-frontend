@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RecaptchaV3Module, ReCaptchaV3Service } from 'ng-recaptcha-2';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -30,6 +31,7 @@ import {
     ReactiveFormsModule,
     TooltipModule,
     ProgressSpinnerModule,
+    RecaptchaV3Module,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
@@ -37,7 +39,8 @@ import {
 export class RegisterComponent {
   constructor(
     private authService: AuthService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private recaptchaV3Service: ReCaptchaV3Service
   ) {}
   registrationInProgress: boolean = false;
   @Output() registrationSuccessful = new EventEmitter();
@@ -56,49 +59,67 @@ export class RegisterComponent {
     ) {
       this.registrationInProgress = true;
 
-      this.authService
-        .register(this.username.value!, this.email.value!, this.password.value!)
-        .subscribe({
-          complete: () => {
-            this.registrationInProgress = false;
-            this.messageService.add({
-              key: 'central',
-              severity: 'info',
-              summary: 'Poslan ti je mail za dovršetak registracije!',
-              detail:
-                'Ako ti uskoro ne dođe obavijest, provjeri neželjenu poštu (spam).',
-              life: 60000,
+      this.recaptchaV3Service
+        .execute('register')
+        .subscribe((recaptchaToken) => {
+          this.authService
+            .register(
+              this.username.value!,
+              this.email.value!,
+              this.password.value!,
+              recaptchaToken
+            )
+            .subscribe({
+              complete: () => {
+                this.registrationInProgress = false;
+                this.messageService.add({
+                  key: 'central',
+                  severity: 'info',
+                  summary: 'Poslan ti je mail za dovršetak registracije!',
+                  detail:
+                    'Ako ti uskoro ne dođe obavijest, provjeri neželjenu poštu (spam).',
+                  life: 60000,
+                });
+                this.registrationSuccessful.emit(true);
+              },
+              error: (errorResponse: HttpErrorResponse) => {
+                this.registrationInProgress = false;
+
+                let message =
+                  'Nažalost, registracija nije uspjela. Molim te, pokušaj malo kasnije.';
+
+                if (
+                  errorResponse.status >= 400 &&
+                  errorResponse.status <= 400
+                ) {
+                  switch (
+                    (errorResponse.error as RegistrationFailureResponse)
+                      .errorCode
+                  ) {
+                    case RegistrationErrorCode.INFO_INVALID:
+                      message = 'Provjeri svoje podatke još jednom.';
+                      break;
+                    case RegistrationErrorCode.USERNAME_OR_EMAIL_TAKEN:
+                      message =
+                        'Čini se da već postoji korisnik s ovim korisničkim imenom ili unesenim emailom.';
+                      break;
+                    case RegistrationErrorCode.EXEC_ERR_RECAPTCHA_REQUIRES_CHALLENGE:
+                      // TODO implement challange
+                      message =
+                        'Sustav je detektirao sumnjivo ponašanje, pokušaj ponovno kasnije.';
+                      break;
+                  }
+                }
+
+                this.messageService.add({
+                  key: 'general',
+                  severity: 'error',
+                  summary: 'Registracija nije uspjela!',
+                  detail: message,
+                  life: 10000,
+                });
+              },
             });
-            this.registrationSuccessful.emit(true);
-          },
-          error: (errorResponse: HttpErrorResponse) => {
-            this.registrationInProgress = false;
-
-            let message =
-              'Nažalost, registracija nije uspjela. Molim te, pokušaj malo kasnije.';
-
-            if (errorResponse.status !== 0) {
-              switch (
-                (errorResponse.error as RegistrationFailureResponse).errorCode
-              ) {
-                case RegistrationErrorCode.INFO_INVALID:
-                  message = 'Provjeri svoje podatke još jednom.';
-                  break;
-                case RegistrationErrorCode.USERNAME_OR_EMAIL_TAKEN:
-                  message =
-                    'Čini se da već postoji korisnik s ovim korisničkim imenom ili unesenim emailom.';
-                  break;
-              }
-            }
-
-            this.messageService.add({
-              key: 'general',
-              severity: 'error',
-              summary: 'Registracija nije uspjela!',
-              detail: message,
-              life: 10000,
-            });
-          },
         });
     } else {
       let errorMessage = '';
