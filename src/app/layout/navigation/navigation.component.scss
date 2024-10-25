@@ -8,7 +8,7 @@
 
   @media screen and (max-width: $smallWidth) {
     max-width: 100px;
-    transition: width 0.4s linear;
+    transition: width 0.2s ease-out;
   }
   max-width: 200px;
   transition: width 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
