@@ -5,24 +5,37 @@
   box-shadow: $primary 0px 1px 20px, $primary 0px 0px 0px 1px;
 
   .title {
+    @media screen and (max-width: $smallWidth) {
+      padding-top: 1px;
+    }
     padding-top: 10px;
     text-align: center;
   }
   .text {
     @media screen and (max-width: $smallWidth) {
       padding: 1px;
+      font-size: small;
     }
-    text-align: start;
+    @media screen and (max-width: $minProgrammingWidth) {
+      font-size: xx-small;
+    }
     padding: 0px 10px;
+    font-size: small;
+
+    text-align: start;
   }
   .time {
     @media screen and (max-width: $smallWidth) {
       padding: 1px;
       text-align: start;
     }
-    color: $tertiary;
-    text-align: end;
+    @media screen and (max-width: $minProgrammingWidth) {
+      font-size: xx-small;
+    }
     padding: 1em;
+    text-align: end;
+
+    color: $tertiary;
     font-size: small;
   }
 }
