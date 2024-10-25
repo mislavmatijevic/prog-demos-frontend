@@ -3,12 +3,17 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { RecaptchaV3Module, ReCaptchaV3Service } from 'ng-recaptcha-2';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { finalize } from 'rxjs';
-import { AuthService } from '../../services/auth.service';
+import {
+  AuthErrorCode,
+  AuthFailureResponse,
+  AuthService,
+} from '../../services/auth.service';
 
 @Component({
   selector: 'app-password-reset',
@@ -20,6 +25,7 @@ import { AuthService } from '../../services/auth.service';
     InputTextModule,
     FormsModule,
     ReactiveFormsModule,
+    RecaptchaV3Module,
   ],
   templateUrl: './password-reset.component.html',
   styleUrl: './password-reset.component.scss',
@@ -29,7 +35,8 @@ export class PasswordResetComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private messageService: MessageService,
-    private authService: AuthService
+    private authService: AuthService,
+    private recaptchaV3Service: ReCaptchaV3Service
   ) {}
 
   resetRequested = false;
@@ -49,41 +56,61 @@ export class PasswordResetComponent implements OnInit {
     ) {
       this.resetRequested = true;
 
-      this.authService
-        .resetPassword(this.newPassword.value!, this.resetToken)
-        .pipe(
-          finalize(() =>
-            this.router.navigateByUrl('/login', { replaceUrl: true })
-          )
-        )
-        .subscribe({
-          complete: () => {
-            this.messageService.add({
-              key: 'central',
-              severity: 'success',
-              detail: 'Nova lozinka uspješno postavljena!',
-            });
-          },
-          error: (err) => {
-            let errorMessage = '';
+      this.recaptchaV3Service
+        .execute('reset_password')
+        .subscribe((recaptchaToken) => {
+          this.authService
+            .resetPassword(
+              this.newPassword.value!,
+              this.resetToken,
+              recaptchaToken
+            )
+            .pipe(
+              finalize(() =>
+                this.router.navigateByUrl('/login', { replaceUrl: true })
+              )
+            )
+            .subscribe({
+              complete: () => {
+                this.messageService.add({
+                  key: 'central',
+                  severity: 'success',
+                  detail: 'Nova lozinka uspješno postavljena!',
+                });
+              },
+              error: (errorResponse: HttpErrorResponse) => {
+                let errorMessage = '';
 
-            if (
-              err instanceof HttpErrorResponse &&
-              err.status == 403 &&
-              (err.error.message as string).includes('expired')
-            ) {
-              errorMessage = 'Zahtjev za novom lozinkom je istekao.';
-            } else {
-              errorMessage =
-                'Nažalost, nije bilo moguće postaviti novu lozinku!';
-            }
+                if (
+                  errorResponse.status == 403 &&
+                  (errorResponse.error.message as string).includes('expired')
+                ) {
+                  errorMessage = 'Zahtjev za novom lozinkom je istekao.';
+                } else if (
+                  errorResponse.status >= 400 &&
+                  errorResponse.status <= 400
+                ) {
+                  switch (
+                    (errorResponse.error as AuthFailureResponse).errorCode
+                  ) {
+                    case AuthErrorCode.EXEC_ERR_RECAPTCHA_REQUIRES_CHALLENGE:
+                      // TODO implement challange
+                      errorMessage =
+                        'Sustav je detektirao sumnjivo ponašanje, pokušaj ponovno kasnije.';
+                      break;
+                  }
+                } else {
+                  errorMessage =
+                    'Nažalost, nije bilo moguće postaviti novu lozinku!';
+                }
 
-            this.messageService.add({
-              key: 'central',
-              severity: 'error',
-              detail: errorMessage + ' Ponovno zatraži promjenu lozinke.',
+                this.messageService.add({
+                  key: 'central',
+                  severity: 'error',
+                  detail: errorMessage + ' Ponovno zatraži promjenu lozinke.',
+                });
+              },
             });
-          },
         });
     } else {
       this.messageService.add({

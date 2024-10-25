@@ -125,22 +125,31 @@ export class AuthService {
     );
   }
 
-  requestPasswordReset(email: string): Observable<{ username: string }> {
+  requestPasswordReset(
+    email: string,
+    recaptchaToken: string
+  ): Observable<{ username: string }> {
     return this.apiService.post(
       '/auth/password/request-reset',
       {
-        email: email,
+        email,
+        recaptchaToken,
       },
       false
     );
   }
 
-  resetPassword(newPassword: string, resetToken: string): Observable<void> {
+  resetPassword(
+    newPassword: string,
+    resetToken: string,
+    recaptchaToken: string
+  ): Observable<void> {
     return this.apiService.post(
       '/auth/password/reset',
       {
         newPassword,
         resetToken,
+        recaptchaToken,
       },
       false
     );
