@@ -3,16 +3,16 @@ import { Injectable, signal } from '@angular/core';
 import { Observable, tap, throwError } from 'rxjs';
 import { ApiService } from './api.service';
 
-export enum RegistrationErrorCode {
+export enum AuthErrorCode {
   INFO_INVALID = 1,
   USERNAME_OR_EMAIL_TAKEN = 2,
   EXEC_ERR_RECAPTCHA_REQUIRES_CHALLENGE = 3,
 }
 
-export type RegistrationFailureResponse = {
+export type AuthFailureResponse = {
   success: boolean;
   message: string;
-  errorCode: RegistrationErrorCode;
+  errorCode: AuthErrorCode;
 };
 
 type User = {
@@ -63,28 +63,32 @@ export class AuthService {
     password: string,
     recaptchaToken: string
   ) {
-    const registrationResponse =
-      this.apiService.post<RegistrationFailureResponse>(
-        '/auth/register',
-        {
-          username,
-          email,
-          password,
-          recaptchaToken,
-        },
-        false
-      );
+    const registrationResponse = this.apiService.post<AuthFailureResponse>(
+      '/auth/register',
+      {
+        username,
+        email,
+        password,
+        recaptchaToken,
+      },
+      false
+    );
 
     return registrationResponse;
   }
 
-  login(identifier: string, password: string): Observable<LoginResponse> {
+  login(
+    identifier: string,
+    password: string,
+    recaptchaToken: string
+  ): Observable<LoginResponse> {
     const loginResponse = this.apiService
       .post<LoginResponse>(
         '/auth/login',
         {
           identifier,
           password,
+          recaptchaToken,
         },
         false
       )

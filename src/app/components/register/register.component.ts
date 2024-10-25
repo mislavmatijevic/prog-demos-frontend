@@ -12,9 +12,9 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TooltipModule } from 'primeng/tooltip';
 import {
+  AuthErrorCode,
+  AuthFailureResponse,
   AuthService,
-  RegistrationErrorCode,
-  RegistrationFailureResponse,
 } from '../../services/auth.service';
 
 @Component({
@@ -93,17 +93,16 @@ export class RegisterComponent {
                   errorResponse.status <= 400
                 ) {
                   switch (
-                    (errorResponse.error as RegistrationFailureResponse)
-                      .errorCode
+                    (errorResponse.error as AuthFailureResponse).errorCode
                   ) {
-                    case RegistrationErrorCode.INFO_INVALID:
+                    case AuthErrorCode.INFO_INVALID:
                       message = 'Provjeri svoje podatke još jednom.';
                       break;
-                    case RegistrationErrorCode.USERNAME_OR_EMAIL_TAKEN:
+                    case AuthErrorCode.USERNAME_OR_EMAIL_TAKEN:
                       message =
                         'Čini se da već postoji korisnik s ovim korisničkim imenom ili unesenim emailom.';
                       break;
-                    case RegistrationErrorCode.EXEC_ERR_RECAPTCHA_REQUIRES_CHALLENGE:
+                    case AuthErrorCode.EXEC_ERR_RECAPTCHA_REQUIRES_CHALLENGE:
                       // TODO implement challange
                       message =
                         'Sustav je detektirao sumnjivo ponašanje, pokušaj ponovno kasnije.';
