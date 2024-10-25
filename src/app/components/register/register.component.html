@@ -25,10 +25,14 @@
                 name="password" minlength="8" required [formControl]="password" />
             <label for="password" class="register-form__row__label">Lozinka</label>
         </p-floatLabel>
+        <small>Lozinka mora imati 8 znakova!</small>
     </div>
-    <small>Pročitaj <a href="/privacy">Obavijest o privatnosti</a>.</small>
-    <p-checkbox id="agree-to-privacy-policy" name="agree-to-privacy-policy" label="Prihvaćam Obavijest o privatnosti."
-        required [(ngModel)]="checkedPrivacyPolicy" [binary]="true"></p-checkbox>
+    <div class="register-form__row">
+        <p>Pročitaj <a href="/privacy">Obavijest o privatnosti</a>.</p>
+        <p-checkbox id="agree-to-privacy-policy" name="agree-to-privacy-policy"
+            label="Prihvaćam Obavijest o privatnosti." required [(ngModel)]="checkedPrivacyPolicy"
+            [binary]="true"></p-checkbox>
+    </div>
     <p-button *ngIf="!registrationInProgress" label="Registracija" type="submit" icon="pi pi-user-plus" />
     <p-progressSpinner *ngIf="registrationInProgress" />
 </form>
