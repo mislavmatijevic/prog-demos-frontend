@@ -364,7 +364,7 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
       this.bitAnimationHandler.push(
         setTimeout(() => {
           this.bitCode = this.transformToMockByteStream(this.bitCode, i);
-        }, 5 * i) as unknown as number
+        }, 20 * i) as unknown as number
       );
     }
   }
