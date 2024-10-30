@@ -31,7 +31,7 @@ export const routes: Routes = [
     title: 'Prog Demos | Vježbaj',
   },
   {
-    path: 'prog/:taskId',
+    path: 'prog/:taskIdentifier',
     component: TaskPlaygroundComponent,
     title: 'Učitavanje zadatka...',
   },

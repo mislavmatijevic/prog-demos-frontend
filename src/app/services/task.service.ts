@@ -79,9 +79,9 @@ export class TaskService {
     ) as Observable<TasksResponse>;
   }
 
-  getSingleTask(taskId: number): Observable<TaskResponse> {
+  getSingleTaskByIdentifier(taskIdentifier: number): Observable<TaskResponse> {
     return this.apiService.get<TaskResponse>(
-      `/tasks/${taskId}`,
+      `/tasks/${taskIdentifier}`,
       true
     ) as Observable<TaskResponse>;
   }

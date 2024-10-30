@@ -28,6 +28,7 @@ export type UserBestScore = {
 };
 
 export type BasicTask = Identifiable & {
+  identifier: number;
   complexity: string;
   isBossBattle: boolean;
   bestSuccessfulSubmission: UserBestScore | undefined;

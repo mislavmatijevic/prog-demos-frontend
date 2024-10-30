@@ -103,15 +103,17 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
     'Zanimljivo...',
   ];
 
-  getTaskStorageKey = () => `playground-code-${this.task.id}`;
+  getTaskStorageKey = () => `playground-code-${this.task.identifier}`;
 
   ngOnInit() {
     const minimalWidthForProgramming = 435;
     this.isScreenWideEnoughForProgramming =
       window.innerWidth > minimalWidthForProgramming;
 
-    const taskId = parseInt(this.route.snapshot.paramMap.get('taskId')!);
-    this.fetchTask(taskId);
+    const taskIdentifier = parseInt(
+      this.route.snapshot.paramMap.get('taskIdentifier')!
+    );
+    this.fetchTask(taskIdentifier);
 
     if (!this.authService.isLoggedIn()) {
       window.addEventListener('beforeunload', function (e) {
@@ -210,8 +212,8 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
     this.currentStorage().setItem(this.getTaskStorageKey(), currentCode);
   }
 
-  private fetchTask(videoId: number) {
-    this.taskService.getSingleTask(videoId).subscribe({
+  private fetchTask(taskIdentifier: number) {
+    this.taskService.getSingleTaskByIdentifier(taskIdentifier).subscribe({
       next: (res: TaskResponse) => {
         this.task = res.task;
         if (this.task.bestSuccessfulSubmission) {

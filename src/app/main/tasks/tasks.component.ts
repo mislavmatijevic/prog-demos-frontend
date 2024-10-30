@@ -46,12 +46,10 @@ export class TasksComponent implements OnInit {
   }
 
   onTaskSelected(task: BasicTask) {
-    this.router.navigateByUrl(`/prog/${task.id}`);
+    this.router.navigateByUrl(`/prog/${task.identifier}`);
   }
 
   sort(tasks: BasicTask[]): BasicTask[] {
-    return tasks.sort(
-      (task1, task2) => parseInt(task1.complexity) - parseInt(task2.complexity)
-    );
+    return tasks.sort((task1, task2) => task1.identifier - task2.identifier);
   }
 }
