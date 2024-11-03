@@ -159,6 +159,7 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
   async executeCode() {
     if (this.authService.isLoggedIn()) {
       if (this.mainCode !== undefined && this.mainCode !== '') {
+        this.messageService.clear('central');
         this.animateCodeTransferToBits();
         this.handleTaskExecution();
       } else {
