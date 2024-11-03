@@ -7,59 +7,30 @@
 <p>Želim ti dobrodošlicu na svoju stranicu, progdemos.com.</p>
 <div class="two-sections-grid">
     <section>
-        <div class="image-background-section">
-            <div class="dimmed-text dim-abit">
-                <h2>Što je ova stranica?</h2>
-                <p>
-                    Ova stranica namijenjena je učenju programiranja, a zamišljena je kao
-                    nadopuna mojim javnim video zapisima na mom YouTube kanalu
-                    <strong>prog_demos</strong>.
-                </p>
-                <p>
-                    Mojim videozapisima na YouTubeu možeš pristupiti lijevo pod sekcijom
-                    "Uči", a zadacima vezanima uz svaki video i rješenjima možeš
-                    pristupiti lijevo pod sekcijom "Vježbaj".
-                </p>
-                <p>
-                    Prije ove stranice koristio sam OneDrive kao repozitorij zadataka, ali
-                    kako je kanal 4 godine rastao i kako mi se mnogo ljudi krenulo
-                    javljati da sam im pomogao pri učenju, odlučio sam se upustiti u
-                    razvijanje zabavnijeg načina pružanja pomoći i održavanja zadataka.
-                    Stranica ti omogućuje da rješavaš zadatke koji su nekada bili na
-                    OneDriveu uz skupljanje bodova za svoja rješenja.
-                </p>
-            </div>
-            <div class="dimmed-text dim-alot">
-                <h2>Tko sam ja?</h2>
-                <p>
-                    Moje ime je Mislav Matijević, s programiranjem se bavim od osnovne
-                    škole, a posebno me veseli prenošenje znanja programiranja na druge!
-                </p>
-                <p>
-                    Magistar sam informatike s Fakulteta organizacije i informatike
-                    Sveučilišta u Zagrebu. Tri sam godine bio demonstrator iz
-                    Programiranja 1, a dvije sam godine kao zaposlenik fakulteta pripremao
-                    i držao nastavu iz raznih programerskih kolegija. U tvrtki u kojoj
-                    danas radim imam ulogu Backend Developera s naglaskom na DevOps.
-                </p>
-                <p>
-                    Kao demonstrator na Programiranju 1 tijekom pandemije, snimao sam i
-                    objavljivao videozapise za svoje kolege studente s 1. godine umjesto
-                    demonstratura uživo, kako bih im unatoč "lockdownu" pokušao olakšati
-                    učenje gradiva. Dobio sam mnoštvo pozitivnih reakcija, pa sam "iz
-                    čistog mira" snimio još i video zapise za kolegij Operacijski sustavi
-                    1 i kolegij Web Dizajn i Programiranje.
-                </p>
-                <p>
-                    Ništa me ne čini veselijim nego kada mi netko i dan danas zahvali na
-                    pomoći pri učenju!
-                </p>
-                <small class="image-description">U pozadini je fotka prvog responsea s backenda, prvi dan razvoja ovog
-                    projekta.</small>
-            </div>
+        <div class="dimmed-text dim-abit">
+            <h2>Što je ova stranica?</h2>
+            <p>
+                Ova stranica namijenjena je učenju programiranja, a zamišljena je kao
+                nadopuna mojim javnim video zapisima na mom YouTube kanalu
+                <strong>prog_demos</strong>.
+            </p>
+            <p>
+                Mojim videozapisima na YouTubeu možeš pristupiti lijevo pod sekcijom
+                <a class="navigation-link" routerLink="/demos">Uči</a>, a zadacima vezanima uz svaki video i
+                rješenjima možeš pristupiti
+                lijevo pod sekcijom <a class="navigation-link" routerLink="/prog">Vježbaj</a>.
+            </p>
+            <p>
+                Prije ove stranice koristio sam OneDrive kao repozitorij zadataka, ali
+                kako je kanal 4 godine rastao i kako mi se mnogo ljudi krenulo javljati
+                da sam im pomogao pri učenju, odlučio sam se upustiti u razvijanje
+                zabavnijeg načina pružanja pomoći i održavanja zadataka. Stranica ti
+                omogućuje da rješavaš zadatke koji su nekada bili na OneDriveu uz
+                skupljanje bodova za svoja rješenja.
+            </p>
         </div>
         <div class="showcase-section">
-            <h2>Kako stranica radi?</h2>
+            <h2>Kako izgleda logika u pozadini ove stranice?</h2>
             <p>Možeš proučiti izvorni kod ove stranice na GitHubu:</p>
             <ul>
                 <li>
@@ -78,6 +49,39 @@
                 Molim te ondje piši na engleskom jeziku budući da su i cijeli
                 repozitoriji na engleskome.
             </p>
+        </div>
+        <div class="image-background-section">
+            <div class="dimmed-text dim-alot">
+                <h2>Tko sam ja?</h2>
+                <p>
+                    Ja sam
+                    <a href="https://www.linkedin.com/in/mislav-matijevic/">Mislav Matijević</a>. S programiranjem se
+                    bavim od osnovne škole, a posebno me veseli
+                    prenošenje znanja programiranja na druge!
+                </p>
+                <p>
+                    Magistar sam informatike s Fakulteta organizacije i informatike
+                    Sveučilišta u Zagrebu. Tri sam godine bio demonstrator iz
+                    Programiranja 1, a gotovo dvije godine sam kao zaposlenik fakulteta
+                    pripremao i držao nastavu iz raznih programerskih kolegija. U tvrtki u
+                    kojoj danas radim na dnevnoj bazi obavljam različite zanimljive
+                    backend zadatke s naglaskom na DevOps.
+                </p>
+                <p>
+                    Kao demonstrator na Programiranju 1 tijekom pandemije, snimao sam i
+                    objavljivao videozapise za svoje kolege studente s 1. godine umjesto
+                    demonstratura uživo, kako bih im unatoč lockdownu pokušao olakšati
+                    učenje gradiva. Dobio sam mnoštvo pozitivnih reakcija, pa sam iz
+                    čistog mira snimio još i video zapise za kolegij Operacijski sustavi 1
+                    i kolegij Web Dizajn i Programiranje.
+                </p>
+                <p>
+                    Ništa me ne čini veselijim nego kada mi netko i dan danas zahvali na
+                    pomoći pri učenju!
+                </p>
+                <small class="image-description">U pozadini je fotka prvog responsea s backenda, prvi dan razvoja ovog
+                    projekta.</small>
+            </div>
         </div>
     </section>
     <section *ngIf="fetchedNews.length > 0" class="news-section">

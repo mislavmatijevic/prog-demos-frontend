@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { News } from '../../../types/models';
 import { NewsService } from '../../services/news.service';
 import { NewsCardComponent } from './news-card/news-card.component';
@@ -7,7 +8,7 @@ import { NewsCardComponent } from './news-card/news-card.component';
 @Component({
   selector: 'app-welcome',
   standalone: true,
-  imports: [CommonModule, NewsCardComponent],
+  imports: [CommonModule, NewsCardComponent, RouterModule],
   templateUrl: './welcome.component.html',
   styleUrl: './welcome.component.scss',
 })
