@@ -21,8 +21,8 @@ export class NavigationComponent {
   ) {
     effect(() => {
       this.navigationHeaders = [
-        { name: 'Uči', link: '/demos' },
-        { name: 'Vježbaj', link: '/prog' },
+        { name: 'Uči', link: '/demos', icon: 'pi-play-circle' },
+        { name: 'Vježbaj', link: '/prog', icon: 'pi-objects-column' },
       ];
       this.displayAppropriateNavigations();
     });
@@ -99,15 +99,28 @@ export class NavigationComponent {
 
   private displayAppropriateNavigations() {
     if (!this.authService.isLoggedIn()) {
-      this.navigationHeaders.push({ name: 'Prijava', link: '/login' });
+      this.navigationHeaders.push({
+        name: 'Prijava',
+        link: '/login',
+        icon: 'pi-sign-in',
+      });
       this.navigationHeaders.push({
         name: 'Registracija',
         link: '/register',
+        icon: '',
       });
     } else {
-      this.navigationHeaders.push({ name: 'Račun', link: '/account' });
+      this.navigationHeaders.push({
+        name: 'Račun',
+        link: '/account',
+        icon: 'pi-user-edit',
+      });
       if (this.authService.isSpecialType()) {
-        this.navigationHeaders.push({ name: 'Stvaraj', link: '/create-task' });
+        this.navigationHeaders.push({
+          name: 'Stvaraj',
+          link: '/create-task',
+          icon: 'pi-pen-to-square',
+        });
       }
     }
   }

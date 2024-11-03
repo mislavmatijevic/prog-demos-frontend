@@ -8,7 +8,9 @@
     <div class="navigation">
         <a *ngFor="let navigationHeader of navigationHeaders" class="navigation-link"
             [routerLink]="navigationHeader.link" routerLinkActive="navigation-link__active"
-            [routerLinkActiveOptions]="{exact: true}">{{navigationHeader.name}}</a>
+            [routerLinkActiveOptions]="{exact: true}">
+            <span>{{navigationHeader.name}}</span><i *ngIf="navigationHeader.icon"
+                class="pi {{navigationHeader.icon}}"></i></a>
     </div>
 
     <div [ngStyle]="{'transform': isCollapsed ? 'translate(-100%, 100%)' : 'translate(-40%, 20%)'}"

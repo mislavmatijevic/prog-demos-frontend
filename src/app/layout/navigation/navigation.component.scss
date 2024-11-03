@@ -96,9 +96,12 @@
   margin-left: 50px;
 
   &-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     border-top-left-radius: 1em;
     border-bottom-left-radius: 1em;
-    padding: 5px;
+    padding: 5px 10px;
     text-align: left;
     color: $tertiary;
     background-color: $dark-accent;
