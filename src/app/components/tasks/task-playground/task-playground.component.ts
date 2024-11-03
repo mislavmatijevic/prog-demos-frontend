@@ -497,11 +497,16 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
     this.diffEditorRightSide = reasonFailed.expectedOutput;
     this.diffEditorShown = true;
 
+    let inputDescription = `s unosom ${reasonFailed.testInput}`;
+    if (reasonFailed.testInput === undefined) {
+      inputDescription = 'bez unosa';
+    }
+
     this.messageService.add({
       key: 'central',
       severity: 'error',
       summary: 'Rješenje nije proizvelo očekivani rezultat!',
-      detail: `Kada se tvoje rješenje testira s unosom "${reasonFailed.testInput}", izlaz tvog programa se ne podudara s očekivanim za taj ulaz.`,
+      detail: `Kada se tvoje rješenje testira ${inputDescription}, izlaz tvog programa se ne podudara s očekivanim za taj ulaz.`,
       life: 120000,
     });
   }
