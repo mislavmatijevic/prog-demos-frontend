@@ -10,15 +10,14 @@
 
     <div class="statistics-wrapper" *ngIf="solutionAttempts !== null">
         <div class="total-stats">
-            <p-chart type="radar" [responsive]="true" [height]="'60vh'" [data]="radarData" [options]="radarOptions" />
+            <p-chart type="radar" [height]="'500px'" [responsive]="true" [data]="radarData" [options]="radarOptions" />
         </div>
-        <div>
-            <div class="statistics-wrapper__doughnuts">
-                <div *ngFor="let subtopicWithAttempts of solutionAttempts.solutionAttemptsPerSubtopic">
-                    <p-chart type="doughnut" *ngIf="subtopicWithAttempts.totalTasksInSubtopicCount > 0"
-                        [data]="getDataForCurrentAttempt(subtopicWithAttempts)"
-                        [options]="getOptionsForCurrentAttempt(subtopicWithAttempts)" />
-                </div>
+        <div class="statistics-wrapper__doughnuts">
+            <div *ngFor="let subtopicWithAttempts of solutionAttempts.solutionAttemptsPerSubtopic">
+                <p-chart [width]="doughnutsWidthPx+'px'" type="doughnut"
+                    *ngIf="subtopicWithAttempts.totalTasksInSubtopicCount > 0"
+                    [data]="getDataForCurrentAttempt(subtopicWithAttempts)"
+                    [options]="getOptionsForCurrentAttempt(subtopicWithAttempts)" />
             </div>
         </div>
     </div>

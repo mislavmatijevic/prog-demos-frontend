@@ -64,11 +64,19 @@
 }
 
 .statistics-wrapper {
-  margin-top: 100px;
-
   display: flex;
   flex-direction: column;
-  max-width: 100%;
+  gap: 2rem;
+
+  margin-top: 5rem;
+
+  .total-stats {
+    @media screen and (max-width: $smallWidth) {
+      display: none;
+    }
+    width: 90%;
+    align-self: center;
+  }
 
   &__doughnuts {
     display: flex;

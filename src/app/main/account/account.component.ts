@@ -41,7 +41,18 @@ export class AccountComponent implements OnInit {
   private dataPerAttempts!: Map<SolutionAttemptPerSubtopic, object>;
   private optionsPerAttempts!: Map<SolutionAttemptPerSubtopic, object>;
 
+  shouldShowPointLabels = true;
+  doughnutsWidthPx: number = 300;
+
   ngOnInit(): void {
+    const minimalWidthForFullRadarDisplay = 1250;
+    const minimalWidthForFullDoughnutDisplay = 500;
+    if (window.innerWidth < minimalWidthForFullDoughnutDisplay) {
+      this.doughnutsWidthPx = 150;
+    } else if (window.innerWidth < minimalWidthForFullRadarDisplay) {
+      this.shouldShowPointLabels = false;
+    }
+
     this.statisticsService.getTotalScore().subscribe({
       next: (response) => {
         this.totalScore = response.totalScore;
@@ -86,6 +97,7 @@ export class AccountComponent implements OnInit {
     return {
       plugins: {
         legend: {
+          position: this.shouldShowPointLabels ? 'right' : 'top',
           labels: {
             color: 'orange',
           },
@@ -97,6 +109,7 @@ export class AccountComponent implements OnInit {
             color: 'orange',
           },
           pointLabels: {
+            display: this.shouldShowPointLabels,
             color: 'cyan',
           },
         },
