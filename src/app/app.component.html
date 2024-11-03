@@ -2,6 +2,15 @@
     [breakpoints]="{ '500px': { width: '90%', right: 'auto', left: '50%' } }" />
 <p-toast key="general" [position]="'bottom-left'"
     [breakpoints]="{ '500px': { width: '80%', right: '0', left: '0' } }" />
+<p-toast key="hackerman-easter-egg" [position]="'center'" [breakpoints]="{'920px': {width: '75%'}}">
+    <ng-template let-message pTemplate="message">
+        <div class="hackerman-message">
+            <div>{{message.detail}}</div>
+            <img class="hackerman-message__image" src="assets/images/hackerman.jpg">
+            <div>{{message.summary}}</div>
+        </div>
+    </ng-template>
+</p-toast>
 
 <app-navigation />
 

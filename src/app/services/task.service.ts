@@ -38,6 +38,9 @@ export enum SolutionErrorCode {
   EXEC_ERR_TIMEOUT = 3,
   EXEC_ERR_KILLED = 4,
   EXEC_ERR_ARTEFACT_CONTENT_MISMATCH = 5,
+  EXEC_RUNTIME_ERROR = 6,
+  EXEC_ERR_ILLEGAL_OPERATION = 7,
+  EXEC_ERR_FILE_SIZE_EXCEEDED = 8,
 }
 
 export type SuccessfulTaskExecutionResponse = {

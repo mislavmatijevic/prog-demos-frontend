@@ -11,6 +11,7 @@ import { DialogModule } from 'primeng/dialog';
 import { DividerModule } from 'primeng/divider';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 import { finalize } from 'rxjs';
 import { standardCppStarterCode } from '../../../../helpers/editor-helpers';
@@ -49,6 +50,7 @@ import { SuccessDialogComponent } from './success-dialog/success-dialog.componen
     EditorComponent,
     TaskScoreGraphComponent,
     SuccessDialogComponent,
+    ToastModule,
   ],
   templateUrl: './task-playground.component.html',
   styleUrl: './task-playground.component.scss',
@@ -464,6 +466,18 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
         this.handleKilled();
         break;
       }
+      case SolutionErrorCode.EXEC_RUNTIME_ERROR: {
+        this.handleRuntimeError();
+        break;
+      }
+      case SolutionErrorCode.EXEC_ERR_ILLEGAL_OPERATION: {
+        this.handleIllegalOperation();
+        break;
+      }
+      case SolutionErrorCode.EXEC_ERR_FILE_SIZE_EXCEEDED: {
+        this.handleFileSizeExceeded();
+        break;
+      }
       default:
         break;
     }
@@ -518,6 +532,38 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
       detail:
         'Vjerojatan uzrok problema je tzv. "memory leak". Najvjerojatnije imaš neku petlju u kojoj alociraš beskonačno mnogo prostora. ' +
         'Moj savjet je da pretražiš sva mjesta gdje koristiš naredbu "new" i osiguraš da se ona ne izvršava beskonačno.',
+      life: 120000,
+    });
+  }
+
+  private handleRuntimeError() {
+    this.messageService.add({
+      key: 'central',
+      severity: 'error',
+      summary: 'Izvršavanje nije uspjelo!',
+      detail:
+        'Pregledaj još jednom svoj kod. On se uspio prevesti, ali je prijavljena pogreška pri izvršavanju.',
+      life: 120000,
+    });
+  }
+
+  private handleIllegalOperation() {
+    this.messageService.add({
+      key: 'hackerman-easter-egg',
+      summary: '?',
+      detail: 'Ti si neki',
+      life: 120000,
+    });
+  }
+
+  private handleFileSizeExceeded() {
+    this.messageService.add({
+      key: 'central',
+      severity: 'error',
+      summary: 'Datoteka je prešla ograničenje veličine!',
+      detail:
+        'Vjerojatan uzrok problema je upis podataka u datoteku koji ondje ne pripadaju. ' +
+        'Moj savjet je da pretražiš sva mjesta gdje upisuješ sadržaj u datoteku i osiguraš da se u datoteku upisuje samo onaj sadržaj koji se očekuje.',
       life: 120000,
     });
   }
