@@ -162,6 +162,7 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
         this.messageService.clear('central');
         this.animateCodeTransferToBits();
         this.handleTaskExecution();
+        this.forceHideDiffEditor();
       } else {
         this.messageService.add({
           key: 'central',
