@@ -11,10 +11,12 @@ import { DialogModule } from 'primeng/dialog';
 import { DividerModule } from 'primeng/divider';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { SplitterModule } from 'primeng/splitter';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 import { finalize } from 'rxjs';
 import { standardCppStarterCode } from '../../../../helpers/editor-helpers';
+import { sizes } from '../../../../styles/variables';
 import { FullTask, TaskScore } from '../../../../types/models';
 import { NewlinePipe } from '../../../pipes/newline.pipe';
 import { AuthService } from '../../../services/auth.service';
@@ -51,6 +53,7 @@ import { SuccessDialogComponent } from './success-dialog/success-dialog.componen
     TaskScoreGraphComponent,
     SuccessDialogComponent,
     ToastModule,
+    SplitterModule,
   ],
   templateUrl: './task-playground.component.html',
   styleUrl: './task-playground.component.scss',
@@ -73,7 +76,6 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
   previouslyGivenCodeHelp: string = '';
   mainCode: string | undefined = undefined;
   mainEditorReady: boolean = false;
-  maximizeCodeWidth: boolean = false;
 
   bitCode: string = '';
   isBeingTestedRemotely: boolean = false;
@@ -91,6 +93,7 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
   loginDialogVisible: boolean = false;
   successDialogVisible: boolean = false;
 
+  isScreenWideEnoughForHorizontalSplitter: boolean = false;
   isScreenWideEnoughForProgramming: boolean = false;
   userAchievedScore: TaskScore | null = null;
   loadSuccessfulSolutionBtnVisible: boolean = false;
@@ -108,9 +111,11 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
   getTaskStorageKey = () => `playground-code-${this.task.identifier}`;
 
   ngOnInit() {
-    const minimalWidthForProgramming = 435;
+    this.isScreenWideEnoughForHorizontalSplitter =
+      window.innerWidth > sizes.smallWidth;
+
     this.isScreenWideEnoughForProgramming =
-      window.innerWidth > minimalWidthForProgramming;
+      window.innerWidth > sizes.minProgrammingWidth;
 
     const taskIdentifier = parseInt(
       this.route.snapshot.paramMap.get('taskIdentifier')!
@@ -132,10 +137,6 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
   onMainEditorReady() {
     this.mainEditorReady = true;
     this.changeDetectorRef.detectChanges();
-  }
-
-  expandCode() {
-    this.maximizeCodeWidth = !this.maximizeCodeWidth;
   }
 
   copyCode() {

@@ -15,79 +15,82 @@
     [scoreNumber]="userAchievedScore?.totalScore!" />
 
 <div class="playground">
-    <div class="playground-info__wrapper" *ngIf="task; else loadingTask"
-        [ngStyle]="{'width': maximizeCodeWidth ? '0%' : '100%', 'padding': maximizeCodeWidth ? '0' : '20px 20px'}">
-        <h2>{{task.name}}</h2>
+    <p-splitter [layout]="isScreenWideEnoughForHorizontalSplitter ? 'horizontal' : 'vertical'">
+        <ng-template pTemplate>
 
-        <ul>
-            <li>Ulaz: {{task.input}}</li>
-            <li>Izlaz: {{task.output}}</li>
-        </ul>
+            <div class="playground-info__wrapper" *ngIf="task">
+                <h2>{{task.name}}</h2>
 
-        <h2>Primjer:</h2>
-        <div class="console-output">
-            <pre>{{task.inputOutputExample|newline}}</pre>
-        </div>
+                <ul>
+                    <li>Ulaz: {{task.input}}</li>
+                    <li>Izlaz: {{task.output}}</li>
+                </ul>
 
-        <div class="results" *ngIf="userAchievedScore !== null">
-            <h2>Usporedba rješenja ovoga zadatka</h2>
-            <app-task-score-graph [userScore]="userAchievedScore" [averageScore]="task.averageScore"
-                [bestScore]="task.allTimeBestScore"></app-task-score-graph>
-        </div>
-    </div>
-    <ng-template #loadingTask>
-        <div class="loading-spinner">
-            <p-progressSpinner ariaLabel="loading" />
-        </div>
-    </ng-template>
+                <h2>Primjer:</h2>
+                <div class="console-output">
+                    <pre>{{task.inputOutputExample|newline}}</pre>
+                </div>
 
-    <div *ngIf="isScreenWideEnoughForProgramming" class="playground-input__wrapper">
-        <div class="playground-input__wrapper-controls-top">
-            <p-button (onClick)="expandCode()" text="true" icon="pi pi-code" class="expand-code-btn"
-                [pTooltip]="maximizeCodeWidth ? 'Prikaži zadatak' : 'Fokusiraj kod'" tooltipPosition="bottom" />
-            <p-button (onClick)="copyCode()" text="true" icon="pi pi-copy" pTooltip="Kopiraj cijeli kod"
-                tooltipPosition="bottom" />
-        </div>
+                <div class="results" *ngIf="userAchievedScore !== null">
+                    <h2>Usporedba rješenja ovoga zadatka</h2>
+                    <app-task-score-graph [userScore]="userAchievedScore" [averageScore]="task.averageScore"
+                        [bestScore]="task.allTimeBestScore"></app-task-score-graph>
+                </div>
+            </div>
+            <div *ngIf="!task" class="loading-spinner">
+                <p-progressSpinner ariaLabel="loading" />
+            </div>
 
-        <app-editor *ngIf="mainCode !== undefined" (onEditorReady)="onMainEditorReady()" [(code)]="mainCode"
-            [isBeingBitcoded]="isBeingTestedRemotely" [bitCode]="bitCode" [syntaxErrors]="syntaxErrors"
-            [ngStyle]="{'width': maximizeCodeWidth ? '100%' : 'initial'}" (onSave)="saveAndNotify($event)"
-            (onExecute)="executeCode()" />
-        <div *ngIf="isBeingTestedRemotely" class="evaluating-spinner">
-            <p-progressSpinner [strokeWidth]="'10px'" ariaLabel="loading" [animationDuration]="'10s'" />
-            <p class="evaluating-text" *ngIf="coolMessageIndex !== -1">{{coolMessages[coolMessageIndex]}}</p>
-        </div>
+        </ng-template>
+        <ng-template pTemplate>
 
-        <div *ngIf="diffEditorShown && mainCode !== undefined">
-            <app-editor [isDiffEditor]="true" [originalCode]="diffEditorLeftState"
-                [(comparedCode)]="diffEditorRightSide" [ngStyle]="{'width': maximizeCodeWidth ? '100%' : 'initial'}" />
-        </div>
+            <div *ngIf="isScreenWideEnoughForProgramming" class="playground-input__wrapper">
+                <div class="playground-input__wrapper-controls-top">
+                    <p-button (onClick)="copyCode()" text="true" icon="pi pi-copy" pTooltip="Kopiraj cijeli kod"
+                        tooltipPosition="bottom" />
+                </div>
 
-        <div *ngIf="!mainEditorReady" class="loading-spinner loading-spinner-code">
-            <p-progressSpinner ariaLabel="loading" />
-        </div>
+                <app-editor *ngIf="mainCode !== undefined" (onEditorReady)="onMainEditorReady()" [(code)]="mainCode"
+                    [isBeingBitcoded]="isBeingTestedRemotely" [bitCode]="bitCode" [syntaxErrors]="syntaxErrors"
+                    (onSave)="saveAndNotify($event)" (onExecute)="executeCode()" />
+                <div *ngIf="isBeingTestedRemotely" class="evaluating-spinner">
+                    <p-progressSpinner [strokeWidth]="'10px'" ariaLabel="loading" [animationDuration]="'10s'" />
+                    <p class="evaluating-text" *ngIf="coolMessageIndex !== -1">{{coolMessages[coolMessageIndex]}}</p>
+                </div>
 
-        <div class="playground-input__wrapper-controls-bottom">
-            <p-button *ngIf="helpButtonRageTolerance != 0" rounded="true"
-                [disabled]="!codeHelpShown && nextHelpCooldownRemainingTime !== 0"
-                [icon]="codeHelpShown ? 'pi pi-times' : 'pi pi-lightbulb'" (onClick)="toggleHelp()"
-                [pTooltip]="codeHelpShown ? 'Zatvori pomoć' : 'Pomozi mi!'" tooltipPosition="top" severity="info" />
-            <p-button [ngStyle]="{'visibility': loadSuccessfulSolutionBtnVisible ? 'visible' : 'hidden' }"
-                rounded="true" icon="pi pi-cloud-download" pTooltip="Učitaj najbolje rješenje"
-                (onClick)="showBestCode()" tooltipPosition="top" severity="success" />
-            <p-button [ngStyle]="{'visibility': isBeingTestedRemotely ? 'hidden' : 'visible' }" rounded="true"
-                icon="pi pi-play" pTooltip="Testiraj! (Ctrl+Enter)" (onClick)="executeCode()" tooltipPosition="top"
-                severity="contrast" />
-        </div>
-    </div>
+                <div *ngIf="diffEditorShown && mainCode !== undefined">
+                    <app-editor [isDiffEditor]="true" [originalCode]="diffEditorLeftState"
+                        [(comparedCode)]="diffEditorRightSide" />
+                </div>
 
-    <div *ngIf="!isScreenWideEnoughForProgramming" class="small-width-error-message">
-        <p>Nije moguće programirati u ovako malenom prozoru.</p>
-        <p>
-            Pristupi zadatku na većem ekranu, i moći ćeš programirati i testirati svoje rješenje direktno na
-            stranici.
-        </p>
-    </div>
+                <div *ngIf="!mainEditorReady" class="loading-spinner loading-spinner-code">
+                    <p-progressSpinner ariaLabel="loading" />
+                </div>
+
+                <div class="playground-input__wrapper-controls-bottom">
+                    <p-button *ngIf="helpButtonRageTolerance != 0" rounded="true"
+                        [disabled]="!codeHelpShown && nextHelpCooldownRemainingTime !== 0"
+                        [icon]="codeHelpShown ? 'pi pi-times' : 'pi pi-lightbulb'" (onClick)="toggleHelp()"
+                        [pTooltip]="codeHelpShown ? 'Zatvori pomoć' : 'Pomozi mi!'" tooltipPosition="top"
+                        severity="info" />
+                    <p-button [ngStyle]="{'visibility': loadSuccessfulSolutionBtnVisible ? 'visible' : 'hidden' }"
+                        rounded="true" icon="pi pi-cloud-download" pTooltip="Učitaj najbolje rješenje"
+                        (onClick)="showBestCode()" tooltipPosition="top" severity="success" />
+                    <p-button [ngStyle]="{'visibility': isBeingTestedRemotely ? 'hidden' : 'visible' }" rounded="true"
+                        icon="pi pi-play" pTooltip="Testiraj! (Ctrl+Enter)" (onClick)="executeCode()"
+                        tooltipPosition="top" severity="contrast" />
+                </div>
+            </div>
+
+            <div *ngIf="!isScreenWideEnoughForProgramming" class="small-width-error-message">
+                <p>Nije moguće programirati u ovako malenom prozoru.</p>
+                <p>
+                    Pristupi zadatku na većem ekranu, i moći ćeš programirati i testirati svoje rješenje direktno na
+                    stranici.
+                </p>
+            </div>
+        </ng-template>
+    </p-splitter>
 </div>
 
 <p-overlayPanel>
