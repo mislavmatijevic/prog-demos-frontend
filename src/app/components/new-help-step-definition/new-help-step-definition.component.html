@@ -4,8 +4,7 @@
     </ng-template>
     <div class="column">
         <span>Programski kod:</span>
-        <app-editor class="editor" class="editor" [code]="helpStep.helperCode"
-            (codeChange)="onHelpCodeChange($event)" />
+        <app-editor class="editor" [code]="helpStep.helperCode" (codeChange)="onHelpCodeChange($event)" />
         <span>Tekst oblačića:</span>
         <textarea pInputTextarea [ngModel]="helpStep.helperText" (ngModelChange)="onHelpHintChange($event)"
             class="help-text" rows="5" cols="30"></textarea>
