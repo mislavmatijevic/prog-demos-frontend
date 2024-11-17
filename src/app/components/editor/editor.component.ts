@@ -247,7 +247,8 @@ export class EditorComponent implements OnInit, OnChanges {
   }
 
   private adjustEditorSize() {
-    const editor = this.mainEditor !== null ? this.mainEditor : this.diffEditor;
+    const editor =
+      this.mainEditor !== undefined ? this.mainEditor : this.diffEditor;
     setTimeout(() => {
       editor.layout();
     });
