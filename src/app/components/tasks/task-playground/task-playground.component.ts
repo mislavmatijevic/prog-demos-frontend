@@ -33,6 +33,7 @@ import { LoginComponent } from '../../login/login.component';
 import { RegisterComponent } from '../../register/register.component';
 import { TaskScoreGraphComponent } from '../task-score-graph/task-score-graph.component';
 import { HelpStepDialogComponent } from './help-step-dialog/help-step-dialog.component';
+import { OutputMismatchDialogComponent } from './output-mismatch-dialog/output-mismatch-dialog.component';
 import { SuccessDialogComponent } from './success-dialog/success-dialog.component';
 
 @Component({
@@ -55,6 +56,7 @@ import { SuccessDialogComponent } from './success-dialog/success-dialog.componen
     ToastModule,
     SplitterModule,
     HelpStepDialogComponent,
+    OutputMismatchDialogComponent,
   ],
   templateUrl: './task-playground.component.html',
   styleUrl: './task-playground.component.scss',
@@ -79,9 +81,13 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
   bitAnimationHandler: Array<number> = [];
 
   syntaxErrors: Array<SyntaxError> = [];
+  outputMismatchReportedFailure:
+    | ExecutionFailureReasonOutputMismatch
+    | undefined = undefined;
 
   loginDialogVisible: boolean = false;
   successDialogVisible: boolean = false;
+  outputMismatchDialogVisible: boolean = false;
 
   helpDialogVisible: boolean = false;
   nextHelpCooldownRemainingTime: number = 0;
@@ -389,23 +395,25 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
   private handleTestFailure(
     reasonFailed: ExecutionFailureReasonOutputMismatch
   ) {
-    // TODO HANDLE TEST FAILURE
-    // this.diffEditorLeftState = reasonFailed.output ?? '';
-    // this.diffEditorRightSide = reasonFailed.expectedOutput;
-    // this.diffEditorShown = true;
+    const shouldCompareOutputs = reasonFailed.output !== undefined;
 
-    let inputDescription = `s unosom ${reasonFailed.testInput}`;
-    if (reasonFailed.testInput === undefined) {
-      inputDescription = 'bez unosa';
+    if (shouldCompareOutputs) {
+      this.outputMismatchReportedFailure = reasonFailed;
+      this.outputMismatchDialogVisible = true;
+    } else {
+      let inputDescription = ` kada se unese: ${reasonFailed.testInput}`;
+      if (reasonFailed.testInput === undefined) {
+        inputDescription = '.';
+      }
+
+      this.messageService.add({
+        key: 'central',
+        severity: 'error',
+        summary: 'Rješenje nije proizvelo očekivani rezultat!',
+        detail: `Tvoje rješenje nije dalo očekivani izlaz${inputDescription}`,
+        life: 120000,
+      });
     }
-
-    this.messageService.add({
-      key: 'central',
-      severity: 'error',
-      summary: 'Rješenje nije proizvelo očekivani rezultat!',
-      detail: `Kada se tvoje rješenje testira ${inputDescription}, izlaz tvog programa se ne podudara s očekivanim za taj ulaz.`,
-      life: 120000,
-    });
   }
 
   private handleArtefactMismatch(reason: ExecutionFailureReasonTests) {

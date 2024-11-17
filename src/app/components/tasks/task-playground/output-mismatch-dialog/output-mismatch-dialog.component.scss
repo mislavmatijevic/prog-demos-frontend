@@ -1,0 +1,15 @@
+@import "../../../../../styles/variables.scss";
+
+.main-content {
+  height: 10rem;
+}
+
+.explanations {
+  display: flex;
+  justify-content: space-evenly;
+  gap: 1rem;
+}
+
+.highlighted-text {
+  color: $highlighted;
+}

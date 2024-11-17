@@ -55,8 +55,8 @@ export interface ExecutionFailureReasonTests {
 
 export type ExecutionFailureReasonOutputMismatch =
   ExecutionFailureReasonTests & {
-    output: string;
-    expectedOutput: string;
+    output: string | undefined;
+    expectedOutput: string | undefined;
   };
 
 export type FailedTaskExecutionResponse = {

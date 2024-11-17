@@ -70,6 +70,8 @@ export class EditorComponent implements OnInit, OnChanges {
 
   @Input() resizeEvent!: UIEvent;
 
+  @Input() shouldWordWrap: boolean = false;
+
   mouseMovementListener: IDisposable | null = null;
 
   ngOnInit(): void {
@@ -230,6 +232,8 @@ export class EditorComponent implements OnInit, OnChanges {
           readOnlyMessage: {
             value: 'Prouči ponuđenu pomoć!',
           },
+          wordWrap: this.shouldWordWrap ? 'on' : 'off',
+          diffWordWrap: this.shouldWordWrap ? 'on' : 'off',
         });
       }
 
