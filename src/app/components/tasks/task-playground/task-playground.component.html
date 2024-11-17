@@ -15,7 +15,8 @@
     [scoreNumber]="userAchievedScore?.totalScore!" />
 
 <div class="playground">
-    <p-splitter [layout]="isScreenWideEnoughForHorizontalSplitter ? 'horizontal' : 'vertical'">
+    <p-splitter [layout]="isScreenWideEnoughForHorizontalSplitter ? 'horizontal' : 'vertical'"
+        (onResizeEnd)="onLayoutResized($event)">
         <ng-template pTemplate>
 
             <div class="playground-info__wrapper" *ngIf="task">
@@ -52,10 +53,12 @@
 
                 <app-editor *ngIf="mainCode !== undefined" (onEditorReady)="onMainEditorReady()" [(code)]="mainCode"
                     [isBeingBitcoded]="isBeingTestedRemotely" [bitCode]="bitCode" [syntaxErrors]="syntaxErrors"
-                    (onSave)="saveAndNotify($event)" (onExecute)="executeCode()" />
+                    (onSave)="saveAndNotify($event)" (onExecute)="executeCode()"
+                    [resizeEvent]="lastSplitterResizedEvent" />
                 <div *ngIf="isBeingTestedRemotely" class="evaluating-spinner">
                     <p-progressSpinner [strokeWidth]="'10px'" ariaLabel="loading" [animationDuration]="'10s'" />
-                    <p class="evaluating-text" *ngIf="coolMessageIndex !== -1">{{coolMessages[coolMessageIndex]}}</p>
+                    <p class="evaluating-text" *ngIf="coolMessageIndex !== -1">
+                        {{coolMessages[coolMessageIndex]}}</p>
                 </div>
 
                 <div *ngIf="diffEditorShown && mainCode !== undefined">

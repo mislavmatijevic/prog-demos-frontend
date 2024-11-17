@@ -11,7 +11,7 @@ import { DialogModule } from 'primeng/dialog';
 import { DividerModule } from 'primeng/divider';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { SplitterModule } from 'primeng/splitter';
+import { SplitterModule, SplitterResizeEndEvent } from 'primeng/splitter';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 import { finalize } from 'rxjs';
@@ -97,6 +97,8 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
   isScreenWideEnoughForProgramming: boolean = false;
   userAchievedScore: TaskScore | null = null;
   loadSuccessfulSolutionBtnVisible: boolean = false;
+
+  lastSplitterResizedEvent: UIEvent = new UIEvent('init');
 
   coolMessageIndex = -1;
   coolMessages = [
@@ -317,6 +319,10 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
         life: 5000,
       });
     }
+  }
+
+  onLayoutResized(event: SplitterResizeEndEvent) {
+    this.lastSplitterResizedEvent = event.originalEvent;
   }
 
   private hideHelp() {

@@ -68,6 +68,8 @@ export class EditorComponent implements OnInit, OnChanges {
   @Output() onSave = new EventEmitter<string>();
   @Output() onExecute = new EventEmitter<string>();
 
+  @Input() resizeEvent!: UIEvent;
+
   mouseMovementListener: IDisposable | null = null;
 
   ngOnInit(): void {
@@ -77,7 +79,7 @@ export class EditorComponent implements OnInit, OnChanges {
       minimap: { enabled: false },
       scrollBeyondLastLine: false,
       fontSize: 14,
-      automaticLayout: true,
+      automaticLayout: false,
     };
 
     if (this.isDiffEditor) {
@@ -115,6 +117,10 @@ export class EditorComponent implements OnInit, OnChanges {
         // However, the library I've used here (basically only viable solution for Angular) made that impossible.
         this.handleNewSyntaxErrors();
       }
+    }
+
+    if (changes['resizeEvent']) {
+      this.adjustEditorSize();
     }
   }
 
@@ -227,6 +233,7 @@ export class EditorComponent implements OnInit, OnChanges {
         });
       }
 
+      this.adjustEditorSize();
       this.onEditorReady.emit();
 
       if (this.isDiffEditor) {
@@ -237,6 +244,13 @@ export class EditorComponent implements OnInit, OnChanges {
         this.enableEditorEvents();
       }
     }
+  }
+
+  private adjustEditorSize() {
+    const editor = this.mainEditor !== null ? this.mainEditor : this.diffEditor;
+    setTimeout(() => {
+      editor.layout();
+    });
   }
 
   private handleBitcoding() {
