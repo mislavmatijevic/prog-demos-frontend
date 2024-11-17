@@ -76,8 +76,9 @@
                         [icon]="helpDialogVisible ? 'pi pi-times' : 'pi pi-lightbulb'" (onClick)="toggleHelp()"
                         pTooltip="Pomozi mi!" tooltipPosition="top" severity="info" />
                     <p-button [ngStyle]="{'visibility': loadSuccessfulSolutionBtnVisible ? 'visible' : 'hidden' }"
-                        rounded="true" icon="pi pi-cloud-download" pTooltip="Učitaj najbolje rješenje"
-                        (onClick)="showBestCode()" tooltipPosition="top" severity="success" />
+                        [disabled]="isBeingTestedRemotely" rounded="true" icon="pi pi-cloud-download"
+                        pTooltip="Učitaj najbolje rješenje" (onClick)="showBestCode()" tooltipPosition="top"
+                        severity="success" />
                     <p-button [ngStyle]="{'visibility': isBeingTestedRemotely ? 'hidden' : 'visible' }" rounded="true"
                         icon="pi pi-play" pTooltip="Testiraj! (Ctrl+Enter)" (onClick)="executeCode()"
                         tooltipPosition="top" severity="contrast" />
