@@ -180,6 +180,7 @@
 
 .collapse-expand {
   position: absolute;
+  z-index: 999;
 
   @media screen and (max-width: $smallWidth) {
     bottom: 150px;
