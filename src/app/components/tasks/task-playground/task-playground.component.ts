@@ -20,7 +20,6 @@ import { sizes } from '../../../../styles/variables';
 import { FullTask, TaskScore } from '../../../../types/models';
 import { NewlinePipe } from '../../../pipes/newline.pipe';
 import { AuthService } from '../../../services/auth.service';
-import { TaskHelpStepService } from '../../../services/task-help-step.service';
 import {
   ExecutionFailureReasonOutputMismatch,
   ExecutionFailureReasonTests,
@@ -33,6 +32,7 @@ import { EditorComponent, SyntaxError } from '../../editor/editor.component';
 import { LoginComponent } from '../../login/login.component';
 import { RegisterComponent } from '../../register/register.component';
 import { TaskScoreGraphComponent } from '../task-score-graph/task-score-graph.component';
+import { HelpStepDialogComponent } from './help-step-dialog/help-step-dialog.component';
 import { SuccessDialogComponent } from './success-dialog/success-dialog.component';
 
 @Component({
@@ -54,6 +54,7 @@ import { SuccessDialogComponent } from './success-dialog/success-dialog.componen
     SuccessDialogComponent,
     ToastModule,
     SplitterModule,
+    HelpStepDialogComponent,
   ],
   templateUrl: './task-playground.component.html',
   styleUrl: './task-playground.component.scss',
@@ -66,14 +67,10 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
     private messageService: MessageService,
     private authService: AuthService,
     private changeDetectorRef: ChangeDetectorRef,
-    private taskHelpStepService: TaskHelpStepService,
     private titleService: Title
   ) {}
 
   task!: FullTask;
-  diffEditorLeftState: string = '';
-  diffEditorRightSide: string = '';
-  previouslyGivenCodeHelp: string = '';
   mainCode: string | undefined = undefined;
   mainEditorReady: boolean = false;
 
@@ -83,15 +80,12 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
 
   syntaxErrors: Array<SyntaxError> = [];
 
-  nextHelpStep = 0;
-  diffEditorShown: boolean = false;
-  codeHelpShown: boolean = false;
-  helpButtonRageTolerance = 5;
-  nextHelpCooldownRemainingTime = 0;
-  helpCooldownIntervalHandler: number = -1;
-
   loginDialogVisible: boolean = false;
   successDialogVisible: boolean = false;
+
+  helpDialogVisible: boolean = false;
+  nextHelpCooldownRemainingTime: number = 0;
+  helpStepAvailable = true;
 
   isScreenWideEnoughForHorizontalSplitter: boolean = false;
   isScreenWideEnoughForProgramming: boolean = false;
@@ -152,11 +146,14 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
   }
 
   toggleHelp() {
-    if (!this.codeHelpShown) {
-      this.showHelp();
-    } else {
-      this.hideHelp();
+    this.helpDialogVisible = !this.helpDialogVisible;
+    if (this.helpDialogVisible) {
+      this.helpStepAvailable = false;
     }
+  }
+
+  handleNewHelpStepReady() {
+    this.helpStepAvailable = true;
   }
 
   async executeCode() {
@@ -165,7 +162,6 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
         this.messageService.clear('central');
         this.animateCodeTransferToBits();
         this.handleTaskExecution();
-        this.forceHideDiffEditor();
       } else {
         this.messageService.add({
           key: 'central',
@@ -215,6 +211,10 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
     this.mainCode = this.task.bestSuccessfulSubmission?.submittedCode;
   }
 
+  onLayoutResized(event: SplitterResizeEndEvent) {
+    this.lastSplitterResizedEvent = event.originalEvent;
+  }
+
   private saveCurrentCode(currentCode: string) {
     this.currentStorage().setItem(this.getTaskStorageKey(), currentCode);
   }
@@ -250,115 +250,6 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
       this.mainCode = savedCode;
     } else {
       this.mainCode = standardCppStarterCode;
-    }
-  }
-
-  private startHelpCooldown(seconds: number) {
-    this.nextHelpCooldownRemainingTime = seconds;
-
-    this.helpCooldownIntervalHandler = setInterval(() => {
-      if (this.nextHelpCooldownRemainingTime == 0) {
-        clearTimeout(this.helpCooldownIntervalHandler);
-      } else {
-        this.nextHelpCooldownRemainingTime--;
-      }
-    }, 1000) as unknown as number;
-  }
-
-  private showHelp() {
-    if (this.diffEditorShown) {
-      this.diffEditorShown = false;
-      this.changeDetectorRef.detectChanges();
-    }
-
-    if (this.nextHelpStep == 0) {
-      this.previouslyGivenCodeHelp = standardCppStarterCode;
-      this.nextHelpStep = 1;
-    }
-
-    this.taskHelpStepService
-      .getHelpStep(this.task.id, this.nextHelpStep)
-      .subscribe({
-        next: (receivedResponse) => {
-          if (!receivedResponse.success) {
-            this.handleHelpButtonWhenNoMoreHelpAvailable();
-            return;
-          }
-
-          const nextHelpStep = receivedResponse.helpStep;
-
-          let foundHelpfulCodeStep = nextHelpStep.helperCode;
-          let foundHelpfulTip = nextHelpStep.helperText;
-
-          this.handleDisplayingHelp(foundHelpfulCodeStep, foundHelpfulTip);
-          this.startHelpCooldown(this.nextHelpStep * 10);
-
-          this.nextHelpStep++;
-        },
-        error: () => {
-          this.handleHelpButtonWhenNoMoreHelpAvailable();
-        },
-      });
-  }
-
-  handleHelpButtonWhenNoMoreHelpAvailable() {
-    this.messageService.add({
-      key: 'central',
-      severity: 'error',
-      summary: 'To je to od pomoći!',
-      detail: 'Ne mogu ti dati više pomoći, dalje moraš samostalno.',
-    });
-    this.helpButtonRageTolerance--;
-    if (this.helpButtonRageTolerance == 0) {
-      this.messageService.add({
-        key: 'central',
-        severity: 'info',
-        summary: 'Prestani klikati',
-        detail:
-          'Ok, pomoći ću ti tako da maknem gumb, pa da se fokusiraš na zadatak.',
-        life: 5000,
-      });
-    }
-  }
-
-  onLayoutResized(event: SplitterResizeEndEvent) {
-    this.lastSplitterResizedEvent = event.originalEvent;
-  }
-
-  private hideHelp() {
-    this.codeHelpShown = false;
-    this.diffEditorShown = false;
-  }
-
-  private handleDisplayingHelp(
-    foundHelpfulCodeStep: string | undefined,
-    foundHelpfulTip: string | undefined
-  ) {
-    if (foundHelpfulCodeStep !== undefined && foundHelpfulCodeStep !== null) {
-      this.showCodeDifferenceFromHelpStep(foundHelpfulCodeStep);
-    }
-    if (foundHelpfulTip !== undefined && foundHelpfulTip !== null) {
-      this.displayHelpToast(foundHelpfulTip);
-    }
-  }
-
-  private showCodeDifferenceFromHelpStep(foundHelpfulCodeStep: string) {
-    this.diffEditorLeftState = this.previouslyGivenCodeHelp;
-    this.diffEditorRightSide = foundHelpfulCodeStep;
-    this.diffEditorRightSide = foundHelpfulCodeStep;
-    this.codeHelpShown = true;
-    this.diffEditorShown = true;
-  }
-
-  private displayHelpToast(helpMessageForCurrentStep: string) {
-    if (helpMessageForCurrentStep != '') {
-      this.messageService.add({
-        key: 'central',
-        severity: 'info',
-        summary: 'Moj savjet',
-        detail: helpMessageForCurrentStep,
-        life: 90000,
-      });
     }
   }
 
@@ -408,7 +299,6 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
       .pipe(finalize(() => this.revertBitsAfterExecution()))
       .subscribe({
         next: (value) => {
-          this.forceHideDiffEditor();
           this.userAchievedScore = value.score;
           this.successDialogVisible = true;
           this.popConfetti();
@@ -499,11 +389,10 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
   private handleTestFailure(
     reasonFailed: ExecutionFailureReasonOutputMismatch
   ) {
-    this.forceHideDiffEditor();
-
-    this.diffEditorLeftState = reasonFailed.output ?? '';
-    this.diffEditorRightSide = reasonFailed.expectedOutput;
-    this.diffEditorShown = true;
+    // TODO HANDLE TEST FAILURE
+    // this.diffEditorLeftState = reasonFailed.output ?? '';
+    // this.diffEditorRightSide = reasonFailed.expectedOutput;
+    // this.diffEditorShown = true;
 
     let inputDescription = `s unosom ${reasonFailed.testInput}`;
     if (reasonFailed.testInput === undefined) {
@@ -580,15 +469,6 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
         'Moj savjet je da pretražiš sva mjesta gdje upisuješ sadržaj u datoteku i osiguraš da se u datoteku upisuje samo onaj sadržaj koji se očekuje.',
       life: 120000,
     });
-  }
-
-  private forceHideDiffEditor() {
-    if (this.codeHelpShown) {
-      this.hideHelp();
-    } else if (this.diffEditorShown) {
-      this.diffEditorShown = false;
-    }
-    this.changeDetectorRef.detectChanges();
   }
 
   private revertBitsAfterExecution() {

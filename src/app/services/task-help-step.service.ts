@@ -24,6 +24,10 @@ export class TaskHelpStepService {
     taskId: number,
     helpStepIndex: number
   ): Observable<HelpStepResponse> {
+    if (helpStepIndex < 1) {
+      throw new Error('Steps have indices starting from 1!');
+    }
+
     const storedHelpStep = this.findHelpStep({ taskId, helpStepIndex });
 
     if (storedHelpStep !== undefined) {

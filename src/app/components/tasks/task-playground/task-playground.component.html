@@ -11,6 +11,9 @@
     <app-register (registrationSuccessful)="handleRegistrationSuccessful()"></app-register>
 </p-dialog>
 
+<app-help-step-dialog *ngIf="task" [taskId]="task.id" [(visible)]="helpDialogVisible"
+    (isReadyForNewHelp)="handleNewHelpStepReady()" />
+
 <app-success-dialog *ngIf="userAchievedScore?.totalScore" [(visible)]="successDialogVisible"
     [scoreNumber]="userAchievedScore?.totalScore!" />
 
@@ -61,21 +64,14 @@
                         {{coolMessages[coolMessageIndex]}}</p>
                 </div>
 
-                <div *ngIf="diffEditorShown && mainCode !== undefined">
-                    <app-editor [isDiffEditor]="true" [originalCode]="diffEditorLeftState"
-                        [(comparedCode)]="diffEditorRightSide" />
-                </div>
-
                 <div *ngIf="!mainEditorReady" class="loading-spinner loading-spinner-code">
                     <p-progressSpinner ariaLabel="loading" />
                 </div>
 
                 <div class="playground-input__wrapper-controls-bottom">
-                    <p-button *ngIf="helpButtonRageTolerance != 0" rounded="true"
-                        [disabled]="!codeHelpShown && nextHelpCooldownRemainingTime !== 0"
-                        [icon]="codeHelpShown ? 'pi pi-times' : 'pi pi-lightbulb'" (onClick)="toggleHelp()"
-                        [pTooltip]="codeHelpShown ? 'Zatvori pomoć' : 'Pomozi mi!'" tooltipPosition="top"
-                        severity="info" />
+                    <p-button rounded="true" [disabled]="!this.helpDialogVisible && !helpStepAvailable"
+                        [icon]="helpDialogVisible ? 'pi pi-times' : 'pi pi-lightbulb'" (onClick)="toggleHelp()"
+                        pTooltip="Pomozi mi!" tooltipPosition="top" severity="info" />
                     <p-button [ngStyle]="{'visibility': loadSuccessfulSolutionBtnVisible ? 'visible' : 'hidden' }"
                         rounded="true" icon="pi pi-cloud-download" pTooltip="Učitaj najbolje rješenje"
                         (onClick)="showBestCode()" tooltipPosition="top" severity="success" />
@@ -95,6 +91,3 @@
         </ng-template>
     </p-splitter>
 </div>
-
-<p-overlayPanel>
-</p-overlayPanel>

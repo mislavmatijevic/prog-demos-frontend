@@ -1,0 +1,16 @@
+@import "../../../../../styles/variables.scss";
+
+.help-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.info-message {
+  color: $tertiary;
+}
+
+.diff-editor {
+  height: 100%;
+  width: 100%;
+}
