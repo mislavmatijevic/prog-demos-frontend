@@ -1,12 +1,13 @@
 <p-dialog header="Tvoje rješenje nije zadovoljilo test." [(visible)]="visible" [modal]="true"
     [style]="{width: '65rem', height: '30rem'}" (onHide)="handleOnHide()" (onResizeEnd)="handleResize($event)">
     <div class="main-content">
-        <p>Kada se u tvoj program unese <span class="highlighted-text">{{reportedFailure.testInput}}</span>, izlaz ne
+        <p *ngIf="reportedFailure.testInput">Kada se u tvoj program unese <span
+                class="highlighted-text">{{reportedFailure.testInput}}</span>, izlaz ne
             odgovara očekivanom.</p>
         <div class="explanations">
-            <span class="highlighted-text">izlaz tvog rješenja za ulaz {{reportedFailure.testInput}}</span>
+            <span class="highlighted-text">izlaz tvog rješenja</span>
             <span class="highlighted-text">VS</span>
-            <span class="highlighted-text">ono što se očekivalo za ulaz {{reportedFailure.testInput}}</span>
+            <span class="highlighted-text">ono što se očekivalo</span>
         </div>
         <app-editor [isDiffEditor]="true" [originalCode]="reportedFailure.output!" [shouldWordWrap]="true"
             [comparedCode]="reportedFailure.expectedOutput!" [resizeEvent]="resizeEvent" />

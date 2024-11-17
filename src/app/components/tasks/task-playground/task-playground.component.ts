@@ -417,10 +417,15 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
   }
 
   private handleArtefactMismatch(reason: ExecutionFailureReasonTests) {
+    const messageSuffix =
+      reason.testInput !== undefined
+        ? ` za dani unos: ${reason.testInput}`
+        : `.`;
+
     this.messageService.add({
       key: 'central',
       severity: 'error',
-      detail: `Nisu se stvorile odgovarajuće datoteke za dani unos: ${reason.testInput}`,
+      detail: `Nisu se stvorile odgovarajuće datoteke${messageSuffix}`,
     });
   }
 

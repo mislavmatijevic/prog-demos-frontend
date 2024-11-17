@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
@@ -12,7 +13,7 @@ import { EditorComponent } from '../../../editor/editor.component';
 @Component({
   selector: 'app-output-mismatch-dialog',
   standalone: true,
-  imports: [DialogModule, EditorComponent],
+  imports: [CommonModule, DialogModule, EditorComponent],
   templateUrl: './output-mismatch-dialog.component.html',
   styleUrl: './output-mismatch-dialog.component.scss',
 })
