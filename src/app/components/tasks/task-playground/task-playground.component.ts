@@ -409,19 +409,30 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
     const shouldCompareOutputs = reasonFailed.output !== undefined;
 
     if (shouldCompareOutputs) {
+      if (reasonFailed.expectedOutput === undefined) {
+        this.outputMismatchReportedFailure = undefined;
+        this.changeDetectorRef.detectChanges();
+      }
       this.outputMismatchReportedFailure = reasonFailed;
+      console.log(this.outputMismatchReportedFailure);
+
       this.outputMismatchDialogVisible = true;
     } else {
-      let inputDescription = ` kada se unese: ${reasonFailed.testInput}`;
-      if (reasonFailed.testInput === undefined) {
-        inputDescription = '.';
+      let errorDetail: string;
+      const failedAtLastTest = reasonFailed.testInput === undefined;
+      if (failedAtLastTest) {
+        errorDetail =
+          'Svi testovi su prošli osim posljednjeg. Provjeri o čemu je riječ.';
+      } else {
+        errorDetail =
+          'Tvoje rješenje nije ništa ispisalo! Osiguraj da se izvrši `cout` naredba.';
       }
 
       this.messageService.add({
         key: 'central',
         severity: 'error',
-        summary: 'Rješenje nije proizvelo očekivani rezultat!',
-        detail: `Tvoje rješenje nije dalo očekivani izlaz${inputDescription}`,
+        summary: 'Testiranje nije uspjelo!',
+        detail: errorDetail,
         life: 120000,
       });
     }

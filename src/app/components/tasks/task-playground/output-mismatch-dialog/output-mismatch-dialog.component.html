@@ -1,16 +1,19 @@
-<p-dialog header="Tvoje rješenje nije zadovoljilo test." [(visible)]="visible" [modal]="true"
-    [style]="{width: '65rem', height: '30rem'}" (onHide)="handleOnHide()" (onResizeEnd)="handleResize($event)">
-    <div class="main-content">
+<p-dialog header="Tvoje rješenje nije zadovoljilo test." [(visible)]="visible" [modal]="true" [dismissableMask]="true"
+    [style]="{width: '65rem', height: diffEditorShown ? '30rem' : 'fit-content'}" (onHide)="handleOnHide()"
+    (onResizeEnd)="handleResize($event)">
+    <div [ngStyle]="{height: diffEditorShown ? '10em' : 'fit-content'}">
         <p *ngIf="reportedFailure.testInput">Kada se u tvoj program unese <span
                 class="highlighted-text">{{reportedFailure.testInput}}</span>, izlaz ne
             odgovara očekivanom.</p>
-        <div class="explanations">
+        <div class="explanations" *ngIf="diffEditorShown">
             <span class="highlighted-text">izlaz tvog rješenja</span>
             <span class="highlighted-text">VS</span>
             <span class="highlighted-text">ono što se očekivalo</span>
         </div>
-        <app-editor [isDiffEditor]="true" [originalCode]="reportedFailure.output!" [shouldWordWrap]="true"
-            [comparedCode]="reportedFailure.expectedOutput!" [resizeEvent]="resizeEvent" />
+        <app-editor *ngIf="diffEditorShown" [isDiffEditor]="true" [originalCode]="reportedFailure.output!"
+            [shouldWordWrap]="true" [comparedCode]="reportedFailure.expectedOutput!" [resizeEvent]="resizeEvent" />
+        <p *ngIf="!diffEditorShown">Neki testovi su prošli, tako da je riječ o sitnoj pogreški.
+            Samostalno otkriji gdje se ona krije!</p>
     </div>
     <p-footer>
         Nije bitno da se stvarni i očekivani izlaz u potpunosti podudaraju, već samo da se podudaraju po zadnjem dijelu.

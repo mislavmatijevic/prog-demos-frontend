@@ -4,7 +4,9 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   Output,
+  SimpleChanges,
 } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
 import { ExecutionFailureReasonOutputMismatch } from '../../../../services/task.service';
@@ -17,7 +19,7 @@ import { EditorComponent } from '../../../editor/editor.component';
   templateUrl: './output-mismatch-dialog.component.html',
   styleUrl: './output-mismatch-dialog.component.scss',
 })
-export class OutputMismatchDialogComponent {
+export class OutputMismatchDialogComponent implements OnChanges {
   constructor(private changeDetectorRef: ChangeDetectorRef) {}
 
   @Input({ required: true })
@@ -27,7 +29,14 @@ export class OutputMismatchDialogComponent {
   @Output()
   visibleChange = new EventEmitter<boolean>();
 
+  diffEditorShown = false;
   resizeEvent: UIEvent = new UIEvent('init');
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['reportedFailure']) {
+      this.diffEditorShown = this.reportedFailure.expectedOutput !== undefined;
+    }
+  }
 
   handleOnHide() {
     this.visible = false;
