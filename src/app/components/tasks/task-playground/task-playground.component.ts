@@ -318,6 +318,17 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
               case 422:
                 this.handleSolutionEvaluationFailure(errorRes);
                 break;
+              case 429:
+                this.messageService.add({
+                  key: 'central',
+                  severity: 'error',
+                  summary: 'Preveliko opterećenje sustava!',
+                  detail:
+                    'Čini se da previše korisnika u ovome trenutku koristi stranicu. Molim te pokušaj za par trenutaka. ' +
+                    'Ako se ova greška ponavlja, pričekaj nekoliko sati.',
+                  life: 30000,
+                });
+                break;
 
               case 500:
                 this.messageService.add({
