@@ -128,8 +128,18 @@
 }
 
 .synthwave-sun {
-  @media screen and (max-width: $smallWidth), (max-height: $smallHeight) {
-    display: none;
+  @media screen and (max-height: $smallHeight) {
+    width: 200px;
+    height: 200px;
+    left: 40px;
+    top: 75%;
+  }
+  @media screen and (max-width: $smallWidth) {
+    width: 125px;
+    height: 125px;
+    left: 0px;
+    top: 75%;
+    bottom: 30px;
   }
 
   position: absolute;

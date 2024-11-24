@@ -3,8 +3,16 @@ import { Component, effect, Renderer2 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
+import { sizes } from '../../../styles/variables';
 import { NavigationItem } from '../../../types/general';
 import { AuthService } from '../../services/auth.service';
+
+enum RippleEffectPositionalInfo {
+  NORMAL,
+  SMALL_WIDTH,
+  SMALL_HEIGHT,
+  SMALL_WIDTH_HEIGHT,
+}
 
 @Component({
   selector: 'app-navigation',
@@ -39,6 +47,25 @@ export class NavigationComponent {
   }
 
   onSunClick(e: MouseEvent) {
+    let rippleEfectPosition = RippleEffectPositionalInfo.NORMAL;
+    if (
+      window.innerWidth <= sizes.smallWidth &&
+      window.innerHeight <= sizes.smallHeight
+    ) {
+      rippleEfectPosition = RippleEffectPositionalInfo.SMALL_WIDTH_HEIGHT;
+    } else if (window.innerWidth <= sizes.smallWidth) {
+      rippleEfectPosition = RippleEffectPositionalInfo.SMALL_WIDTH;
+    } else if (window.innerHeight <= sizes.smallHeight) {
+      rippleEfectPosition = RippleEffectPositionalInfo.SMALL_HEIGHT;
+    }
+
+    this.createRippleEffect(e, rippleEfectPosition);
+  }
+
+  private createRippleEffect(
+    e: MouseEvent,
+    positionalInfo: RippleEffectPositionalInfo
+  ) {
     const sunContainer = e.currentTarget as HTMLElement;
 
     if (this.sunClickedCounter >= 20) {
@@ -59,14 +86,56 @@ export class NavigationComponent {
       this.sunClickedCounter++;
     }
 
-    const ripple = this.renderer.createElement('div');
+    let width: string;
+    let height: string;
+
     const distanceFromBottom = window.innerHeight - e.clientY;
 
+    let bottom: string;
+    let left: string;
+    let scaleAmount: number;
+
+    switch (positionalInfo) {
+      case RippleEffectPositionalInfo.NORMAL: {
+        bottom = `${50 + distanceFromBottom}px`;
+        left = `${110 + e.clientX}px`;
+        width = '25px';
+        height = '20px';
+        scaleAmount = 20;
+        break;
+      }
+      case RippleEffectPositionalInfo.SMALL_WIDTH: {
+        bottom = `40px`;
+        left = `30px`;
+        width = '60px';
+        height = '50px';
+        scaleAmount = 7;
+        break;
+      }
+      case RippleEffectPositionalInfo.SMALL_WIDTH_HEIGHT: {
+        bottom = `70px`;
+        left = `50px`;
+        width = '50px';
+        height = '50px';
+        scaleAmount = 5;
+        break;
+      }
+      case RippleEffectPositionalInfo.SMALL_HEIGHT: {
+        bottom = `${distanceFromBottom + 30}px`;
+        left = `${e.clientX - 25}px`;
+        width = '150px';
+        height = '125px';
+        scaleAmount = 2;
+        break;
+      }
+    }
+
+    const ripple = this.renderer.createElement('div');
     this.renderer.setStyle(ripple, 'position', 'absolute');
-    this.renderer.setStyle(ripple, 'bottom', `${50 + distanceFromBottom}px`);
-    this.renderer.setStyle(ripple, 'left', `${110 + e.clientX}px`);
-    this.renderer.setStyle(ripple, 'width', '25px');
-    this.renderer.setStyle(ripple, 'height', '20px');
+    this.renderer.setStyle(ripple, 'bottom', bottom);
+    this.renderer.setStyle(ripple, 'left', left);
+    this.renderer.setStyle(ripple, 'width', width);
+    this.renderer.setStyle(ripple, 'height', height);
     this.renderer.setStyle(ripple, 'background-color', 'darkorange');
     this.renderer.setStyle(ripple, 'border-radius', '50%');
     this.renderer.setStyle(ripple, 'opacity', '1');
@@ -81,7 +150,7 @@ export class NavigationComponent {
 
     setTimeout(() => {
       this.renderer.setStyle(ripple, 'opacity', '0');
-      this.renderer.setStyle(ripple, 'scale', '20');
+      this.renderer.setStyle(ripple, 'scale', scaleAmount);
       this.renderer.setStyle(ripple, 'background-color', 'red');
       this.renderer.setStyle(ripple, 'transform', 'translate(40%, 30%)');
     }, 20);
@@ -93,8 +162,7 @@ export class NavigationComponent {
 
   // Hack made to decide how far to move the collapse-expand button.
   returnZeroIfSmallWidth(): number {
-    const smallWidth = 850;
-    return window.innerWidth <= smallWidth ? 0 : 1;
+    return window.innerWidth <= sizes.smallWidth ? 0 : 1;
   }
 
   private displayAppropriateNavigations() {
