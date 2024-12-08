@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AccordionModule } from 'primeng/accordion';
 import { MessageService } from 'primeng/api';
 import { BasicTask, Topic } from '../../../types/models';
 import { TaskCardComponent } from '../../components/tasks/task-card/task-card.component';
@@ -9,7 +10,7 @@ import { TaskService, TasksResponse } from '../../services/task.service';
 @Component({
   selector: 'app-tasks',
   standalone: true,
-  imports: [CommonModule, TaskCardComponent],
+  imports: [CommonModule, TaskCardComponent, AccordionModule],
   templateUrl: './tasks.component.html',
   styleUrl: './tasks.component.scss',
 })

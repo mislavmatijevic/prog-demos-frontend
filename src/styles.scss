@@ -39,6 +39,8 @@ app-root {
   overflow-y: auto;
   scrollbar-color: $dark $tertiary;
   scrollbar-width: auto;
+
+  overflow-y: scroll;
 }
 
 body {

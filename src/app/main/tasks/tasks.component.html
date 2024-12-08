@@ -1,13 +1,17 @@
 <h1>Vježbaj na zadacima po temama</h1>
 <section class="topic" *ngFor="let topic of topics">
     <h2>{{topic.name}}</h2>
-    <div class="topic__task-grid">
-        <section class="topic__task-grid__subtopic" *ngFor="let subtopic of topic.subtopics">
-            <h3>{{subtopic.name}}</h3>
-            <div class="topic__task-grid__subtopic__grid" *ngIf="subtopic.tasks">
-                <app-task-card *ngFor="let task of sort(subtopic.tasks)" [task]=task
-                    (onSelected)="onTaskSelected($event)"></app-task-card>
-            </div>
-        </section>
-    </div>
+    <p-accordion [activeIndex]="0">
+        <p-accordionTab *ngFor="let subtopic of topic.subtopics" header="{{subtopic.name}}"
+            [headerStyle]="{'background-color': 'transparent', 'border-color': 'transparent'}"
+            [tabStyle]="{'background-color': 'transparent'}"
+            [contentStyle]="{'background-color': 'transparent', 'border-color': 'transparent'}">
+            <section class="topic__task-grid__subtopic">
+                <div class="topic__task-grid__subtopic__grid" *ngIf="subtopic.tasks">
+                    <app-task-card *ngFor="let task of sort(subtopic.tasks)" [task]=task
+                        (onSelected)="onTaskSelected($event)"></app-task-card>
+                </div>
+            </section>
+        </p-accordionTab>
+    </p-accordion>
 </section>
