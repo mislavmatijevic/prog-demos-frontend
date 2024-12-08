@@ -22,7 +22,7 @@
 
 <div class="playground">
     <p-splitter [layout]="isScreenWideEnoughForHorizontalSplitter ? 'horizontal' : 'vertical'"
-        (onResizeEnd)="onLayoutResized($event)">
+        (onResizeEnd)="onLayoutResized($event)" [gutterSize]="isScreenWideEnoughForHorizontalSplitter ? 5 : 0">
         <ng-template pTemplate>
 
             <div class="playground-info__wrapper" *ngIf="task">
