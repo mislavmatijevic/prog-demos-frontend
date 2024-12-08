@@ -14,7 +14,7 @@
 <app-help-step-dialog *ngIf="task" [taskId]="task.id" [(visible)]="helpDialogVisible"
     (isReadyForNewHelp)="handleNewHelpStepReady()" />
 
-<app-output-mismatch-dialog *ngIf="outputMismatchReportedFailure !== undefined"
+<app-output-mismatch-dialog *ngIf="outputMismatchDialogVisible && outputMismatchReportedFailure !== undefined"
     [(visible)]="outputMismatchDialogVisible" [reportedFailure]="outputMismatchReportedFailure" />
 
 <app-success-dialog *ngIf="userAchievedScore?.totalScore" [(visible)]="successDialogVisible"

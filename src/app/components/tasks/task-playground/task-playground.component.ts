@@ -414,7 +414,6 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
         this.changeDetectorRef.detectChanges();
       }
       this.outputMismatchReportedFailure = reasonFailed;
-      console.log(this.outputMismatchReportedFailure);
 
       this.outputMismatchDialogVisible = true;
     } else {
