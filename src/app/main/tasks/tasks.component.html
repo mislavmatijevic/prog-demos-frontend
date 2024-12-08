@@ -1,7 +1,7 @@
 <h1>Vježbaj na zadacima po temama</h1>
 <section class="topic" *ngFor="let topic of topics">
     <h2>{{topic.name}}</h2>
-    <p-accordion [activeIndex]="0">
+    <p-accordion [activeIndex]="currentTabIndex" (activeIndexChange)="handleTabChange($event)">
         <p-accordionTab *ngFor="let subtopic of topic.subtopics" header="{{subtopic.name}}"
             [headerStyle]="{'background-color': 'transparent', 'border-color': 'transparent'}"
             [tabStyle]="{'background-color': 'transparent'}"

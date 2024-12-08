@@ -5,6 +5,7 @@ import { AccordionModule } from 'primeng/accordion';
 import { MessageService } from 'primeng/api';
 import { BasicTask, Topic } from '../../../types/models';
 import { TaskCardComponent } from '../../components/tasks/task-card/task-card.component';
+import { AuthService } from '../../services/auth.service';
 import { TaskService, TasksResponse } from '../../services/task.service';
 
 @Component({
@@ -18,13 +19,16 @@ export class TasksComponent implements OnInit {
   constructor(
     private taskService: TaskService,
     private router: Router,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private authService: AuthService
   ) {}
 
   topics: Topic[] = [];
+  currentTabIndex: number = 0;
 
   ngOnInit() {
     this.fetchTasks();
+    this.reopenLastViewedTab();
   }
 
   fetchTasks() {
@@ -52,5 +56,20 @@ export class TasksComponent implements OnInit {
 
   sort(tasks: BasicTask[]): BasicTask[] {
     return tasks.sort((task1, task2) => task1.identifier - task2.identifier);
+  }
+
+  handleTabChange(newTabIndex: number | number[]) {
+    if (this.authService.isLoggedIn()) {
+      localStorage.setItem('last-opened-task-tab', newTabIndex.toString());
+    }
+  }
+
+  private reopenLastViewedTab() {
+    if (this.authService.isLoggedIn()) {
+      const number = localStorage.getItem('last-opened-task-tab');
+      if (number !== null) {
+        this.currentTabIndex = parseInt(number);
+      }
+    }
   }
 }
