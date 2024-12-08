@@ -390,7 +390,7 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
         break;
       }
       case SolutionErrorCode.EXEC_ERR_FILE_SIZE_EXCEEDED: {
-        this.handleFileSizeExceeded();
+        this.handleOutputSizeLimit(error.reason);
         break;
       }
       default:
@@ -492,14 +492,27 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
     });
   }
 
-  private handleFileSizeExceeded() {
+  private handleOutputSizeLimit(reason: ExecutionFailureReasonOutputMismatch) {
+    let errorTitle = 'Neispravni izlazni podaci!';
+    let errorMessage =
+      'Tvoj program je prešao ograničenje količine podataka koju smije generirati.';
+
+    console.log(reason);
+    if (typeof reason === 'string' && reason == 'file size limit exceeded') {
+      errorMessage +=
+        ' Provjeri sva mjesta gdje ispisuješ izlazne podatke i osiguraj da je taj sadržaj ograničen u okviru zadatka.';
+    } else if (reason.expectedOutput) {
+      errorTitle = 'Datoteka je prešla ograničenje veličine!';
+      errorMessage +=
+        ' Provjeri da sve naredbe `cin` unose odgovarajući tip podataka za ovaj unos. ' +
+        'Ako upisuješ podatke u datoteku, osiguraj da se u nju upisuje samo očekivani sadržaj.';
+    }
+
     this.messageService.add({
       key: 'central',
       severity: 'error',
-      summary: 'Datoteka je prešla ograničenje veličine!',
-      detail:
-        'Vjerojatan uzrok problema je upis podataka u datoteku koji ondje ne pripadaju. ' +
-        'Moj savjet je da pretražiš sva mjesta gdje upisuješ sadržaj u datoteku i osiguraš da se u datoteku upisuje samo onaj sadržaj koji se očekuje.',
+      summary: errorTitle,
+      detail: errorMessage,
       life: 120000,
     });
   }
