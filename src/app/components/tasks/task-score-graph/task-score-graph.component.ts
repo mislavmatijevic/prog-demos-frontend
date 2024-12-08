@@ -26,7 +26,7 @@ export class TaskScoreGraphComponent implements OnInit {
 
   private refreshStats() {
     this.complexityData = {
-      labels: ['Kompleksnost ovog zadatka'],
+      labels: ['Kompleksnost rješenja'],
       datasets: [
         {
           label: 'Kompleksnost tvog koda',
