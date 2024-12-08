@@ -11,7 +11,7 @@
     <app-register (registrationSuccessful)="handleRegistrationSuccessful()"></app-register>
 </p-dialog>
 
-<app-help-step-dialog *ngIf="task" [taskId]="task.id" [(visible)]="helpDialogVisible"
+<app-help-step-dialog *ngIf="task" [task]="task" [(visible)]="helpDialogVisible"
     (isReadyForNewHelp)="handleNewHelpStepReady()" />
 
 <app-output-mismatch-dialog *ngIf="outputMismatchDialogVisible && outputMismatchReportedFailure !== undefined"

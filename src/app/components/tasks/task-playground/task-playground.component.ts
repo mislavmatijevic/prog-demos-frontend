@@ -90,7 +90,6 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
   outputMismatchDialogVisible: boolean = false;
 
   helpDialogVisible: boolean = false;
-  nextHelpCooldownRemainingTime: number = 0;
   helpStepAvailable = true;
 
   isScreenWideEnoughForHorizontalSplitter: boolean = false;

@@ -11,7 +11,7 @@ import {
 import { DialogModule } from 'primeng/dialog';
 import { firstValueFrom } from 'rxjs';
 import { standardCppStarterCode } from '../../../../../helpers/editor-helpers';
-import { HelpStep } from '../../../../../types/models';
+import { BasicTask, HelpStep } from '../../../../../types/models';
 import { TaskHelpStepService } from '../../../../services/task-help-step.service';
 import { EditorComponent } from '../../../editor/editor.component';
 
@@ -28,7 +28,7 @@ export class HelpStepDialogComponent implements OnChanges {
     private changeDetectorRef: ChangeDetectorRef
   ) {}
 
-  @Input() taskId: number = 0;
+  @Input({ required: true }) task!: BasicTask;
 
   @Input() visible: boolean = false;
   @Output() visibleChange = new EventEmitter<boolean>();
@@ -84,7 +84,12 @@ export class HelpStepDialogComponent implements OnChanges {
     const newHelpStep = await this.displayHelp(this.nextHelpStep);
 
     if (newHelpStep !== null) {
-      this.startHelpCooldown(this.nextHelpStep * 10);
+      let cooldownSeconds = this.nextHelpStep * 30;
+      const cooldownComplexityModifier = parseInt(this.task.complexity) * 60;
+      if (cooldownComplexityModifier > 0) {
+        cooldownSeconds += cooldownComplexityModifier;
+      }
+      this.startHelpCooldown(cooldownSeconds);
       this.nextHelpStep++;
     } else {
       this.infoMessage = 'Ne mogu ti dati više pomoći, dalje moraš samostalno.';
@@ -96,7 +101,7 @@ export class HelpStepDialogComponent implements OnChanges {
   private async displayHelp(step: number): Promise<HelpStep | null> {
     try {
       const requestedHelp = await firstValueFrom(
-        this.taskHelpStepService.getHelpStep(this.taskId, step)
+        this.taskHelpStepService.getHelpStep(this.task.id, step)
       );
 
       if (!requestedHelp.success) {
@@ -151,7 +156,7 @@ export class HelpStepDialogComponent implements OnChanges {
     try {
       const previousHelpStep = await firstValueFrom(
         this.taskHelpStepService.getHelpStep(
-          this.taskId,
+          this.task.id,
           currentHelpStep.step - 1
         )
       );
