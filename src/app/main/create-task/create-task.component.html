@@ -53,18 +53,12 @@
                 Ako očekivani ulazi / izlazi sadržavaju više linija,
                 te linije odvoji znakom '\n' unutar istog retka!
             </strong>
-            <div class="row">
-                <div class="column">
-                    <label class="form-label" for="test-inputs">Testni unosi:</label>
-                    <textarea pInputTextarea id="test-inputs" type="text" class="new-task-input__terminal" name="input"
-                        minlength="2" required [formControl]="inputControl" rows="5"></textarea>
-                </div>
-                <div class="column">
-                    <label class="form-label" for="test-outputs">Očekivani izlazi:</label>
-                    <textarea pInputTextarea id="test-outputs" type="text" class="new-task-input__terminal"
-                        name="output" minlength="2" required [formControl]="outputControl"
-                        [rows]="inputControl.value?.split('\n')?.length ?? 1"></textarea>
-                </div>
+            <div class="input-output-row">
+                <textarea pInputTextarea id="test-inputs" type="text" class="new-task-input__terminal" name="input"
+                    minlength="2" required [formControl]="inputControl" rows="5" cols="50"></textarea>
+                <textarea pInputTextarea id="test-outputs" type="text" class="new-task-input__terminal" name="output"
+                    minlength="2" required [formControl]="outputControl"
+                    [rows]="inputControl.value?.split('\n')?.length ?? 1" cols="50"></textarea>
             </div>
             <div class="column">
                 <label class="form-label" for="sha256">Ako zadatak generira datoteke,

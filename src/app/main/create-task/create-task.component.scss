@@ -21,12 +21,20 @@
     flex-direction: column;
     flex-grow: 1;
   }
+
   .row {
     display: flex;
     gap: 50px;
     flex-wrap: wrap;
     justify-content: space-around;
   }
+
+  .input-output-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+
   .new-task-input {
     background-color: $tertiary;
 
