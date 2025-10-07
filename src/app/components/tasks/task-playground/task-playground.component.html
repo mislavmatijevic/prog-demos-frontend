@@ -72,16 +72,16 @@
                 </div>
 
                 <div class="playground-input__wrapper-controls-bottom">
-                    <p-button rounded="true" [disabled]="!this.helpDialogVisible && !helpStepAvailable"
+                    <p-button *ngIf="!task.isBossBattle" rounded="true"
+                        [disabled]="!this.helpDialogVisible && !helpStepAvailable"
                         [icon]="helpDialogVisible ? 'pi pi-times' : 'pi pi-lightbulb'" (onClick)="toggleHelp()"
                         pTooltip="Pomozi mi!" tooltipPosition="top" severity="info" />
-                    <p-button [ngStyle]="{'visibility': loadSuccessfulSolutionBtnVisible ? 'visible' : 'hidden' }"
-                        [disabled]="isBeingTestedRemotely" rounded="true" icon="pi pi-cloud-download"
-                        pTooltip="Učitaj najbolje rješenje" (onClick)="showBestCode()" tooltipPosition="top"
-                        severity="success" />
-                    <p-button [ngStyle]="{'visibility': isBeingTestedRemotely ? 'hidden' : 'visible' }" rounded="true"
-                        icon="pi pi-play" pTooltip="Testiraj! (Ctrl+Enter)" (onClick)="executeCode()"
-                        tooltipPosition="top" severity="contrast" />
+                    <p-button *ngIf="loadSuccessfulSolutionBtnVisible" [disabled]="isBeingTestedRemotely" rounded="true"
+                        icon="pi pi-cloud-download" pTooltip="Učitaj najbolje rješenje" (onClick)="showBestCode()"
+                        tooltipPosition="top" severity="success" />
+                    <p-button *ngIf="!isBeingTestedRemotely" rounded="true" icon="pi pi-play"
+                        pTooltip="Testiraj! (Ctrl+Enter)" (onClick)="executeCode()" tooltipPosition="top"
+                        severity="contrast" />
                 </div>
             </div>
 
