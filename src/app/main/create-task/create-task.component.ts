@@ -107,7 +107,11 @@ export class CreateTaskComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.saveCurrentState();
+    if (this.nameControl.value && this.nameControl.value.length > 0) {
+      this.saveCurrentState();
+    } else {
+      this.clearSavedState();
+    }
   }
 
   loadLatestSavedState() {
@@ -224,6 +228,20 @@ export class CreateTaskComponent implements OnInit, OnDestroy {
       HELP_STEPS_STORAGE_KEY,
       JSON.stringify(this.definedHelpSteps)
     );
+  }
+
+  clearSavedState() {
+    localStorage.removeItem(SELECTED_SUBTOPIC_STORAGE_KEY);
+    localStorage.removeItem(NAME_CONTROL_STORAGE_KEY);
+    localStorage.removeItem(COMPLEXITY_CONTROL_STORAGE_KEY);
+    localStorage.removeItem(INPUT_CONTROL_STORAGE_KEY);
+    localStorage.removeItem(OUTPUT_CONTROL_STORAGE_KEY);
+    localStorage.removeItem(SHA256_CONTROL_STORAGE_KEY);
+    localStorage.removeItem(INPUT_EXPLANATION_CONTROL_STORAGE_KEY);
+    localStorage.removeItem(OUTPUT_EXPLANATION_CONTROL_STORAGE_KEY);
+    localStorage.removeItem(INPUT_OUTPUT_EXAMPLE_CONTROL_STORAGE_KEY);
+    localStorage.removeItem(IS_BOSS_BATTLE_STORAGE_KEY);
+    localStorage.removeItem(HELP_STEPS_STORAGE_KEY);
   }
 
   onSubmit() {
