@@ -90,6 +90,7 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
   outputMismatchDialogVisible: boolean = false;
 
   helpDialogVisible: boolean = false;
+  helpStepCountdown = 0;
   helpStepAvailable = true;
 
   isScreenWideEnoughForHorizontalSplitter: boolean = false;
@@ -157,8 +158,11 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
     }
   }
 
-  handleNewHelpStepReady() {
-    this.helpStepAvailable = true;
+  handleCountdown(secondsRemaining: number) {
+    this.helpStepCountdown = secondsRemaining;
+    if (secondsRemaining === 0) {
+      this.helpStepAvailable = true;
+    }
   }
 
   async executeCode() {

@@ -12,7 +12,7 @@
 </p-dialog>
 
 <app-help-step-dialog *ngIf="task" [task]="task" [(visible)]="helpDialogVisible"
-    (isReadyForNewHelp)="handleNewHelpStepReady()" />
+    (onCountdown)="handleCountdown($event)" />
 
 <app-output-mismatch-dialog *ngIf="outputMismatchDialogVisible && outputMismatchReportedFailure !== undefined"
     [(visible)]="outputMismatchDialogVisible" [reportedFailure]="outputMismatchReportedFailure" />
@@ -74,9 +74,14 @@
                 <div class="playground-input__wrapper-controls-bottom">
                     <p-button *ngIf="!task.isBossBattle" rounded="true"
                         [disabled]="!this.helpDialogVisible && !helpStepAvailable"
-                        [icon]="helpDialogVisible ? 'pi pi-times' : 'pi pi-lightbulb'" (onClick)="toggleHelp()"
-                        [pTooltip]="helpDialogVisible ? 'Zatvori pomoć' : 'Pomozi mi!'" tooltipPosition="top"
-                        severity="info" />
+                        [icon]="helpDialogVisible ? 'pi pi-times' : helpStepAvailable ? 'pi pi-lightbulb' : undefined"
+                        (onClick)="toggleHelp()" [pTooltip]="helpDialogVisible ? 'Zatvori pomoć' : 'Pomozi mi!'"
+                        [style]="{ 'width': '40px', 'height': '40px', 'padding': '0 5px' }" tooltipPosition="top"
+                        severity="info">
+                        <div *ngIf="!this.helpDialogVisible && !helpStepAvailable" class="countdown-number">
+                            {{helpStepCountdown.toString()}}
+                        </div>
+                    </p-button>
                     <p-button *ngIf="loadSuccessfulSolutionBtnVisible" [disabled]="isBeingTestedRemotely" rounded="true"
                         icon="pi pi-cloud-download" pTooltip="Učitaj najbolje rješenje" (onClick)="showBestCode()"
                         tooltipPosition="top" severity="success" />

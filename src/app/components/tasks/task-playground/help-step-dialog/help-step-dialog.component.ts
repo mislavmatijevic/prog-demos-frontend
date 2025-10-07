@@ -33,7 +33,7 @@ export class HelpStepDialogComponent implements OnChanges {
   @Input() visible: boolean = false;
   @Output() visibleChange = new EventEmitter<boolean>();
 
-  @Output() isReadyForNewHelp = new EventEmitter<boolean>();
+  @Output() onCountdown = new EventEmitter<number>();
 
   dialogTitle: string = '💡 Pomoć';
 
@@ -76,7 +76,7 @@ export class HelpStepDialogComponent implements OnChanges {
     this.visibleChange.emit(this.visible);
 
     if (this.nextHelpStep === -1) {
-      this.isReadyForNewHelp.emit(true);
+      this.onCountdown.emit(0);
     }
   }
 
@@ -93,8 +93,8 @@ export class HelpStepDialogComponent implements OnChanges {
       this.nextHelpStep++;
     } else {
       this.infoMessage = 'Ne mogu ti dati više pomoći, dalje moraš samostalno.';
-      this.isReadyForNewHelp.emit(true);
       this.nextHelpStep = -1;
+      this.onCountdown.emit(0);
     }
   }
 
@@ -119,13 +119,14 @@ export class HelpStepDialogComponent implements OnChanges {
 
   private startHelpCooldown(seconds: number) {
     this.nextHelpCooldownRemainingTime = seconds;
+    this.onCountdown.emit(this.nextHelpCooldownRemainingTime);
 
     this.helpCooldownIntervalHandler = setInterval(() => {
       if (this.nextHelpCooldownRemainingTime == 0) {
         clearTimeout(this.helpCooldownIntervalHandler);
-        this.isReadyForNewHelp.emit(true);
+        this.onCountdown.emit(0);
       } else {
-        this.nextHelpCooldownRemainingTime--;
+        this.onCountdown.emit(this.nextHelpCooldownRemainingTime--);
       }
     }, 1000) as unknown as number;
   }
