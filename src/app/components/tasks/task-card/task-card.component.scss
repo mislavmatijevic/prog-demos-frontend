@@ -27,9 +27,30 @@
   }
 }
 
+@keyframes burning-text {
+  0% {
+    color: rgba(255, 170, 96, 0.7);
+  }
+  20% {
+    color: rgba(255, 225, 90, 0.6);
+  }
+  40% {
+    color: rgba(255, 191, 172, 0.4);
+  }
+  60% {
+    color: rgba(255, 220, 209, 0.4);
+  }
+  90% {
+    color: rgba(255, 139, 38, 0.7);
+  }
+  100% {
+    color: rgba(255, 170, 96, 0.7);
+  }
+}
+
 @keyframes burning-completed {
   0% {
-    box-shadow: 0 0 5px lightgreen, 0 0 3px green, 0 0 4px green,
+    box-shadow: 0 0 5px green, 0 0 3px red, 0 0 4px green,
       inset 0 0 2px lightgreen;
   }
   20% {
@@ -38,7 +59,7 @@
   }
   40% {
     box-shadow: 0 0 6px rgba(255, 120, 0, 0.7), 0 0 9px $highlighted,
-      0 0 5px green, inset 0 0 2.5px rgba(255, 160, 0, 0.5);
+      0 0 5px green, inset 0 0 2.5px green;
   }
   60% {
     box-shadow: 0 0 15px green, 0 0 2.5px lightgreen, 0 0 3.5px lightgreen,
@@ -49,7 +70,7 @@
       inset 0 0 1.8px lightgreen;
   }
   100% {
-    box-shadow: 0 0 5px lightgreen, 0 0 3px green, 0 0 8px green,
+    box-shadow: 0 0 5px red, 0 0 3px green, 0 0 8px green,
       inset 0 0 2px lightgreen;
   }
 }
@@ -60,6 +81,7 @@
   background-color: $dark-accent;
   padding: 10px;
   gap: 20px;
+  user-select: none;
 
   box-shadow: $primary 0px 1px 20px, $tertiary 0px 0px 0px 1px;
 
@@ -105,4 +127,27 @@
   .header {
     border-bottom-color: lightgreen;
   }
+}
+
+.boss-battle-header {
+  font-variant: small-caps;
+  padding: 0;
+  text-align: center;
+  z-index: 99;
+  user-select: none;
+
+  color: #fdd;
+  background-color: darkred;
+  box-shadow: 0 0 7px red, 0 0 3.2px red, 0 0 4.2px red, inset 0 0 1.8px red;
+
+  &__complete {
+    color: lightgreen;
+    background-color: darkgreen;
+    box-shadow: 0 0 7px #008000, 0 0 3.2px lightgreen, 0 0 4.2px green,
+      inset 0 0 1.8px lightgreen;
+  }
+}
+
+.burning-text {
+  animation: burning-text 5s infinite ease-in-out;
 }

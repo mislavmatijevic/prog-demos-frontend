@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Button } from 'primeng/button';
 import { BasicTask } from '../../../../types/models';
 import { ComplexityColorPipe } from '../../../pipes/complexity-color.pipe';
@@ -19,11 +19,17 @@ import { ComplexityEmojiPipe } from '../../../pipes/complexity-emoji.pipe';
   templateUrl: './task-card.component.html',
   styleUrl: './task-card.component.scss',
 })
-export class TaskCardComponent {
+export class TaskCardComponent implements OnInit {
   @Input({ required: true }) task!: BasicTask;
   @Output() onSelected = new EventEmitter<BasicTask>();
 
+  completed: boolean = false;
+
   openTask() {
     this.onSelected.emit(this.task);
+  }
+
+  ngOnInit(): void {
+    this.completed = this.task?.bestSuccessfulSubmission !== undefined;
   }
 }

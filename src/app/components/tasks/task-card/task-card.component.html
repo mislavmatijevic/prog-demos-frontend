@@ -1,8 +1,12 @@
+<div *ngIf="task.isBossBattle" class="boss-battle-header"
+    [ngClass]="{'burning-text': !completed, 'boss-battle-header__complete': completed}">
+    {{completed ? 'Riješeni Boss' : 'Boss Battle'}}
+</div>
 <div [ngClass]="{
     'task-card-wrapper': true,
-    'task-card-completed': task.bestSuccessfulSubmission !== undefined,
-    'burning': task.isBossBattle && task.bestSuccessfulSubmission === undefined,
-    'burning-completed': task.isBossBattle && task.bestSuccessfulSubmission !== undefined
+    'task-card-completed': completed,
+    'burning': task.isBossBattle && !completed,
+    'burning-completed': task.isBossBattle && completed
 }">
     <div class="header">
         <span class="header__title">{{task.identifier}}</span>
