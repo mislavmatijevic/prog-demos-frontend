@@ -99,7 +99,7 @@
 
             <p-button rounded="true" severity="info" (onClick)="addHelpStep()" type="button" icon="pi pi-plus-circle" />
 
-            <app-new-help-step-definition *ngFor="let helpStep of definedHelpSteps" [helpStep]="helpStep" />
+            <app-new-help-step-definition *ngFor="let helpStep of definedHelpSteps.reverse()" [helpStep]="helpStep" />
 
             <p-button rounded="true" severity="danger" (onClick)="removeHelpStep()" type="button"
                 icon="pi pi-minus-circle" *ngIf="definedHelpSteps.length > 1" />
