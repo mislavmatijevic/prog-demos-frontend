@@ -59,7 +59,7 @@ export class TasksComponent implements OnInit {
   }
 
   handleTabChange(newTabIndex: number | number[]) {
-    if (this.authService.isLoggedIn()) {
+    if (this.authService.isLoggedIn() && newTabIndex !== null) {
       localStorage.setItem('last-opened-task-tab', newTabIndex.toString());
     }
   }
