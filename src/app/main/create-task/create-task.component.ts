@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AccordionModule } from 'primeng/accordion';
 import { MessageService } from 'primeng/api';
@@ -13,8 +13,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { SliderModule } from 'primeng/slider';
 import { standardCppStarterCode } from '../../../helpers/editor-helpers';
-import { HelpStep, Topic } from '../../../types/models';
-import { EditorComponent } from '../../components/editor/editor.component';
+import { HelpStep, Subtopic, Topic } from '../../../types/models';
 import { NewHelpStepDefinitionComponent } from '../../components/new-help-step-definition/new-help-step-definition.component';
 import { ComplexityEmojiPipe } from '../../pipes/complexity-emoji.pipe';
 import {
@@ -23,6 +22,22 @@ import {
   TaskService,
 } from '../../services/task.service';
 import { TopicsService } from '../../services/topics.service';
+
+const SELECTED_SUBTOPIC_STORAGE_KEY =
+  'taskCreationInProgress-selectedTopicId_SubtopicId';
+const NAME_CONTROL_STORAGE_KEY = 'taskCreationInProgress-name';
+const COMPLEXITY_CONTROL_STORAGE_KEY = 'taskCreationInProgress-complexity';
+const INPUT_CONTROL_STORAGE_KEY = 'taskCreationInProgress-input';
+const OUTPUT_CONTROL_STORAGE_KEY = 'taskCreationInProgress-output';
+const SHA256_CONTROL_STORAGE_KEY = 'taskCreationInProgress-sha256';
+const INPUT_EXPLANATION_CONTROL_STORAGE_KEY =
+  'taskCreationInProgress-inputExplanation';
+const OUTPUT_EXPLANATION_CONTROL_STORAGE_KEY =
+  'taskCreationInProgress-outputExplanation';
+const INPUT_OUTPUT_EXAMPLE_CONTROL_STORAGE_KEY =
+  'taskCreationInProgress-inputOutputExample';
+const IS_BOSS_BATTLE_STORAGE_KEY = 'taskCreationInProgress-isBossBattle';
+const HELP_STEPS_STORAGE_KEY = 'taskCreationInProgress-isBossBattle';
 
 @Component({
   selector: 'app-create-task',
@@ -36,7 +51,6 @@ import { TopicsService } from '../../services/topics.service';
     InputTextModule,
     SliderModule,
     CheckboxModule,
-    EditorComponent,
     InputTextareaModule,
     DividerModule,
     AccordionModule,
@@ -47,7 +61,7 @@ import { TopicsService } from '../../services/topics.service';
   templateUrl: './create-task.component.html',
   styleUrl: './create-task.component.scss',
 })
-export class CreateTaskComponent implements OnInit {
+export class CreateTaskComponent implements OnInit, OnDestroy {
   constructor(
     private topicsService: TopicsService,
     private messageService: MessageService,
@@ -56,7 +70,7 @@ export class CreateTaskComponent implements OnInit {
   possibleTopics: Array<Topic> = [];
 
   selectedTopic = new FormControl<Topic | undefined>(undefined);
-  selectedSubtopic = new FormControl<Topic | undefined>(undefined);
+  selectedSubtopic = new FormControl<Subtopic | undefined>(undefined);
   nameControl = new FormControl('');
   complexityControl = new FormControl<number>(1);
   inputControl = new FormControl('');
@@ -69,6 +83,148 @@ export class CreateTaskComponent implements OnInit {
 
   codeEditorsVisible = false;
   definedHelpSteps: Array<HelpStep> = [];
+
+  ngOnInit(): void {
+    this.topicsService.getTasksPerTopics().subscribe({
+      next: (response) => {
+        this.possibleTopics = response.topics;
+        if (response.topics.length == 1) {
+          this.selectedTopic.setValue(response.topics[0]);
+        }
+        this.enableEditors();
+        this.addHelpStep();
+        this.loadLatestSavedState();
+        this.enableAutosaveOnExit();
+      },
+      error: () => {
+        this.messageService.add({
+          key: 'central',
+          severity: 'error',
+          detail: 'Nažalost, dohvat tema nije uspio. Pokušaj ponovno kasnije.',
+        });
+      },
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.saveCurrentState();
+  }
+
+  loadLatestSavedState() {
+    this.nameControl.setValue(localStorage.getItem(NAME_CONTROL_STORAGE_KEY));
+
+    const topicSubtopicIds = localStorage.getItem(
+      SELECTED_SUBTOPIC_STORAGE_KEY
+    );
+    if (topicSubtopicIds === null) {
+      return;
+    }
+
+    const lastTopicId = topicSubtopicIds.split('_')[0];
+    const lastSubtopicId = topicSubtopicIds.split('_')[1];
+
+    const recoveredTopic = this.possibleTopics.find(
+      (topic) => topic.id == parseInt(lastTopicId)
+    );
+    this.selectedTopic.setValue(recoveredTopic);
+
+    const recoveredSubtopic = recoveredTopic?.subtopics.find(
+      (subtopic) => subtopic.id === parseInt(lastSubtopicId)
+    );
+    this.selectedSubtopic.setValue(recoveredSubtopic);
+
+    this.complexityControl.setValue(
+      parseInt(localStorage.getItem(COMPLEXITY_CONTROL_STORAGE_KEY) ?? '1')
+    );
+    this.inputControl.setValue(localStorage.getItem(INPUT_CONTROL_STORAGE_KEY));
+    this.outputControl.setValue(
+      localStorage.getItem(OUTPUT_CONTROL_STORAGE_KEY)
+    );
+    this.sha256Control.setValue(
+      localStorage.getItem(SHA256_CONTROL_STORAGE_KEY)
+    );
+    this.inputExplanationControl.setValue(
+      localStorage.getItem(INPUT_EXPLANATION_CONTROL_STORAGE_KEY)
+    );
+    this.outputExplanationControl.setValue(
+      localStorage.getItem(OUTPUT_EXPLANATION_CONTROL_STORAGE_KEY)
+    );
+    this.inputOutputExampleControl.setValue(
+      localStorage.getItem(INPUT_OUTPUT_EXAMPLE_CONTROL_STORAGE_KEY)
+    );
+    this.isBossBattle.setValue(
+      localStorage.getItem(IS_BOSS_BATTLE_STORAGE_KEY) == 'true'
+    );
+
+    const helpSteps: any = JSON.parse(
+      localStorage.getItem(HELP_STEPS_STORAGE_KEY)!
+    );
+    if (helpSteps instanceof Array && helpSteps.length > 0) {
+      this.definedHelpSteps = helpSteps;
+    }
+  }
+
+  enableAutosaveOnExit() {
+    const saveStateCallback = () => this.saveCurrentState();
+    window.addEventListener('beforeunload', () => saveStateCallback());
+  }
+
+  saveCurrentState() {
+    localStorage.setItem(
+      NAME_CONTROL_STORAGE_KEY,
+      this.nameControl.value ?? ''
+    );
+
+    if (
+      this.selectedTopic.value &&
+      this.selectedTopic.value.id > 0 &&
+      this.selectedSubtopic.value &&
+      this.selectedSubtopic.value.id > 0
+    ) {
+      localStorage.setItem(
+        SELECTED_SUBTOPIC_STORAGE_KEY,
+        `${this.selectedTopic.value.id}_${this.selectedSubtopic.value.id}`
+      );
+    }
+
+    localStorage.setItem(
+      COMPLEXITY_CONTROL_STORAGE_KEY,
+      this.complexityControl.value?.toString() ?? '1'
+    );
+    localStorage.setItem(
+      INPUT_CONTROL_STORAGE_KEY,
+      this.inputControl.value ?? ''
+    );
+    localStorage.setItem(
+      OUTPUT_CONTROL_STORAGE_KEY,
+      this.outputControl.value ?? ''
+    );
+    localStorage.setItem(
+      SHA256_CONTROL_STORAGE_KEY,
+      this.sha256Control.value ?? ''
+    );
+    localStorage.setItem(
+      INPUT_EXPLANATION_CONTROL_STORAGE_KEY,
+      this.inputExplanationControl.value ?? ''
+    );
+    localStorage.setItem(
+      OUTPUT_EXPLANATION_CONTROL_STORAGE_KEY,
+      this.outputExplanationControl.value ?? ''
+    );
+    localStorage.setItem(
+      INPUT_OUTPUT_EXAMPLE_CONTROL_STORAGE_KEY,
+      this.inputOutputExampleControl.value ?? ''
+    );
+    localStorage.setItem(
+      IS_BOSS_BATTLE_STORAGE_KEY,
+      this.isBossBattle.value ? 'true' : 'false'
+    );
+
+    localStorage.setItem(
+      HELP_STEPS_STORAGE_KEY,
+      JSON.stringify(this.definedHelpSteps)
+    );
+  }
 
   onSubmit() {
     if (
@@ -129,26 +285,6 @@ export class CreateTaskComponent implements OnInit {
           'Ne čini se da je zadatak u potpunosti definiran, provjeri još jednom sva polja.',
       });
     }
-  }
-
-  ngOnInit(): void {
-    this.topicsService.getTasksPerTopics().subscribe({
-      next: (response) => {
-        this.possibleTopics = response.topics;
-        if (response.topics.length == 1) {
-          this.selectedTopic.setValue(response.topics[0]);
-        }
-        this.enableEditors();
-        this.addHelpStep();
-      },
-      error: () => {
-        this.messageService.add({
-          key: 'central',
-          severity: 'error',
-          detail: 'Nažalost, dohvat tema nije uspio. Pokušaj ponovno kasnije.',
-        });
-      },
-    });
   }
 
   enableEditors() {
