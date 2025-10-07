@@ -1,9 +1,62 @@
 @import "../../../../styles/variables.scss";
 
+@keyframes burning {
+  0% {
+    box-shadow: 0 0 5px rgba(255, 80, 0, 0.5), 0 0 3px $tertiary,
+      0 0 4px rgba(255, 30, 0, 0.3), inset 0 0 2px rgba(255, 120, 0, 0.3);
+  }
+  20% {
+    box-shadow: 0 0 2.5px rgba(255, 100, 0, 0.6), 0 0 3.5px $tertiary,
+      0 0 10px $highlighted, inset 0 0 2px rgba(255, 140, 0, 0.4);
+  }
+  40% {
+    box-shadow: 0 0 6px rgba(255, 120, 0, 0.7), 0 0 9px $highlighted,
+      0 0 5px rgba(255, 70, 0, 0.5), inset 0 0 2.5px rgba(255, 160, 0, 0.5);
+  }
+  60% {
+    box-shadow: 0 0 15px rgba(255, 60, 0, 0.4), 0 0 2.5px rgba(255, 40, 0, 0.3),
+      0 0 3.5px rgba(255, 20, 0, 0.2), inset 0 0 2px rgba(255, 100, 0, 0.3);
+  }
+  90% {
+    box-shadow: 0 0 7px $tertiary, 0 0 3.2px rgba(255, 60, 0, 0.45),
+      0 0 4.2px $tertiary, inset 0 0 1.8px rgba(255, 130, 0, 0.35);
+  }
+  100% {
+    box-shadow: 0 0 5px rgba(255, 80, 0, 0.5), 0 0 3px $tertiary,
+      0 0 8px rgba(255, 30, 0, 0.3), inset 0 0 2px rgba(255, 120, 0, 0.3);
+  }
+}
+
+@keyframes burning-completed {
+  0% {
+    box-shadow: 0 0 5px lightgreen, 0 0 3px green, 0 0 4px green,
+      inset 0 0 2px lightgreen;
+  }
+  20% {
+    box-shadow: 0 0 2.5px green, 0 0 3.5px green, 0 0 10px $highlighted,
+      inset 0 0 2px rgba(255, 140, 0, 0.4);
+  }
+  40% {
+    box-shadow: 0 0 6px rgba(255, 120, 0, 0.7), 0 0 9px $highlighted,
+      0 0 5px green, inset 0 0 2.5px rgba(255, 160, 0, 0.5);
+  }
+  60% {
+    box-shadow: 0 0 15px green, 0 0 2.5px lightgreen, 0 0 3.5px lightgreen,
+      inset 0 0 2px green;
+  }
+  90% {
+    box-shadow: 0 0 7px green, 0 0 3.2px lightgreen, 0 0 4.2px green,
+      inset 0 0 1.8px lightgreen;
+  }
+  100% {
+    box-shadow: 0 0 5px lightgreen, 0 0 3px green, 0 0 8px green,
+      inset 0 0 2px lightgreen;
+  }
+}
+
 .task-card-wrapper {
   display: flex;
   flex-direction: column;
-
   background-color: $dark-accent;
   padding: 10px;
   gap: 20px;
@@ -36,6 +89,14 @@
     font-family: monospace;
     font-size: large;
   }
+}
+
+.burning {
+  animation: burning 5s infinite ease-in-out;
+}
+
+.burning-completed {
+  animation: burning-completed 10s infinite ease-in-out;
 }
 
 .task-card-completed {

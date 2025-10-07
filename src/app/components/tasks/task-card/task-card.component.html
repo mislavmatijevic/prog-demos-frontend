@@ -1,4 +1,9 @@
-<div [ngClass]="{'task-card-wrapper': true, 'task-card-completed': task.bestSuccessfulSubmission !== undefined}">
+<div [ngClass]="{
+    'task-card-wrapper': true,
+    'task-card-completed': task.bestSuccessfulSubmission !== undefined,
+    'burning': task.isBossBattle && task.bestSuccessfulSubmission === undefined,
+    'burning-completed': task.isBossBattle && task.bestSuccessfulSubmission !== undefined
+}">
     <div class="header">
         <span class="header__title">{{task.identifier}}</span>
         <span class="header__description" [ngStyle]="{ color: task.complexity | complexityColor }">
