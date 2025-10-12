@@ -48,6 +48,7 @@ export class NavigationComponent {
 
   onSunClick(e: MouseEvent) {
     let rippleEfectPosition = RippleEffectPositionalInfo.NORMAL;
+
     if (
       window.innerWidth <= sizes.smallWidth &&
       window.innerHeight <= sizes.smallHeight
