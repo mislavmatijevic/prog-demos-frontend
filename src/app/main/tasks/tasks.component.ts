@@ -40,6 +40,9 @@ export class TasksComponent implements OnInit {
     this.taskService.getTasksPerTopics().subscribe({
       next: (res: TasksResponse) => {
         this.topics = res.topics;
+        res.topics.forEach((topic) =>
+          topic.subtopics.sort((st1, st2) => st1.order - st2.order)
+        );
       },
       error: (error) => {
         console.error(error);

@@ -10,6 +10,7 @@ export type Topic = Identifiable & {
 export type Subtopic = Identifiable & {
   videos: Array<Video>;
   tasks: Array<BasicTask>;
+  order: number;
 };
 
 export type Video = Identifiable & {
