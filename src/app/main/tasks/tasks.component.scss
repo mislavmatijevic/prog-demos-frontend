@@ -40,3 +40,16 @@ h3 {
     }
   }
 }
+
+.no-tasks-card {
+  color: $accent-light;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: $dark-accent;
+  padding: 10px;
+  gap: 20px;
+  user-select: none;
+
+  box-shadow: $primary 0px 1px 20px, $tertiary 0px 0px 0px 1px;
+}

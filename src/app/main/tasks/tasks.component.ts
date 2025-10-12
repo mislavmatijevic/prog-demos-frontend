@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, isDevMode, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AccordionModule } from 'primeng/accordion';
 import { MessageService } from 'primeng/api';
+import { Button } from 'primeng/button';
 import { BasicTask, Topic } from '../../../types/models';
 import { TaskCardComponent } from '../../components/tasks/task-card/task-card.component';
 import { AuthService } from '../../services/auth.service';
@@ -11,7 +12,7 @@ import { TaskService, TasksResponse } from '../../services/task.service';
 @Component({
   selector: 'app-tasks',
   standalone: true,
-  imports: [CommonModule, TaskCardComponent, AccordionModule],
+  imports: [CommonModule, TaskCardComponent, AccordionModule, Button],
   templateUrl: './tasks.component.html',
   styleUrl: './tasks.component.scss',
 })
@@ -29,6 +30,10 @@ export class TasksComponent implements OnInit {
   ngOnInit() {
     this.fetchTasks();
     this.reopenLastViewedTab();
+  }
+
+  getOldRepoUrl() {
+    return isDevMode() ? 'http://localhost:8889' : 'https://repo.progdemos.com';
   }
 
   fetchTasks() {

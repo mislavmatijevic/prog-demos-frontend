@@ -7,11 +7,20 @@
             [tabStyle]="{'background-color': 'transparent'}"
             [contentStyle]="{'background-color': 'transparent', 'border-color': 'transparent'}">
             <section class="topic__task-grid__subtopic">
-                <div class="topic__task-grid__subtopic__grid" *ngIf="subtopic.tasks">
+                <div class="topic__task-grid__subtopic__grid" *ngIf="subtopic.tasks;else repository_link">
                     <app-task-card *ngFor="let task of sort(subtopic.tasks)" [task]=task
                         (onSelected)="onTaskSelected($event)"></app-task-card>
                 </div>
             </section>
+            <ng-template #repository_link>
+                <div class="no-tasks-card">
+                    Zadaci još nisu dodani na ovu sekciju. Pretraži relevantne zadatke na starome repozitoriju.
+                    <a icon="pi pi-link" [href]="getOldRepoUrl()">
+                        <i class="pi pi-link"></i>
+                        Otvori stari repozitorij zadataka
+                    </a>
+                </div>
+            </ng-template>
         </p-accordionTab>
     </p-accordion>
 </section>
