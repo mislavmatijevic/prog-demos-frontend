@@ -29,6 +29,11 @@ export class NavigationComponent {
   ) {
     effect(() => {
       this.navigationHeaders = [
+        {
+          name: 'Početna',
+          link: '/',
+          icon: '../../../assets/images/prog_demos.png',
+        },
         { name: 'Uči', link: '/demos', icon: 'pi-play-circle' },
         { name: 'Vježbaj', link: '/prog', icon: 'pi-objects-column' },
       ];

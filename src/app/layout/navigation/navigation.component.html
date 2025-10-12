@@ -1,16 +1,13 @@
 <section class="navigation-drawer" [ngStyle]="{'width': isCollapsed ? '0' : '200px'}">
-    <div class="navigation-drawer__header">
-        <div class="navigation-drawer__header__logo">
-            <img routerLink="/" src="assets/images/prog_demos.png">
-            <span>Prog Demos</span>
-        </div>
-    </div>
     <div class="navigation">
         <a *ngFor="let navigationHeader of navigationHeaders" class="navigation-link"
             [routerLink]="navigationHeader.link" routerLinkActive="navigation-link__active"
             [routerLinkActiveOptions]="{exact: true}">
-            <span>{{navigationHeader.name}}</span><i *ngIf="navigationHeader.icon"
-                class="pi {{navigationHeader.icon}}"></i></a>
+            <span>{{navigationHeader.name}}</span>
+            <i *ngIf="!navigationHeader.icon?.includes('/')" class="pi {{navigationHeader.icon}}"></i>
+            <img *ngIf="navigationHeader.icon?.includes('/')" class="navigation__image"
+                src="{{navigationHeader.icon}}" />
+        </a>
     </div>
 
     <div [ngStyle]="{'transform': isCollapsed ? 'translate(-100%, 100%)' : 'translate(-40%, 20%)'}"

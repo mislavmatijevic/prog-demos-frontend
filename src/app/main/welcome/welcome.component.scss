@@ -1,5 +1,17 @@
 @import "../../../styles/variables.scss";
 
+.welcome-header {
+  display: flex;
+  justify-content: space-between;
+
+  img {
+    @media screen and (max-width: $smallWidth) {
+      max-height: 50px;
+    }
+    max-height: 75px;
+  }
+}
+
 .two-sections-grid {
   @media screen and (max-width: $smallWidth) {
     padding: 1px;
