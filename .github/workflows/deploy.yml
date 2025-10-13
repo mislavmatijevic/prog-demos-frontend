@@ -1,0 +1,38 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy via SSH
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy frontend to Prog Demos server
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: ${{ vars.SSH_HOST }}
+          username: ${{ vars.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          script: |
+            cd ~/prog-demos-frontend
+
+            git checkout main
+
+            git pull
+            [[ $? != 0 ]] && echo "Failed to pull latest changes." && exit 1
+
+            if docker compose -f down; then
+              echo "Stopped frontend Docker container."
+            else
+              echo "Failed to stop frontend Docker container, but proceeding regardless."
+            fi
+
+            if docker compose up --build -d; then
+              echo "Built and ran frontend's Docker container successfully."
+            else
+              echo "Failed to build and run frontend's Docker container!"
+              exit 1
+            fi
