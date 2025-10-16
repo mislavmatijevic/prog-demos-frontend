@@ -52,7 +52,11 @@
         <ng-template pTemplate>
 
             <div *ngIf="isScreenWideEnoughForProgramming" class="playground-input__wrapper">
-                <div class="playground-input__wrapper-controls-top">
+                <div *ngIf="!mainEditorReady" class="loading-spinner loading-spinner-code">
+                    <p-progressSpinner ariaLabel="loading" />
+                </div>
+
+                <div *ngIf="mainEditorReady" class="playground-input__wrapper-controls-top">
                     <p-button (onClick)="copyCode()" text="true" icon="pi pi-copy" pTooltip="Kopiraj cijeli kod"
                         tooltipPosition="bottom" />
                 </div>
@@ -67,11 +71,7 @@
                         {{coolMessages[coolMessageIndex]}}</p>
                 </div>
 
-                <div *ngIf="!mainEditorReady" class="loading-spinner loading-spinner-code">
-                    <p-progressSpinner ariaLabel="loading" />
-                </div>
-
-                <div class="playground-input__wrapper-controls-bottom">
+                <div *ngIf="mainEditorReady && task" class="playground-input__wrapper-controls-bottom">
                     <p-button *ngIf="!task.isBossBattle" rounded="true"
                         [disabled]="!this.helpDialogVisible && !helpStepAvailable"
                         [icon]="helpDialogVisible ? 'pi pi-times' : helpStepAvailable ? 'pi pi-lightbulb' : undefined"
