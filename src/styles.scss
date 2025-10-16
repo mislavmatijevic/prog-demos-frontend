@@ -179,3 +179,10 @@ div.divider {
 .p-text-secondary {
   color: $text;
 }
+
+.loader-wrapper {
+  align-items: center;
+  justify-content: center;
+  height: 50vh;
+  display: flex;
+}

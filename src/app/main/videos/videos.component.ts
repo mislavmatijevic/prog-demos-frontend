@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { Topic, Video } from '../../../types/models';
 import { VideoCardComponent } from '../../components/videos/video-card/video-card.component';
 import { VideoService, VideosResponse } from '../../services/video.service';
@@ -9,7 +10,7 @@ import { VideoService, VideosResponse } from '../../services/video.service';
 @Component({
   selector: 'app-videos',
   standalone: true,
-  imports: [CommonModule, VideoCardComponent],
+  imports: [CommonModule, VideoCardComponent, ProgressSpinnerModule],
   templateUrl: './videos.component.html',
   styleUrl: './videos.component.scss',
 })
@@ -20,7 +21,7 @@ export class VideosComponent implements OnInit {
     private messageService: MessageService
   ) {}
 
-  topics: Topic[] = [];
+  topics: Topic[] | null = null;
 
   ngOnInit() {
     this.fetchVideos();
