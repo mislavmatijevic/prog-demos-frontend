@@ -80,6 +80,7 @@
     color: $tertiary;
     background-color: $dark-accent;
     box-shadow: $tertiary 0px 1px 20px, $tertiary 0px 0px 0px 3px;
+    user-select: none;
 
     @media screen and (max-height: $smallHeight) {
       font-size: large;
