@@ -37,7 +37,7 @@ app-root {
 
   width: fit-content;
   overflow-y: auto;
-  scrollbar-color: $dark $tertiary;
+  scrollbar-color: $tertiary $dark;
   scrollbar-width: auto;
 
   overflow-y: scroll;
