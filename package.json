@@ -1,6 +1,6 @@
 {
   "name": "prog-demos-frontend",
-  "version": "1.3.0",
+  "version": "1.9.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -19,10 +19,10 @@
     "@angular/platform-browser": "^18.2.7",
     "@angular/platform-browser-dynamic": "^18.2.7",
     "@angular/router": "^18.2.7",
+    "@pangz/ng-cloudflare-turnstile": "^0.4.0",
     "canvas-confetti": "^1.9.3",
     "chart.js": "^4.4.4",
     "monaco-editor": "^0.50.0",
-    "ng-recaptcha-2": "^14.0.0",
     "ngx-monaco-editor-v2": "^18.1.0",
     "primeicons": "^7.0.0",
     "primeng": "^17.18.6",

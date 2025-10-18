@@ -27,12 +27,14 @@
         </p-floatLabel>
         <small>Lozinka mora imati 8 znakova!</small>
     </div>
+    <captcha view="register" [(captchaToken)]="captchaToken" />
     <div class="register-form__row">
         <p>Pročitaj <a href="/privacy">Obavijest o privatnosti</a>.</p>
         <p-checkbox id="agree-to-privacy-policy" name="agree-to-privacy-policy"
             label="Prihvaćam Obavijest o privatnosti." required [(ngModel)]="checkedPrivacyPolicy"
             [binary]="true"></p-checkbox>
     </div>
-    <p-button *ngIf="!registrationInProgress" label="Registracija" type="submit" icon="pi pi-user-plus" />
+    <p-button *ngIf="!registrationInProgress" [disabled]="!captchaToken || !checkedPrivacyPolicy" label="Registracija"
+        type="submit" icon="pi pi-user-plus" />
     <p-progressSpinner *ngIf="registrationInProgress" />
 </form>

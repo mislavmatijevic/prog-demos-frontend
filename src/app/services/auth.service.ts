@@ -6,7 +6,7 @@ import { ApiService } from './api.service';
 export enum AuthErrorCode {
   INFO_INVALID = 1,
   USERNAME_OR_EMAIL_TAKEN = 2,
-  EXEC_ERR_RECAPTCHA_REQUIRES_CHALLENGE = 3,
+  EXEC_ERR_CAPTCHA_FAILED = 3,
 }
 
 export type AuthFailureResponse = {
@@ -61,7 +61,7 @@ export class AuthService {
     username: string,
     email: string,
     password: string,
-    recaptchaToken: string
+    captchaToken: string
   ) {
     const registrationResponse = this.apiService.post<AuthFailureResponse>(
       '/auth/register',
@@ -69,7 +69,7 @@ export class AuthService {
         username,
         email,
         password,
-        recaptchaToken,
+        captchaToken,
       },
       false
     );
@@ -80,7 +80,7 @@ export class AuthService {
   login(
     identifier: string,
     password: string,
-    recaptchaToken: string
+    captchaToken: string
   ): Observable<LoginResponse> {
     const loginResponse = this.apiService
       .post<LoginResponse>(
@@ -88,7 +88,7 @@ export class AuthService {
         {
           identifier,
           password,
-          recaptchaToken,
+          captchaToken,
         },
         false
       )
@@ -127,13 +127,13 @@ export class AuthService {
 
   requestPasswordReset(
     email: string,
-    recaptchaToken: string
+    captchaToken: string
   ): Observable<{ username: string }> {
     return this.apiService.post(
       '/auth/password/request-reset',
       {
         email,
-        recaptchaToken,
+        captchaToken,
       },
       false
     );
@@ -142,14 +142,14 @@ export class AuthService {
   resetPassword(
     newPassword: string,
     resetToken: string,
-    recaptchaToken: string
+    captchaToken: string
   ): Observable<void> {
     return this.apiService.post(
       '/auth/password/reset',
       {
         newPassword,
         resetToken,
-        recaptchaToken,
+        captchaToken,
       },
       false
     );
