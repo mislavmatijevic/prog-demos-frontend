@@ -1,4 +1,8 @@
-import { ApplicationConfig, importProvidersFrom } from '@angular/core';
+import {
+  ApplicationConfig,
+  importProvidersFrom,
+  InjectionToken,
+} from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import {
@@ -7,11 +11,26 @@ import {
   withInterceptors,
 } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { RECAPTCHA_V3_SITE_KEY } from 'ng-recaptcha-2';
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 import { routes } from './app.routes';
+import {
+  TurnstileSettings,
+  TurnstileSiteKeys,
+} from './components/captcha/settings/turnstile-settings';
 import { authInterceptor } from './interceptors/auth.interceptor';
 import { httpCacheInterceptor } from './interceptors/http-cache.interceptor';
+
+export const CAPTCHA_SITE_KEYS = new InjectionToken<TurnstileSiteKeys>(
+  'captcha-site-keys'
+);
+
+function provideCaptchaSiteKeys() {
+  return {
+    provide: CAPTCHA_SITE_KEYS,
+    useFactory: (settings: TurnstileSettings) => settings.siteKeys,
+    deps: [TurnstileSettings],
+  };
+}
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -34,9 +53,6 @@ export const appConfig: ApplicationConfig = {
     ),
     importProvidersFrom(MonacoEditorModule.forRoot()),
     provideAnimations(),
-    {
-      provide: RECAPTCHA_V3_SITE_KEY,
-      useValue: '6LfXFWoqAAAAAKlAm0PU3qHqEisqNCUBBHyclOTR',
-    },
+    provideCaptchaSiteKeys(),
   ],
 };

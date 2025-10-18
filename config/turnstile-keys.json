@@ -1,0 +1,14 @@
+[
+    {
+        "view": "login",
+        "key": "0x4AAAAAAB7VtuaYRAEVLVkc"
+    },
+    {
+        "view": "register",
+        "key": "0x4AAAAAAB7NcSpM0GiJ1hr0"
+    },
+    {
+        "view": "password-reset",
+        "key": "0x4AAAAAAB7WFBHn1PGBSMrd"
+    }
+]

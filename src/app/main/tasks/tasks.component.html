@@ -1,4 +1,7 @@
 <h1>Vježbaj na zadacima po temama</h1>
+<div *ngIf="topics === null" class="loader-wrapper">
+    <p-progressSpinner ariaLabel="loading" />
+</div>
 <section class="topic" *ngFor="let topic of topics">
     <h2>{{topic.name}}</h2>
     <p-accordion [activeIndex]="currentTabIndex" (activeIndexChange)="handleTabChange($event)">

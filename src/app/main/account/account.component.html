@@ -2,7 +2,13 @@
 <div class="page-wrapper">
     <div class="score-row">
         <p class="row-text username">{{authService.getUser()?.username}}</p>
-        <p class="row-text total-score" [innerHTML]="totalScore | progDemosHead"></p>
+        <p *ngIf="totalScore;else scoreLoader" class="row-text total-score" [innerHTML]="totalScore | progDemosHead">
+        </p>
+        <ng-template #scoreLoader>
+            <div class="score-row__loader">
+                <p-progressSpinner ariaLabel="loading" [style]="{ width: '100%', height: '100%' }" />
+            </div>
+        </ng-template>
     </div>
     <p-button (onClick)="signOut()" label="Odjava" type="submit" icon="pi pi-sign-out" severity="danger" />
 

@@ -37,7 +37,7 @@ app-root {
 
   width: fit-content;
   overflow-y: auto;
-  scrollbar-color: $dark $tertiary;
+  scrollbar-color: $tertiary $dark;
   scrollbar-width: auto;
 
   overflow-y: scroll;
@@ -178,4 +178,11 @@ div.divider {
 
 .p-text-secondary {
   color: $text;
+}
+
+.loader-wrapper {
+  align-items: center;
+  justify-content: center;
+  height: 50vh;
+  display: flex;
 }

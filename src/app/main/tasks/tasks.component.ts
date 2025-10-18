@@ -3,7 +3,7 @@ import { Component, isDevMode, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AccordionModule } from 'primeng/accordion';
 import { MessageService } from 'primeng/api';
-import { Button } from 'primeng/button';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { BasicTask, Topic } from '../../../types/models';
 import { TaskCardComponent } from '../../components/tasks/task-card/task-card.component';
 import { AuthService } from '../../services/auth.service';
@@ -12,7 +12,12 @@ import { TaskService, TasksResponse } from '../../services/task.service';
 @Component({
   selector: 'app-tasks',
   standalone: true,
-  imports: [CommonModule, TaskCardComponent, AccordionModule, Button],
+  imports: [
+    CommonModule,
+    TaskCardComponent,
+    AccordionModule,
+    ProgressSpinnerModule,
+  ],
   templateUrl: './tasks.component.html',
   styleUrl: './tasks.component.scss',
 })
@@ -24,7 +29,7 @@ export class TasksComponent implements OnInit {
     private authService: AuthService
   ) {}
 
-  topics: Topic[] = [];
+  topics: Topic[] | null = null;
   currentTabIndex: number = 0;
 
   ngOnInit() {
@@ -40,7 +45,7 @@ export class TasksComponent implements OnInit {
     this.taskService.getTasksPerTopics().subscribe({
       next: (res: TasksResponse) => {
         this.topics = res.topics;
-        res.topics.forEach((topic) =>
+        this.topics.forEach((topic) =>
           topic.subtopics.sort((st1, st2) => st1.order - st2.order)
         );
       },

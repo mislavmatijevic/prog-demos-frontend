@@ -72,7 +72,7 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
     private titleService: Title
   ) {}
 
-  task!: FullTask;
+  task: FullTask | null = null;
   mainCode: string | undefined = undefined;
   mainEditorReady: boolean = false;
 
@@ -110,7 +110,7 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
     'Zanimljivo...',
   ];
 
-  getTaskStorageKey = () => `playground-code-${this.task.identifier}`;
+  getTaskStorageKey = () => `playground-code-${this.task!.identifier}`;
 
   ngOnInit() {
     this.isScreenWideEnoughForHorizontalSplitter =
@@ -166,7 +166,7 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
   }
 
   async executeCode() {
-    if (this.authService.isLoggedIn()) {
+    if (this.authService.isLoggedIn() && this.task) {
       if (this.mainCode !== undefined && this.mainCode !== '') {
         this.messageService.clear('central');
         this.animateCodeTransferToBits();
@@ -217,7 +217,7 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
   showBestCode() {
     this.mainCode = undefined;
     this.changeDetectorRef.detectChanges();
-    this.mainCode = this.task.bestSuccessfulSubmission?.submittedCode;
+    this.mainCode = this.task!.bestSuccessfulSubmission?.submittedCode;
   }
 
   onLayoutResized(event: SplitterResizeEndEvent) {
@@ -241,7 +241,6 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.error(error);
-
         this.messageService.add({
           key: 'central',
           severity: 'error',
@@ -304,7 +303,7 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
   private handleTaskExecution() {
     this.isBeingTestedRemotely = true;
     this.taskService
-      .executeTask(this.task.id, this.mainCode!)
+      .executeTask(this.task!.id, this.mainCode!)
       .pipe(finalize(() => this.revertBitsAfterExecution()))
       .subscribe({
         next: (value) => {

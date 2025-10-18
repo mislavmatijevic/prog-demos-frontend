@@ -33,7 +33,7 @@ export class AccountComponent implements OnInit {
     private statisticsService: StatisticsService,
     private messageService: MessageService
   ) {}
-  totalScore: number = 0;
+  totalScore: number | null = null;
   solutionAttempts: SolutionAttemptResponse | null = null;
 
   radarData!: object;
