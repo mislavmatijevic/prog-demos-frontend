@@ -74,7 +74,7 @@ export class CaptchaComponent implements OnInit {
       onExpired: () => {
         this.messageService.add({
           key: 'general',
-          severity: 'warning',
+          severity: 'warn',
           summary: 'Provjera je istekla',
           detail: 'Još jednom izvrši CAPTCHA provjeru.',
         });
