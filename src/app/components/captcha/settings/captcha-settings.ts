@@ -1,7 +1,11 @@
 import { Injectable } from '@angular/core';
 import turnstileSettings from '../../../../../config/turnstile-keys.json';
 
-export type CaptchaProtectedActions = 'login' | 'register' | 'password-reset';
+export type CaptchaProtectedActions =
+  | 'login'
+  | 'register'
+  | 'password-reset'
+  | 'request-password-reset';
 
 export type SiteKeys = Array<{
   action: CaptchaProtectedActions;

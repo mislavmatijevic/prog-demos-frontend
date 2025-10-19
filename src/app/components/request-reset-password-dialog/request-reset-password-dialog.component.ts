@@ -10,6 +10,7 @@ import {
   AuthFailureResponse,
   AuthService,
 } from '../../services/auth.service';
+import { CaptchaComponent } from '../captcha/captcha.component';
 
 @Component({
   selector: 'app-request-reset-password-dialog',
@@ -20,6 +21,7 @@ import {
     InputTextModule,
     FormsModule,
     ReactiveFormsModule,
+    CaptchaComponent,
   ],
   templateUrl: './request-reset-password-dialog.component.html',
   styleUrl: './request-reset-password-dialog.component.scss',
@@ -30,10 +32,11 @@ export class RequestResetPasswordDialogComponent {
     private messageService: MessageService
   ) {}
 
-  @Input({ required: true }) captchaToken: string | null = null;
   @Input() visible: boolean = false;
   @Output() visibleChange = new EventEmitter<boolean>();
+
   email = new FormControl('');
+  captchaToken: string | null = null;
 
   hide() {
     this.visible = false;

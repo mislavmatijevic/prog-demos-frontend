@@ -1,11 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import {
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Output,
-} from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
@@ -42,8 +37,7 @@ import { RequestResetPasswordDialogComponent } from '../request-reset-password-d
 export class LoginComponent {
   constructor(
     private authService: AuthService,
-    private messageService: MessageService,
-    private changeDetectorRef: ChangeDetectorRef
+    private messageService: MessageService
   ) {}
 
   @Output() loginSuccessful = new EventEmitter();

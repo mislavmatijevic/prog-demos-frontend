@@ -10,5 +10,9 @@
     {
         "action": "password-reset",
         "key": "0x4AAAAAAB7WFBHn1PGBSMrd"
+    },
+    {
+        "action": "request-password-reset",
+        "key": "0x4AAAAAAB7fgxWt53-r4KOR"
     }
 ]
