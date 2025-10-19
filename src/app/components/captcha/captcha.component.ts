@@ -25,10 +25,7 @@ import {
 import { MessageService } from 'primeng/api';
 import { sizes } from '../../../styles/variables';
 import { CAPTCHA_SITE_KEYS } from '../../app.config';
-import {
-  ITurnstileProtectedViews as TurnstileProtectedViews,
-  TurnstileSiteKeys,
-} from './settings/turnstile-settings';
+import { CaptchaProtectedActions, SiteKeys } from './settings/captcha-settings';
 
 @Component({
   selector: 'captcha',
@@ -39,21 +36,21 @@ import {
 export class CaptchaComponent implements OnInit {
   constructor(private messageService: MessageService, private ngZone: NgZone) {}
 
-  @Input({ required: true }) view!: TurnstileProtectedViews;
+  @Input({ required: true }) action!: CaptchaProtectedActions;
   @Input({ required: true }) captchaToken!: string | null;
   @Output() captchaTokenChange = new EventEmitter<string | null>();
 
   isDisplayed = signal(false);
   turnstileConfig!: Config;
-  siteKeys: TurnstileSiteKeys = inject(CAPTCHA_SITE_KEYS);
+  siteKeys: SiteKeys = inject(CAPTCHA_SITE_KEYS);
 
   ngOnInit(): void {
     const currentSiteKey = this.siteKeys.find(
-      (value) => value.view === this.view
+      (value) => value.action === this.action
     )?.key;
 
     if (currentSiteKey === undefined) {
-      throw new Error(`No site key defined for view: ${this.view}`);
+      throw new Error(`No site key defined for view: ${this.action}`);
     }
 
     this.turnstileConfig = {
