@@ -84,10 +84,9 @@ export class LoginComponent {
           let message =
             'Provjeri još jednom svoje podatke ili pokušaj ponovno kasnije!';
 
-          if (errorResponse.status >= 400 && errorResponse.status <= 400) {
+          if (errorResponse.status == 400) {
             switch ((errorResponse.error as AuthFailureResponse).errorCode) {
               case AuthErrorCode.EXEC_ERR_CAPTCHA_FAILED:
-                // TODO implement challange
                 message =
                   'Sustav je detektirao sumnjivo ponašanje, pokušaj ponovno kasnije.';
                 break;
