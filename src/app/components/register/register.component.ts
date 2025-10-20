@@ -85,7 +85,7 @@ export class RegisterComponent {
             let message =
               'Nažalost, registracija nije uspjela. Molim te, pokušaj malo kasnije.';
 
-            if (errorResponse.status >= 400 && errorResponse.status <= 400) {
+            if (errorResponse.status == 400) {
               switch ((errorResponse.error as AuthFailureResponse).errorCode) {
                 case AuthErrorCode.INFO_INVALID:
                   message = 'Provjeri svoje podatke još jednom.';

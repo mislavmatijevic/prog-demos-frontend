@@ -1,4 +1,4 @@
-<app-request-reset-password-dialog [(visible)]="requestPasswordResetDialogVisible" [captchaToken]="captchaToken" />
+<app-request-reset-password-dialog [(visible)]="requestPasswordResetDialogVisible" />
 <form class="login-form" (ngSubmit)="onSubmit()">
     <div class="login-form__row">
         <p-floatLabel>
@@ -14,7 +14,7 @@
             <label for="password" class="login-form__row__label">Lozinka</label>
         </p-floatLabel>
     </div>
-    <captcha view="login" [(captchaToken)]="captchaToken" />
+    <captcha action="login" [(captchaToken)]="captchaToken" />
     <p-button [disabled]="!captchaToken" *ngIf="!loginInProgress" label="Prijava" type="submit" icon="pi pi-sign-in" />
     <button [disabled]="!captchaToken" class="reset-password"
         [ngStyle]="{'filter': captchaToken ? 'brightness(100%)' : 'brightness(50%)'}"
