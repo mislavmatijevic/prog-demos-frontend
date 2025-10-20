@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -22,6 +23,7 @@ import { CaptchaComponent } from '../captcha/captcha.component';
     FormsModule,
     ReactiveFormsModule,
     CaptchaComponent,
+    CommonModule,
   ],
   templateUrl: './request-reset-password-dialog.component.html',
   styleUrl: './request-reset-password-dialog.component.scss',
@@ -67,24 +69,24 @@ export class RequestResetPasswordDialogComponent {
             let errorMessage: string =
               'Nažalost, došlo je do pogreške. Ponovni proces malo kasnije.';
 
-            if (errorResponse.status >= 400 && errorResponse.status <= 400) {
+            if (errorResponse.status == 400) {
               switch ((errorResponse.error as AuthFailureResponse).errorCode) {
                 case AuthErrorCode.EXEC_ERR_CAPTCHA_FAILED:
                   errorMessage =
                     'Sustav je detektirao sumnjivo ponašanje, pokušaj ponovno kasnije.';
                   break;
               }
-            }
-
-            switch (errorResponse.status) {
-              case 425:
-                errorMessage =
-                  'Već ti je nedavno poslan zahtjev za novom lozinkom. Ako nije stigao, pričekaj još malo prije ponovnog pokušaja!';
-                break;
-              default:
-                errorMessage =
-                  'Provjeri još jednom da tvoj postojeći račun sigurno koristi uneseni email.';
-                break;
+            } else {
+              switch (errorResponse.status) {
+                case 425:
+                  errorMessage =
+                    'Već ti je nedavno poslan zahtjev za novom lozinkom. Ako nije stigao, pričekaj još malo prije ponovnog pokušaja!';
+                  break;
+                default:
+                  errorMessage =
+                    'Provjeri još jednom da tvoj postojeći račun sigurno koristi uneseni email.';
+                  break;
+              }
             }
 
             this.messageService.add({
