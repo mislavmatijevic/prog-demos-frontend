@@ -4,9 +4,12 @@ import { Observable, tap, throwError } from 'rxjs';
 import { ApiService } from './api.service';
 
 export enum AuthErrorCode {
-  INFO_INVALID = 1,
-  USERNAME_OR_EMAIL_TAKEN = 2,
-  EXEC_ERR_CAPTCHA_FAILED = 3,
+  ERR_INFO_INVALID = 1,
+  ERR_USERNAME_TAKEN = 2,
+  ERR_CAPTCHA_FAILED = 3,
+  ERR_TOKEN_NOT_VALID = 4,
+  ERR_TOKEN_NOT_FOUND = 5,
+  ERR_TOKEN_EXPIRED = 6,
 }
 
 export type AuthFailureResponse = {
@@ -133,6 +136,20 @@ export class AuthService {
       '/auth/password/request-reset',
       {
         email,
+        captchaToken,
+      },
+      false
+    );
+  }
+
+  checkPasswordResetToken(
+    resetToken: string,
+    captchaToken: string | null
+  ): Observable<AuthFailureResponse> {
+    return this.apiService.post(
+      '/auth/password/reset/verify',
+      {
+        resetToken,
         captchaToken,
       },
       false

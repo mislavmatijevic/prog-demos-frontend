@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { finalize } from 'rxjs';
 import { CaptchaComponent } from '../../components/captcha/captcha.component';
 import {
@@ -26,6 +27,7 @@ import {
     FormsModule,
     ReactiveFormsModule,
     CaptchaComponent,
+    ProgressSpinnerModule,
   ],
   templateUrl: './password-reset.component.html',
   styleUrl: './password-reset.component.scss',
@@ -38,14 +40,60 @@ export class PasswordResetComponent implements OnInit {
     private authService: AuthService
   ) {}
 
+  @ViewChild(CaptchaComponent) captchaComponent?: CaptchaComponent;
+
   resetRequested = false;
   resetToken!: string;
   newPassword = new FormControl('');
   repeatedNewPassword = new FormControl('');
   captchaToken: string | null = null;
+  tokenIsOk: boolean = false;
 
   ngOnInit(): void {
     this.resetToken = this.route.snapshot.paramMap.get('resetToken')!;
+  }
+
+  onNewCaptchaToken(newToken: string | null) {
+    this.captchaToken = newToken;
+    if (!this.tokenIsOk && this.captchaToken !== null) {
+      this.checkToken();
+    }
+  }
+
+  checkToken() {
+    this.authService
+      .checkPasswordResetToken(this.resetToken, this.captchaToken)
+      .subscribe({
+        complete: () => {
+          this.tokenIsOk = true;
+          this.captchaToken = null;
+          this.captchaComponent?.forceRefresh();
+        },
+        error: (errorResponse: HttpErrorResponse) => {
+          this.router.navigateByUrl('/login', { replaceUrl: true });
+          let errorMessage = '';
+          switch ((errorResponse.error as AuthFailureResponse).errorCode) {
+            case AuthErrorCode.ERR_CAPTCHA_FAILED:
+              errorMessage = 'Sustav je detektirao sumnjivo ponašanje.';
+              break;
+            case AuthErrorCode.ERR_TOKEN_NOT_VALID:
+              errorMessage = 'Zahtjev za obnovom lozinke nije ispravan.';
+              break;
+            case AuthErrorCode.ERR_TOKEN_NOT_FOUND:
+            case AuthErrorCode.ERR_TOKEN_EXPIRED:
+              errorMessage = 'Zahtjev za obnovom lozinke je istekao.';
+              break;
+            default:
+              errorMessage =
+                'Došlo je do pogreške prilikom provjere validnosti zahtjeva. Pokušaj se prijaviti.';
+          }
+          this.messageService.add({
+            key: 'central',
+            severity: 'error',
+            detail: errorMessage,
+          });
+        },
+      });
   }
 
   resetPassword() {
@@ -87,7 +135,7 @@ export class PasswordResetComponent implements OnInit {
                 'Zahtjev za novom lozinkom je istekao. Ponovno zatraži promjenu lozinke.';
             } else {
               switch ((errorResponse.error as AuthFailureResponse).errorCode) {
-                case AuthErrorCode.EXEC_ERR_CAPTCHA_FAILED:
+                case AuthErrorCode.ERR_CAPTCHA_FAILED:
                   errorMessage = 'Sustav je detektirao sumnjivo ponašanje.';
                   break;
                 default:

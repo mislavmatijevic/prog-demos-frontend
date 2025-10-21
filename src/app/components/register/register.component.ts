@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
@@ -43,6 +43,7 @@ export class RegisterComponent {
   ) {}
   registrationInProgress: boolean = false;
   @Output() registrationSuccessful = new EventEmitter();
+  @ViewChild(CaptchaComponent) captchaComponent?: CaptchaComponent;
 
   email = new FormControl('');
   username = new FormControl('');
@@ -87,14 +88,14 @@ export class RegisterComponent {
 
             if (errorResponse.status == 400) {
               switch ((errorResponse.error as AuthFailureResponse).errorCode) {
-                case AuthErrorCode.INFO_INVALID:
+                case AuthErrorCode.ERR_INFO_INVALID:
                   message = 'Provjeri svoje podatke još jednom.';
                   break;
-                case AuthErrorCode.USERNAME_OR_EMAIL_TAKEN:
+                case AuthErrorCode.ERR_USERNAME_TAKEN:
                   message =
                     'Čini se da već postoji korisnik s ovim korisničkim imenom ili unesenim emailom.';
                   break;
-                case AuthErrorCode.EXEC_ERR_CAPTCHA_FAILED:
+                case AuthErrorCode.ERR_CAPTCHA_FAILED:
                   message =
                     'Sustav je detektirao sumnjivo ponašanje, pokušaj ponovno kasnije.';
                   break;
@@ -108,6 +109,8 @@ export class RegisterComponent {
               detail: message,
               life: 10000,
             });
+
+            this.captchaComponent?.forceRefresh();
           },
         });
     } else {

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
@@ -41,6 +41,7 @@ export class LoginComponent {
   ) {}
 
   @Output() loginSuccessful = new EventEmitter();
+  @ViewChild(CaptchaComponent) captchaComponent?: CaptchaComponent;
 
   requestPasswordResetDialogVisible = false;
   loginInProgress: boolean = false;
@@ -86,7 +87,7 @@ export class LoginComponent {
 
           if (errorResponse.status == 400) {
             switch ((errorResponse.error as AuthFailureResponse).errorCode) {
-              case AuthErrorCode.EXEC_ERR_CAPTCHA_FAILED:
+              case AuthErrorCode.ERR_CAPTCHA_FAILED:
                 message =
                   'Sustav je detektirao sumnjivo ponašanje, pokušaj ponovno kasnije.';
                 break;
@@ -99,6 +100,8 @@ export class LoginComponent {
             summary: 'Prijava nije uspjela!',
             detail: message,
           });
+
+          this.captchaComponent?.forceRefresh();
         },
       });
   }

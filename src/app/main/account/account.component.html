@@ -2,7 +2,8 @@
 <div class="page-wrapper">
     <div class="score-row">
         <p class="row-text username">{{authService.getUser()?.username}}</p>
-        <p *ngIf="totalScore;else scoreLoader" class="row-text total-score" [innerHTML]="totalScore | progDemosHead">
+        <p *ngIf="totalScore !== null;else scoreLoader" class="row-text total-score"
+            [innerHTML]="totalScore | progDemosHead">
         </p>
         <ng-template #scoreLoader>
             <div class="score-row__loader">

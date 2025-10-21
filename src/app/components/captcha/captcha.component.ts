@@ -21,6 +21,7 @@ import {
   Result,
   Size,
   Theme,
+  TurnstileManager,
 } from '@pangz/ng-cloudflare-turnstile';
 import { MessageService } from 'primeng/api';
 import { sizes } from '../../../styles/variables';
@@ -40,6 +41,15 @@ export class CaptchaComponent implements OnInit {
   @Input({ required: true }) captchaToken!: string | null;
   @Output() captchaTokenChange = new EventEmitter<string | null>();
 
+  turnstileManager?: TurnstileManager;
+
+  forceRefresh(): void {
+    if (this.turnstileManager !== undefined) {
+      this.turnstileManager.reset(null);
+      console.log('refreshed');
+    }
+  }
+
   isDisplayed = signal(false);
   turnstileConfig!: Config;
   siteKeys: SiteKeys = inject(CAPTCHA_SITE_KEYS);
@@ -56,7 +66,7 @@ export class CaptchaComponent implements OnInit {
     this.turnstileConfig = {
       action: this.action,
       siteKey: isDevMode()
-        ? DevSiteKey.FORCE_INTERACTIVE_CHALLENGE
+        ? DevSiteKey.ALWAYS_PASSES_INVISIBLE
         : currentSiteKey,
       theme: Theme.DARK,
       size:
@@ -93,18 +103,13 @@ export class CaptchaComponent implements OnInit {
         this.notifyError();
       },
       onReset: () => {
-        this.messageService.add({
-          key: 'central',
-          severity: 'error',
-          summary: 'CAPTCHA se resetira',
-          detail: 'Ako ne uspiješ, osvježi stranicu!',
-        });
         this.notifyError();
       },
     };
   }
 
   private notifySuccess(result: Result) {
+    this.turnstileManager = result.manager;
     this.ngZone.run(() => this.captchaTokenChange.emit(result.data));
   }
 

@@ -1,6 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
@@ -36,6 +42,7 @@ export class RequestResetPasswordDialogComponent {
 
   @Input() visible: boolean = false;
   @Output() visibleChange = new EventEmitter<boolean>();
+  @ViewChild(CaptchaComponent) captchaComponent?: CaptchaComponent;
 
   email = new FormControl('');
   captchaToken: string | null = null;
@@ -69,13 +76,15 @@ export class RequestResetPasswordDialogComponent {
             let errorMessage: string =
               'Nažalost, došlo je do pogreške. Ponovni proces malo kasnije.';
 
-            if (errorResponse.status == 400) {
-              switch ((errorResponse.error as AuthFailureResponse).errorCode) {
-                case AuthErrorCode.EXEC_ERR_CAPTCHA_FAILED:
-                  errorMessage =
-                    'Sustav je detektirao sumnjivo ponašanje, pokušaj ponovno kasnije.';
-                  break;
-              }
+            if (
+              errorResponse.status == 400 &&
+              (errorResponse.error as AuthFailureResponse).errorCode ==
+                AuthErrorCode.ERR_CAPTCHA_FAILED
+            ) {
+              errorMessage =
+                'Sustav je detektirao sumnjivo ponašanje, pokušaj ponovno kasnije.';
+            } else if (errorResponse.status == 404) {
+              errorMessage = 'Provjeri još jednom uneseni email.';
             } else {
               switch (errorResponse.status) {
                 case 425:
@@ -95,6 +104,8 @@ export class RequestResetPasswordDialogComponent {
               summary: 'Zahtjev za novom lozinkom nije uspio.',
               detail: errorMessage,
             });
+
+            this.captchaComponent?.forceRefresh();
           },
         });
     } else {
