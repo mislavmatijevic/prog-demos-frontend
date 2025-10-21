@@ -1,6 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
@@ -36,6 +42,7 @@ export class RequestResetPasswordDialogComponent {
 
   @Input() visible: boolean = false;
   @Output() visibleChange = new EventEmitter<boolean>();
+  @ViewChild(CaptchaComponent) captchaComponent?: CaptchaComponent;
 
   email = new FormControl('');
   captchaToken: string | null = null;
@@ -97,6 +104,8 @@ export class RequestResetPasswordDialogComponent {
               summary: 'Zahtjev za novom lozinkom nije uspio.',
               detail: errorMessage,
             });
+
+            this.captchaComponent?.forceRefresh();
           },
         });
     } else {

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
@@ -43,6 +43,7 @@ export class RegisterComponent {
   ) {}
   registrationInProgress: boolean = false;
   @Output() registrationSuccessful = new EventEmitter();
+  @ViewChild(CaptchaComponent) captchaComponent?: CaptchaComponent;
 
   email = new FormControl('');
   username = new FormControl('');
@@ -108,6 +109,8 @@ export class RegisterComponent {
               detail: message,
               life: 10000,
             });
+
+            this.captchaComponent?.forceRefresh();
           },
         });
     } else {
