@@ -86,7 +86,7 @@ export class LoginComponent {
 
           if (errorResponse.status == 400) {
             switch ((errorResponse.error as AuthFailureResponse).errorCode) {
-              case AuthErrorCode.EXEC_ERR_CAPTCHA_FAILED:
+              case AuthErrorCode.ERR_CAPTCHA_FAILED:
                 message =
                   'Sustav je detektirao sumnjivo ponašanje, pokušaj ponovno kasnije.';
                 break;

@@ -87,14 +87,14 @@ export class RegisterComponent {
 
             if (errorResponse.status == 400) {
               switch ((errorResponse.error as AuthFailureResponse).errorCode) {
-                case AuthErrorCode.INFO_INVALID:
+                case AuthErrorCode.ERR_INFO_INVALID:
                   message = 'Provjeri svoje podatke još jednom.';
                   break;
-                case AuthErrorCode.USERNAME_OR_EMAIL_TAKEN:
+                case AuthErrorCode.ERR_USERNAME_TAKEN:
                   message =
                     'Čini se da već postoji korisnik s ovim korisničkim imenom ili unesenim emailom.';
                   break;
-                case AuthErrorCode.EXEC_ERR_CAPTCHA_FAILED:
+                case AuthErrorCode.ERR_CAPTCHA_FAILED:
                   message =
                     'Sustav je detektirao sumnjivo ponašanje, pokušaj ponovno kasnije.';
                   break;

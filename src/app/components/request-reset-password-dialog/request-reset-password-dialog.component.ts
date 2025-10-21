@@ -72,7 +72,7 @@ export class RequestResetPasswordDialogComponent {
             if (
               errorResponse.status == 400 &&
               (errorResponse.error as AuthFailureResponse).errorCode ==
-                AuthErrorCode.EXEC_ERR_CAPTCHA_FAILED
+                AuthErrorCode.ERR_CAPTCHA_FAILED
             ) {
               errorMessage =
                 'Sustav je detektirao sumnjivo ponašanje, pokušaj ponovno kasnije.';
