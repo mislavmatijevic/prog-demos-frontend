@@ -15,9 +15,13 @@
         </p-floatLabel>
     </div>
     <captcha action="login" [(captchaToken)]="captchaToken" />
-    <p-button [disabled]="!captchaToken" *ngIf="!loginInProgress" label="Prijava" type="submit" icon="pi pi-sign-in" />
-    <button [disabled]="!captchaToken" class="reset-password"
-        [ngStyle]="{'filter': captchaToken ? 'brightness(100%)' : 'brightness(50%)'}"
-        (click)="openResetPasswordDialog($event)">Zaboravljena lozinka?</button>
-    <p-progressSpinner *ngIf="loginInProgress" />
+    <div *ngIf="captchaToken && !loginInProgress" class="buttons-wrapper">
+        <p-button [disabled]="!captchaToken" label="Prijava" type="submit" icon="pi pi-sign-in" />
+        <button [disabled]="!captchaToken" class="reset-password"
+            [ngStyle]="{'filter': captchaToken ? 'brightness(100%)' : 'brightness(50%)'}"
+            (click)="openResetPasswordDialog($event)">Zaboravljena lozinka?</button>
+    </div>
+    <div *ngIf="!captchaToken || loginInProgress" class="buttons-wrapper">
+        <p-progressSpinner *ngIf="!captchaToken || loginInProgress" />
+    </div>
 </form>

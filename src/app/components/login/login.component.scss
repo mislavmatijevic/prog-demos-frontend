@@ -10,7 +10,7 @@
   align-items: center;
   justify-content: center;
 
-  gap: 1.8rem;
+  gap: 2rem;
 
   &__row {
     display: flex;
@@ -32,6 +32,13 @@
       background-color: $dark-accent;
       color: $tertiary;
     }
+  }
+
+  .buttons-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    height: 100px;
   }
 
   .reset-password {
