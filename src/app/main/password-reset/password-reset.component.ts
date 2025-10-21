@@ -82,10 +82,7 @@ export class PasswordResetComponent implements OnInit {
           error: (errorResponse: HttpErrorResponse) => {
             let errorMessage = '';
 
-            if (
-              errorResponse.status == 403 &&
-              (errorResponse.error.message as string).includes('expired')
-            ) {
+            if (errorResponse.status == 403) {
               errorMessage =
                 'Zahtjev za novom lozinkom je istekao. Ponovno zatraži promjenu lozinke.';
             } else {

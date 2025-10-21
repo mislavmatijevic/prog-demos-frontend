@@ -54,6 +54,7 @@ export class CaptchaComponent implements OnInit {
     }
 
     this.turnstileConfig = {
+      action: this.action,
       siteKey: isDevMode()
         ? DevSiteKey.FORCE_INTERACTIVE_CHALLENGE
         : currentSiteKey,
