@@ -69,13 +69,15 @@ export class RequestResetPasswordDialogComponent {
             let errorMessage: string =
               'Nažalost, došlo je do pogreške. Ponovni proces malo kasnije.';
 
-            if (errorResponse.status == 400) {
-              switch ((errorResponse.error as AuthFailureResponse).errorCode) {
-                case AuthErrorCode.EXEC_ERR_CAPTCHA_FAILED:
-                  errorMessage =
-                    'Sustav je detektirao sumnjivo ponašanje, pokušaj ponovno kasnije.';
-                  break;
-              }
+            if (
+              errorResponse.status == 400 &&
+              (errorResponse.error as AuthFailureResponse).errorCode ==
+                AuthErrorCode.EXEC_ERR_CAPTCHA_FAILED
+            ) {
+              errorMessage =
+                'Sustav je detektirao sumnjivo ponašanje, pokušaj ponovno kasnije.';
+            } else if (errorResponse.status == 404) {
+              errorMessage = 'Provjeri još jednom uneseni email.';
             } else {
               switch (errorResponse.status) {
                 case 425:
