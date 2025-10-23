@@ -40,6 +40,7 @@ export class CaptchaComponent implements OnInit {
   @Input({ required: true }) action!: CaptchaProtectedActions;
   @Input({ required: true }) captchaToken!: string | null;
   @Output() captchaTokenChange = new EventEmitter<string | null>();
+  @Output() onInteractive = new EventEmitter();
 
   turnstileManager?: TurnstileManager;
 
@@ -90,6 +91,7 @@ export class CaptchaComponent implements OnInit {
       },
       onBeforeInteractive: () => {
         this.notifyError();
+        this.onInteractive.emit();
         this.isDisplayed.set(true);
       },
       onError: () => {
