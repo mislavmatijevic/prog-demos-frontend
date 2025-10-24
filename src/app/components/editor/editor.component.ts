@@ -4,6 +4,7 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  NgZone,
   OnChanges,
   OnInit,
   Output,
@@ -27,13 +28,13 @@ export type SyntaxError = {
 @Component({
   selector: 'app-editor',
   standalone: true,
-  imports: [CommonModule, NewlinePipe, MonacoEditorModule],
+  imports: [CommonModule, MonacoEditorModule],
   providers: [NewlinePipe],
   templateUrl: './editor.component.html',
   styleUrl: './editor.component.scss',
 })
 export class EditorComponent implements OnInit, OnChanges {
-  constructor(private newlinePipe: NewlinePipe) {}
+  constructor(private newlinePipe: NewlinePipe, private ngZone: NgZone) {}
 
   @ViewChild('errorExplanationPopup')
   errorExplanationPopup!: ElementRef<HTMLDivElement>;
@@ -238,7 +239,7 @@ export class EditorComponent implements OnInit, OnChanges {
       }
 
       this.adjustEditorSize();
-      this.onEditorReady.emit();
+      this.ngZone.run(() => this.onEditorReady.emit());
 
       if (this.isDiffEditor) {
         setTimeout(() => {
