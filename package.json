@@ -19,7 +19,6 @@
     "@angular/platform-browser": "^18.2.7",
     "@angular/platform-browser-dynamic": "^18.2.7",
     "@angular/router": "^18.2.7",
-    "@pangz/ng-cloudflare-turnstile": "^0.4.0",
     "canvas-confetti": "^1.9.3",
     "chart.js": "^4.4.4",
     "monaco-editor": "^0.50.0",
@@ -32,7 +31,7 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^18.2.7",
-    "@angular/cli": "^18.2.7",
+    "@angular/cli": "^20.3.7",
     "@angular/compiler-cli": "^18.2.7",
     "@types/canvas-confetti": "^1.6.4",
     "@types/jasmine": "~5.1.0",

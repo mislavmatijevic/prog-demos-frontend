@@ -138,7 +138,6 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
 
   onMainEditorReady() {
     this.mainEditorReady = true;
-    this.changeDetectorRef.detectChanges();
   }
 
   copyCode() {

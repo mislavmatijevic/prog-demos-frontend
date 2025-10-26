@@ -1,0 +1,462 @@
+// Implementation forked from github.com/pangz-lab/ng-cloudflare-turnstile
+
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  Output,
+  ViewChild,
+  type AfterViewInit,
+  type OnInit,
+} from '@angular/core';
+
+type TurnstileCallback = () => void;
+
+type IdentifiableTurnstileCallback = {
+  callbackId: string;
+  callback: TurnstileCallback;
+};
+
+declare global {
+  interface Window {
+    onloadTurnstileCallback: TurnstileCallback;
+    turnstile: {
+      render: (idOrContainer: string | HTMLElement, options: any) => string;
+      reset: (widgetIdOrContainer: string | HTMLElement) => void;
+      getResponse: (
+        widgetIdOrContainer: string | HTMLElement
+      ) => string | undefined;
+      remove: (widgetIdOrContainer: string | HTMLElement) => void;
+    };
+    onloadTurnstileCallbackQueue: IdentifiableTurnstileCallback[];
+  }
+}
+
+export enum DevSiteKey {
+  ALWAYS_PASSES = '1x00000000000000000000AA',
+  ALWAYS_BLOCKS = '2x00000000000000000000AB',
+  ALWAYS_PASSES_INVISIBLE = '1x00000000000000000000BB',
+  ALWAYS_BLOCKS_INVISIBLE = '2x00000000000000000000BB',
+  FORCE_INTERACTIVE_CHALLENGE = '3x00000000000000000000FF',
+}
+
+export enum Language {
+  CROATIAN = 'hr-hr',
+  ENGLISH = 'en-us',
+}
+
+export enum Theme {
+  LIGHT = 'light',
+  DARK = 'dark',
+  AUTO = 'auto',
+}
+
+export enum Size {
+  NORMAL = 'normal',
+  FLEXIBLE = 'flexible',
+  COMPACT = 'compact',
+}
+
+export enum Appearance {
+  ALWAYS = 'always',
+  EXECUTE = 'execute',
+  INTERACTION_ONLY = 'interaction-only',
+}
+
+export enum Retry {
+  AUTO = 'auto',
+  NEVER = 'never',
+}
+
+export enum RefreshExpiry {
+  AUTO = 'auto',
+  MANUAL = 'manual',
+  NEVER = 'never',
+}
+
+export enum RefreshTimeout {
+  AUTO = 'auto',
+  MANUAL = 'manual',
+  NEVER = 'never',
+}
+
+export enum State {
+  SUCCESS = 0,
+  WIDGET_CREATED = 1,
+  WIDGET_REMOVED = 2,
+  WIDGET_RESET = 3,
+  AFTER_INTERACTIVE = 4,
+  BEFORE_INTERACTIVE = 5,
+  ERROR = -1,
+  EXPIRED = -2,
+  TIMEOUT = -3,
+}
+
+export type Result = {
+  name: string;
+  data?: any;
+  result: number;
+  manager: TurnstileManager;
+};
+
+export type EventCallback = (d: Result) => void;
+export type Config = {
+  siteKey: string;
+  action?: string;
+  cData?: string;
+  tabIndex?: number;
+  language?: Language;
+  theme?: Theme;
+  responseField?: boolean;
+  size?: Size;
+  appearance?: Appearance;
+  retry?: Retry;
+  retryInterval?: number;
+  refreshExpired?: RefreshExpiry;
+  refreshTimeout?: RefreshTimeout;
+  feedbackEnabled?: boolean;
+  onSuccess?: EventCallback;
+  onError?: EventCallback;
+  onExpired?: EventCallback;
+  onBeforeInteractive?: EventCallback;
+  onAfterInteractive?: EventCallback;
+  onTimeout?: EventCallback;
+  onCreate?: EventCallback;
+  onReset?: EventCallback;
+  onRemove?: EventCallback;
+};
+
+export class TurnstileManager {
+  constructor(
+    private obj: any,
+    private event: EventEmitter<Result>,
+    private widgetId: string = '',
+    private containerRef: string | HTMLElement = '',
+    private options: any = ''
+  ) {}
+
+  reRender(options: Config): void {
+    this.remove(null);
+    this.updateOptions(options);
+    this.widgetId = this.obj.render(this.containerRef, this.options);
+
+    const payload = {
+      name: `${this.widgetId}: WIDGET_CREATED`,
+      data: this.widgetId,
+      result: State.WIDGET_CREATED,
+      manager: this,
+    };
+    this.options.onCreate?.(payload);
+    this.event.emit(payload);
+  }
+
+  reset(id: string | HTMLElement | null): void {
+    this.obj.reset(id ?? this.widgetId);
+
+    const payload = {
+      name: `${id}: WIDGET_RESET`,
+      data: id,
+      result: State.WIDGET_RESET,
+      manager: this,
+    };
+    this.options.onReset?.(payload);
+    this.event.emit(payload);
+  }
+
+  remove(id: string | HTMLElement | null): void {
+    this.obj.remove(id ?? this.widgetId);
+
+    const payload = {
+      name: `${id}: WIDGET_REMOVED`,
+      data: id,
+      result: State.WIDGET_REMOVED,
+      manager: this,
+    };
+    this.options.onRemove?.(payload);
+    this.event.emit(payload);
+  }
+
+  private updateOptions(options: Config): void {
+    this.options.sitekey = options.siteKey;
+    this.options.action = options.action;
+    this.options.cData = options.cData;
+    this.options.tabindex = options.tabIndex;
+    this.options.language = options.language;
+    this.options.theme = options.theme;
+    this.options.size = options.size;
+    this.options.appearance = options.appearance;
+    this.options.retry = options.retry;
+    this.options['retry-interval'] = options.retryInterval;
+    this.options['refresh-expired'] = options.refreshExpired;
+    this.options['refresh-timeout'] = options.refreshTimeout;
+    this.options['response-field'] = options.responseField;
+    this.options['feedback-enabled'] = options.feedbackEnabled;
+  }
+}
+
+class EventHandler {
+  private widgetId: string;
+  private tsManager: TurnstileManager;
+  private event: EventEmitter<Result>;
+  private config: Config;
+
+  constructor(
+    event: EventEmitter<Result>,
+    config: Config,
+    manager: TurnstileManager
+  ) {
+    this.event = event;
+    this.config = config;
+    this.tsManager = manager;
+    this.widgetId = '';
+  }
+
+  emit(d: Result): void {
+    this.event.emit(d);
+  }
+
+  setWidgetId(id: string): void {
+    this.widgetId = id;
+  }
+
+  getWidgetId(): string {
+    return this.widgetId;
+  }
+
+  get conf(): Config {
+    return this.config;
+  }
+
+  get manager(): TurnstileManager {
+    return this.tsManager;
+  }
+
+  get e(): EventEmitter<Result> {
+    return this.event;
+  }
+
+  copyWith(p: { manager?: TurnstileManager }): void {
+    if (p.manager) {
+      this.tsManager = p.manager;
+    }
+  }
+}
+
+@Component({
+  selector: 'turnstile-widget',
+  standalone: true,
+  imports: [],
+  template: `<div #cfContainer></div>`,
+  styles: ``,
+})
+export class NgCloudflareTurnstile implements AfterViewInit, OnInit, OnDestroy {
+  private _manager?: TurnstileManager;
+  private _windowTurnstile: any;
+  @ViewChild('cfContainer', { static: true })
+  private cfContainer!: ElementRef<HTMLDivElement>;
+
+  @Input({ required: true }) config!: Config;
+  @Output() event = new EventEmitter<Result>();
+  private _eventHandler?: EventHandler;
+  private static initialized = false;
+  private uniqueId: string = Math.random().toString(36).substring(2, 15);
+
+  constructor() {
+    if (!NgCloudflareTurnstile.initialized) {
+      window.onloadTurnstileCallbackQueue = [];
+      window.onloadTurnstileCallback = () => {
+        if (window.onloadTurnstileCallbackQueue) {
+          window.onloadTurnstileCallbackQueue.forEach((widget) =>
+            widget.callback()
+          );
+        }
+      };
+      NgCloudflareTurnstile.initialized = true;
+    }
+
+    if (!window.onloadTurnstileCallbackQueue) {
+      window.onloadTurnstileCallbackQueue = [];
+    }
+
+    const callback: IdentifiableTurnstileCallback = {
+      callbackId: this.uniqueId,
+      callback: () => {
+        if (this._manager) return;
+        this._windowTurnstile = window.turnstile;
+        const tempManager = new TurnstileManager(
+          this._windowTurnstile,
+          this.event
+        );
+        this._eventHandler = new EventHandler(
+          this.event,
+          this.config,
+          tempManager
+        );
+        this.init();
+      },
+    };
+
+    window.onloadTurnstileCallbackQueue.push(callback);
+  }
+
+  ngOnInit(): void {
+    if (window.turnstile && window.onloadTurnstileCallback) {
+      window.onloadTurnstileCallback();
+    }
+  }
+
+  ngAfterViewInit(): void {
+    this.loadTurnstileScript();
+  }
+
+  ngOnDestroy(): void {
+    this._manager?.remove(null);
+    this._eventHandler = undefined;
+    this._manager = undefined;
+
+    if (window.onloadTurnstileCallbackQueue) {
+      window.onloadTurnstileCallbackQueue =
+        window.onloadTurnstileCallbackQueue.filter(
+          (callback: any) => callback.id !== this.uniqueId
+        );
+    }
+  }
+
+  private init(): void {
+    if (!this.config.siteKey) {
+      console.error('[Cloudflare Turnstile] Missing siteKey in configuration.');
+      return;
+    }
+
+    const nativeElement = this.cfContainer.nativeElement;
+    const conf = this._eventHandler!.conf;
+    const containerRef = nativeElement;
+    const renderingConf = {
+      sitekey: conf.siteKey,
+      action: conf.action,
+      cData: conf.cData,
+      tabindex: conf.tabIndex,
+      language: conf.language,
+      theme: conf.theme,
+      size: conf.size,
+      appearance: conf.appearance,
+      retry: conf.retry,
+      'retry-interval': conf.retryInterval,
+      'refresh-expired': conf.refreshExpired,
+      'refresh-timeout': conf.refreshTimeout,
+      'response-field': conf.responseField,
+      'feedback-enabled': conf.feedbackEnabled,
+      callback: (token: any) => {
+        const payload = {
+          id: this._eventHandler!.getWidgetId(),
+          name: 'SUCCESS',
+          data: token,
+          result: State.SUCCESS,
+          manager: this._eventHandler!.manager,
+        };
+        if (conf.onSuccess) conf.onSuccess(payload);
+        this._eventHandler!.emit(payload);
+      },
+      'error-callback': (code: any) => {
+        const payload = {
+          id: this._eventHandler!.getWidgetId(),
+          name: 'ERROR',
+          data: code,
+          result: State.ERROR,
+          manager: this._eventHandler!.manager,
+        };
+        if (conf.onError) conf.onError(payload);
+        this._eventHandler!.emit(payload);
+      },
+      'expired-callback': (d: any) => {
+        const payload = {
+          id: this._eventHandler!.getWidgetId(),
+          name: 'EXPIRED',
+          data: d,
+          result: State.EXPIRED,
+          manager: this._eventHandler!.manager,
+        };
+        if (conf.onExpired) conf.onExpired(payload);
+        this._eventHandler!.emit(payload);
+      },
+      'before-interactive-callback': (d: any) => {
+        const payload = {
+          id: this._eventHandler!.getWidgetId(),
+          name: 'BEFORE_INTERACTIVE',
+          data: d,
+          result: State.BEFORE_INTERACTIVE,
+          manager: this._eventHandler!.manager,
+        };
+        if (conf.onBeforeInteractive) conf.onBeforeInteractive(payload);
+        this._eventHandler!.emit(payload);
+      },
+      'after-interactive-callback': (d: any) => {
+        const payload = {
+          id: this._eventHandler!.getWidgetId(),
+          name: 'AFTER_INTERACTIVE',
+          data: d,
+          result: State.AFTER_INTERACTIVE,
+          manager: this._eventHandler!.manager,
+        };
+        if (conf.onAfterInteractive) conf.onAfterInteractive(payload);
+        this._eventHandler!.emit(payload);
+      },
+      'timeout-callback': (d: any) => {
+        const payload = {
+          id: this._eventHandler!.getWidgetId(),
+          name: 'TIMEOUT',
+          data: d,
+          result: State.TIMEOUT,
+          manager: this._eventHandler!.manager,
+        };
+        if (conf.onTimeout) conf.onTimeout(payload);
+        this._eventHandler!.emit(payload);
+      },
+      onSuccess: conf.onSuccess,
+      onError: conf.onError,
+      onExpired: conf.onExpired,
+      onBeforeInteractive: conf.onBeforeInteractive,
+      onAfterInteractive: conf.onAfterInteractive,
+      onTimeout: conf.onTimeout,
+      onCreate: conf.onCreate,
+      onReset: conf.onReset,
+      onRemove: conf.onRemove,
+    };
+
+    const widgetId = this._windowTurnstile.render(containerRef, renderingConf);
+    this._eventHandler!.setWidgetId(widgetId);
+    this._manager = new TurnstileManager(
+      this._windowTurnstile,
+      this._eventHandler!.e,
+      widgetId,
+      containerRef,
+      renderingConf
+    );
+    this._eventHandler!.copyWith({ manager: this._manager });
+
+    const payload = {
+      id: widgetId,
+      name: `${widgetId}: WIDGET_CREATED`,
+      data: widgetId,
+      result: State.WIDGET_CREATED,
+      manager: this._eventHandler!.manager,
+    };
+    if (this._eventHandler!.conf.onCreate) {
+      this._eventHandler!.conf.onCreate(payload);
+    }
+    this._eventHandler!.emit(payload);
+  }
+
+  private loadTurnstileScript(): void {
+    if (!document.querySelector('script[src*="turnstile"]')) {
+      const script = document.createElement('script');
+      script.src =
+        'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onloadTurnstileCallback';
+      script.async = true;
+      script.defer = true;
+      document.head.appendChild(script);
+    }
+  }
+}

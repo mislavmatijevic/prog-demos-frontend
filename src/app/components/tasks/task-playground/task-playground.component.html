@@ -1,4 +1,4 @@
-<p-dialog header="Prijavi se ili registriraj" [(visible)]="loginDialogVisible" [modal]="true"
+<p-dialog *ngIf="loginDialogVisible" header="Prijavi se ili registriraj" [(visible)]="loginDialogVisible" [modal]="true"
     [style]="{ width: '30rem' }" [breakpoints]="{ '500px': '75vw' }">
     <span class="p-text-secondary">Kako bih osigurao proces testiranja tvog rješenja, zamolit ću te da se
         prvo prijaviš.</span>

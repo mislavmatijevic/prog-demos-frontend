@@ -49,7 +49,12 @@ export class LoginComponent {
   identifier = new FormControl('');
   password = new FormControl('');
 
+  captchaShowedUp = false;
   captchaToken: string | null = null;
+
+  captchaRequired() {
+    this.captchaShowedUp = true;
+  }
 
   onSubmit() {
     if (!this.identifier.valid || !this.password.valid) {

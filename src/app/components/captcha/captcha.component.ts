@@ -10,6 +10,10 @@ import {
   Output,
   signal,
 } from '@angular/core';
+import { MessageService } from 'primeng/api';
+import { sizes } from '../../../styles/variables';
+import { CAPTCHA_SITE_KEYS } from '../../app.config';
+import { CaptchaProtectedActions, SiteKeys } from './settings/captcha-settings';
 import {
   Appearance,
   Config,
@@ -22,11 +26,7 @@ import {
   Size,
   Theme,
   TurnstileManager,
-} from '@pangz/ng-cloudflare-turnstile';
-import { MessageService } from 'primeng/api';
-import { sizes } from '../../../styles/variables';
-import { CAPTCHA_SITE_KEYS } from '../../app.config';
-import { CaptchaProtectedActions, SiteKeys } from './settings/captcha-settings';
+} from './turnstile/turnstile-widget';
 
 @Component({
   selector: 'captcha',
@@ -40,6 +40,7 @@ export class CaptchaComponent implements OnInit {
   @Input({ required: true }) action!: CaptchaProtectedActions;
   @Input({ required: true }) captchaToken!: string | null;
   @Output() captchaTokenChange = new EventEmitter<string | null>();
+  @Output() onInteractive = new EventEmitter();
 
   turnstileManager?: TurnstileManager;
 
@@ -90,6 +91,7 @@ export class CaptchaComponent implements OnInit {
       },
       onBeforeInteractive: () => {
         this.notifyError();
+        this.onInteractive.emit();
         this.isDisplayed.set(true);
       },
       onError: () => {
