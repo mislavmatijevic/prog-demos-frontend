@@ -1,4 +1,38 @@
-<div class="report-error" [ngStyle]="{'opacity': isHidden ? '0%' : '100%'}">
+<p-dialog [(visible)]="dialogOpened" header="Prijavi grešku na stranici" focusOnShow="true" modal="true">
+    <div class="report-error-dialog">
+        <h2>Nešto nije u redu?</h2>
+        <p>Džabe što sam toliko testirao, greške se uvijek mogu potkrasti.</p>
+        <p>Imaš GitHub račun? Super, napiši prijavu kao <a
+                href="https://github.com/mislavmatijevic/prog-demos-frontend/issues/new">novi issue</a>. Super bi bilo
+            da dodaš i fotografije zaslona.</p>
+        <p-divider>ILI</p-divider>
+        <p>Nemaš GitHub? Nema veze, otvori javni GitHub issue ovdje na stranici.</p>
+        <form class="report-error-form">
+            <p-floatLabel>
+                <input pInputText id="title" type="text" name="title" minlength="2" required
+                    [formControl]="reportName" />
+                <label for="title">Ukratko opiši grešku</label>
+            </p-floatLabel>
+            <p-floatLabel>
+                <textarea pInputText id="description" type="text" name="description" minlength="2" required
+                    [formControl]="reportBody" placeholder="Kako ova greška utječe na rad?
+
+Koje korake poduzeti za reproducirati grešku?
+
+Imaš li prijedlog za poboljšanje?"></textarea>
+                <label for="description">Više detalja o greški</label>
+            </p-floatLabel>
+            <p-checkbox *ngIf="isLoggedIn()" label="Želiš li da se tvoje korisničko ime uključi u prijavu?"
+                checkboxIcon="pi pi-user-edit" binary="true" />
+            <p-button label="Prijavi" icon="pi pi-github" [iconPos]="'left'" />
+            <small>Prijava će biti javno objavljena na GitHubu.</small>
+        </form>
+        <p-divider>ILI</p-divider>
+        <p>Nešto drugo? Javi mi se privatno na mail: <a href="mailto:mislav@progdemos.com">mislav&#64;progdemos.com</a>
+        </p>
+    </div>
+</p-dialog>
+<div class="report-error-button" [ngStyle]="{'opacity': isHidden ? '0%' : '100%'}">
     <p-button icon="pi pi-exclamation-triangle" (onClick)="openReportBugDialog()" pTooltip="Prijavi grešku"
         [style]="{ 'width': '100%', 'height': '100%', 'padding-right': '10px' }" tooltipPosition="left"
         severity="warning">
