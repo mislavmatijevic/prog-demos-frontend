@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { ReportError } from './components/report-error/report-error';
 import { NavigationComponent } from './layout/navigation/navigation.component';
 import { PreloaderService } from './preloader.service';
 import { AuthService } from './services/auth.service';
@@ -9,7 +10,7 @@ import { AuthService } from './services/auth.service';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, NavigationComponent, ToastModule],
+  imports: [RouterOutlet, NavigationComponent, ToastModule, ReportError],
   providers: [MessageService],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',

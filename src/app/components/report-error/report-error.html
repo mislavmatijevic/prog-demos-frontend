@@ -1,0 +1,6 @@
+<div class="report-error" [ngStyle]="{'opacity': isHidden ? '0%' : '100%'}">
+    <p-button icon="pi pi-exclamation-triangle" (onClick)="openReportBugDialog()" pTooltip="Prijavi grešku"
+        [style]="{ 'width': '100%', 'height': '100%', 'padding-right': '10px' }" tooltipPosition="left"
+        severity="warning">
+    </p-button>
+</div>

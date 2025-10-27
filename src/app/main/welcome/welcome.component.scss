@@ -2,7 +2,8 @@
 
 .welcome-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: start;
+  gap: 1rem;
 
   img {
     @media screen and (max-width: $smallWidth) {
