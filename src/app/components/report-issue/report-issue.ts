@@ -47,7 +47,7 @@ export class ReportIssue implements OnInit {
   ) {}
 
   isHidden: boolean = false;
-  dialogOpened: boolean = true;
+  dialogOpened: boolean = false;
   reportName = new FormControl('');
   reportBody = new FormControl('');
   shouldIncludeName = new FormControl(false);
