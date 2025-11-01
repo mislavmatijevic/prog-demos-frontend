@@ -1,0 +1,46 @@
+@import "../../../styles/variables.scss";
+
+.report-error-button {
+  position: absolute;
+  top: 10px;
+  right: -5px;
+
+  height: 25px;
+  width: 40px;
+
+  transition: 1s opacity cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.report-error-dialog {
+  width: 100%;
+  max-width: 600px;
+}
+
+.report-error-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-top: 3rem;
+
+  input,
+  textarea {
+    width: 100%;
+  }
+
+  textarea {
+    height: 10rem;
+    min-width: 10rem;
+    max-width: 100%;
+    max-height: 30rem;
+  }
+}
+
+.submission-complete-column {
+  display: flex;
+  justify-content: space-between;
+  color: $score;
+  a {
+    color: $score;
+    text-decoration: underline;
+  }
+}

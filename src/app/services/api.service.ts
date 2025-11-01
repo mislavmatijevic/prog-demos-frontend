@@ -3,8 +3,6 @@ import { Injectable, isDevMode } from '@angular/core';
 import { Observable } from 'rxjs';
 import { APPEND_AUTHORIZATION } from '../interceptors/auth.interceptor';
 
-type HttpClientGetOptions = Parameters<HttpClient['get']>[1];
-
 @Injectable({
   providedIn: 'root',
 })
