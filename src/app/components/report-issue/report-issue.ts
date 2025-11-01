@@ -14,7 +14,7 @@ import { AuthService } from '../../services/auth.service';
 const exemptViews = ['/', '/privacy'];
 
 @Component({
-  selector: 'app-report-error',
+  selector: 'app-report-issue',
   standalone: true,
   imports: [
     CommonModule,
@@ -28,10 +28,10 @@ const exemptViews = ['/', '/privacy'];
     DialogModule,
     CheckboxModule,
   ],
-  templateUrl: './report-error.html',
-  styleUrl: './report-error.scss',
+  templateUrl: './report-issue.html',
+  styleUrl: './report-issue.scss',
 })
-export class ReportError implements OnInit {
+export class ReportIssue implements OnInit {
   constructor(private router: Router, private authService: AuthService) {}
 
   isHidden: boolean = false;
