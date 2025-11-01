@@ -24,8 +24,11 @@ Imaš li prijedlog za poboljšanje?"></textarea>
             </p-floatLabel>
             <p-checkbox *ngIf="isLoggedIn()" label="Automatski uključi moje korisničko ime u prijavu?"
                 checkboxIcon="pi pi-user-edit" binary="true" [formControl]="shouldIncludeName" />
-            <p-button label="Prijavi" icon="pi pi-github" [iconPos]="'left'" type="submit" />
-            <small>Prijava će biti javno objavljena na GitHubu.</small>
+            <div *ngIf="!creatingGithubIssue" class="submit-button-column">
+                <p-button label="Prijavi" icon="pi pi-github" [iconPos]="'left'" type="submit" />
+                <small>Prijava će biti javno objavljena na GitHubu.</small>
+            </div>
+            <p-progressSpinner *ngIf="creatingGithubIssue" />
         </form>
         <div *ngIf="urlToCreatedIssue" class="submission-complete-column">
             <span>Prijava uspješno otvorena!</span>

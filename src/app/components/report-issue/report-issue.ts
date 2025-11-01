@@ -51,6 +51,7 @@ export class ReportIssue implements OnInit {
   reportName = new FormControl('');
   reportBody = new FormControl('');
   shouldIncludeName = new FormControl(false);
+  creatingGithubIssue: boolean = false;
   isLoggedIn = this.authService.isLoggedIn;
   urlToCreatedIssue?: string;
 
@@ -81,6 +82,8 @@ export class ReportIssue implements OnInit {
       return;
     }
 
+    this.creatingGithubIssue = true;
+
     this.apiService
       .post<ReportIssueResponse>(
         '/report-issue',
@@ -93,6 +96,7 @@ export class ReportIssue implements OnInit {
       )
       .subscribe({
         next: (value) => {
+          this.creatingGithubIssue = false;
           if (value.success) {
             this.urlToCreatedIssue = value.newIssueUrl;
           } else {
@@ -100,6 +104,7 @@ export class ReportIssue implements OnInit {
           }
         },
         error: () => {
+          this.creatingGithubIssue = false;
           this.notifyError();
         },
       });

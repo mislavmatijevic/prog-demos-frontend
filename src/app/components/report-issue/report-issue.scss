@@ -35,6 +35,12 @@
   }
 }
 
+.submit-button-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
 .submission-complete-column {
   display: flex;
   justify-content: space-between;
