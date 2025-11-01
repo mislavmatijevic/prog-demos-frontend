@@ -6,15 +6,15 @@
                 href="https://github.com/mislavmatijevic/prog-demos-frontend/issues/new">novi issue</a>. Super bi bilo
             da dodaš i fotografije zaslona.</p>
         <p-divider>ILI</p-divider>
-        <p>Nemaš GitHub? Nema veze, otvori javni GitHub issue ovdje na stranici.</p>
-        <form class="report-error-form">
+        <p>Nemaš GitHub? Nema veze, otvori javni GitHub issue preko ove forme.</p>
+        <form *ngIf="!urlToCreatedIssue" class="report-error-form" (ngSubmit)="onGitHubIssueSubmit()">
             <p-floatLabel>
-                <input pInputText id="title" type="text" name="title" minlength="2" required
+                <input pInputText id="title" type="text" name="title" minlength="3" required
                     [formControl]="reportName" />
                 <label for="title">Ukratko opiši grešku</label>
             </p-floatLabel>
             <p-floatLabel>
-                <textarea pInputText id="description" type="text" name="description" minlength="2" required
+                <textarea pInputText id="description" type="text" name="description" minlength="100" required
                     [formControl]="reportBody" placeholder="Kako ova greška utječe na rad?
 
 Koje korake poduzeti za reproducirati grešku?
@@ -22,11 +22,15 @@ Koje korake poduzeti za reproducirati grešku?
 Imaš li prijedlog za poboljšanje?"></textarea>
                 <label for="description">Više detalja o greški</label>
             </p-floatLabel>
-            <p-checkbox *ngIf="isLoggedIn()" label="Želiš li da se tvoje korisničko ime uključi u prijavu?"
-                checkboxIcon="pi pi-user-edit" binary="true" />
-            <p-button label="Prijavi" icon="pi pi-github" [iconPos]="'left'" />
+            <p-checkbox *ngIf="isLoggedIn()" label="Automatski uključi moje korisničko ime u prijavu?"
+                checkboxIcon="pi pi-user-edit" binary="true" [formControl]="shouldIncludeName" />
+            <p-button label="Prijavi" icon="pi pi-github" [iconPos]="'left'" type="submit" />
             <small>Prijava će biti javno objavljena na GitHubu.</small>
         </form>
+        <div *ngIf="urlToCreatedIssue" class="submission-complete-column">
+            <span>Prijava uspješno otvorena!</span>
+            <a [href]="urlToCreatedIssue" target="_blank">Pregledaj svoju prijavu ovdje.</a>
+        </div>
         <p-divider>ILI</p-divider>
         <p>Nešto drugo? Javi mi se privatno na mail: <a href="mailto:mislav@progdemos.com">mislav&#64;progdemos.com</a>
         </p>

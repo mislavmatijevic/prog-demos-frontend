@@ -34,3 +34,13 @@
     max-height: 30rem;
   }
 }
+
+.submission-complete-column {
+  display: flex;
+  justify-content: space-between;
+  color: $score;
+  a {
+    color: $score;
+    text-decoration: underline;
+  }
+}
