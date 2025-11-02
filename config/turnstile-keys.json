@@ -14,5 +14,9 @@
     {
         "action": "request-password-reset",
         "key": "0x4AAAAAAB7fgxWt53-r4KOR"
+    },
+    {
+        "action": "report-issue",
+        "key": "0x4AAAAAAB-bDLr_urQbWZu7"
     }
 ]

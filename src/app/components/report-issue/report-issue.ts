@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Event, NavigationStart, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
@@ -12,6 +12,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ApiService } from '../../services/api.service';
 import { AuthService } from '../../services/auth.service';
+import { CaptchaComponent } from '../captcha/captcha.component';
 
 const exemptViews = ['/', '/privacy'];
 
@@ -34,6 +35,7 @@ type ReportIssueResponse = {
     ProgressSpinnerModule,
     DialogModule,
     CheckboxModule,
+    CaptchaComponent,
   ],
   templateUrl: './report-issue.html',
   styleUrl: './report-issue.scss',
@@ -43,7 +45,8 @@ export class ReportIssue implements OnInit {
     private router: Router,
     private authService: AuthService,
     private messageService: MessageService,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private ngZone: NgZone
   ) {}
 
   isHidden: boolean = false;
@@ -54,6 +57,7 @@ export class ReportIssue implements OnInit {
   creatingGithubIssue: boolean = false;
   isLoggedIn = this.authService.isLoggedIn;
   urlToCreatedIssue?: string;
+  captchaToken: string | null = null;
 
   ngOnInit(): void {
     this.router.events.subscribe((event: Event) => {
@@ -73,6 +77,10 @@ export class ReportIssue implements OnInit {
   }
 
   onGitHubIssueSubmit() {
+    if (this.captchaToken == null) {
+      return;
+    }
+
     if (!this.reportName.valid || !this.reportBody.valid) {
       this.messageService.add({
         key: 'central',
@@ -91,6 +99,7 @@ export class ReportIssue implements OnInit {
           title: this.reportName.value,
           description: this.reportBody.value,
           includeUsername: this.shouldIncludeName.value,
+          captchaToken: this.captchaToken,
         },
         this.shouldIncludeName.value ?? false
       )

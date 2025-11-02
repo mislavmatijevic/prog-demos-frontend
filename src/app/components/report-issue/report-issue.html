@@ -24,6 +24,7 @@ Imaš li prijedlog za poboljšanje?"></textarea>
             </p-floatLabel>
             <p-checkbox *ngIf="isLoggedIn()" label="Automatski uključi moje korisničko ime u prijavu?"
                 checkboxIcon="pi pi-user-edit" binary="true" [formControl]="shouldIncludeName" />
+            <captcha action="report-issue" [(captchaToken)]="captchaToken" />
             <div *ngIf="!creatingGithubIssue" class="submit-button-column">
                 <p-button label="Prijavi" icon="pi pi-github" [iconPos]="'left'" type="submit" />
                 <small>Prijava će biti javno objavljena na GitHubu.</small>
