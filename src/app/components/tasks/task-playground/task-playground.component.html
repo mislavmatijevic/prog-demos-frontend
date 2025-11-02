@@ -73,7 +73,6 @@
 
                 <div *ngIf="mainEditorReady && task" class="playground-input__wrapper-controls-bottom">
                     <p-button *ngIf="!task.isBossBattle" rounded="true"
-                        [disabled]="!this.helpDialogVisible && !helpStepAvailable"
                         [icon]="helpDialogVisible ? 'pi pi-times' : helpStepAvailable ? 'pi pi-lightbulb' : undefined"
                         (onClick)="toggleHelp()" [pTooltip]="helpDialogVisible ? 'Zatvori pomoć' : 'Pomozi mi!'"
                         [style]="{ 'width': '40px', 'height': '40px', 'padding': '0 5px' }" tooltipPosition="top"

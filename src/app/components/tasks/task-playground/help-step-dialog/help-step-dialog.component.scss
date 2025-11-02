@@ -1,5 +1,20 @@
 @import "../../../../../styles/variables.scss";
 
+.help-dialog-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  height: 100%;
+  width: 100%;
+}
+
+.help-steps-wrapper {
+  display: flex;
+  flex-direction: column;
+
+  height: 100%;
+  gap: 1rem;
+}
+
 .help-wrapper {
   display: flex;
   flex-direction: column;

@@ -1,16 +1,29 @@
 <p-dialog [header]="dialogTitle" [(visible)]="visible" [resizable]="true" (onHide)="handleHide()"
     [style]="{ width: codeShown ? '75rem' : '25rem', height: codeShown ? '35rem' : 'fit-content', 'max-height': '40rem' }"
     (onResizeInit)="handleResize($event)" (onResizeEnd)="handleResize($event)">
-    <div class="help-wrapper">
-        <p class="info-message" *ngIf="infoMessage != ''">{{infoMessage}}</p>
 
-        <p *ngIf="textShown">
-            {{helpText}}
-        </p>
+    <div class="help-dialog-wrapper">
+        <div class="help-steps-wrapper">
+            <div *ngFor="let index of numberOfHelpSteps"
+                [ngStyle]="{'color': currentHelpStep < index ? 'red' : 'green'}">
+                <p *ngIf="currentHelpStep == index - 1 && countdownInProgress">Pričekaj
+                    {{nextHelpCooldownRemainingTime+1}}s do idućeg
+                    koraka.</p>
+                {{'Otvori ' + getTitleForStep(index)}}
+            </div>
 
-        <div *ngIf="codeShown" class="diff-editor">
-            <app-editor [isDiffEditor]="true" [originalCode]="diffEditorLeftState"
-                [(comparedCode)]="diffEditorRightSide" [resizeEvent]="resizeEvent" />
+        </div>
+        <div class="help-wrapper">
+            <p class="info-message" *ngIf="infoMessage != ''">{{infoMessage}}</p>
+
+            <p *ngIf="textShown">
+                {{helpText}}
+            </p>
+
+            <div *ngIf="codeShown" class="diff-editor">
+                <app-editor [isDiffEditor]="true" [originalCode]="diffEditorLeftState"
+                    [(comparedCode)]="diffEditorRightSide" [resizeEvent]="resizeEvent" />
+            </div>
         </div>
     </div>
 </p-dialog>

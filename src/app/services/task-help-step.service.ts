@@ -1,11 +1,16 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, tap } from 'rxjs';
+import { map, Observable, of, tap } from 'rxjs';
 import { HelpStep } from '../../types/models';
 import { ApiService } from './api.service';
 
 export type HelpStepResponse = {
   success: boolean;
   helpStep: HelpStep;
+};
+
+export type HelpStepCountResponse = {
+  success: boolean;
+  helpSteps: number;
 };
 
 type HelpStepIdentifier = {
@@ -43,6 +48,12 @@ export class TaskHelpStepService {
           })
         );
     }
+  }
+
+  getHelpStepCount(taskId: number): Observable<number> {
+    return this.apiService
+      .get<HelpStepCountResponse>(`/tasks/${taskId}/help`)
+      .pipe(map((value: HelpStepCountResponse) => value.helpSteps));
   }
 
   findHelpStep(identifier: HelpStepIdentifier): HelpStep | undefined {

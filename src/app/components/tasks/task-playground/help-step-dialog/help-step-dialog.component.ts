@@ -5,9 +5,12 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnInit,
   Output,
   SimpleChanges,
 } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { Button } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { firstValueFrom } from 'rxjs';
 import { standardCppStarterCode } from '../../../../../helpers/editor-helpers';
@@ -18,11 +21,11 @@ import { EditorComponent } from '../../../editor/editor.component';
 @Component({
   selector: 'app-help-step-dialog',
   standalone: true,
-  imports: [CommonModule, DialogModule, EditorComponent],
+  imports: [CommonModule, DialogModule, EditorComponent, FormsModule, Button],
   templateUrl: './help-step-dialog.component.html',
   styleUrl: './help-step-dialog.component.scss',
 })
-export class HelpStepDialogComponent implements OnChanges {
+export class HelpStepDialogComponent implements OnInit, OnChanges {
   constructor(
     private taskHelpStepService: TaskHelpStepService,
     private changeDetectorRef: ChangeDetectorRef
@@ -40,10 +43,12 @@ export class HelpStepDialogComponent implements OnChanges {
   codeShown: boolean = false;
   textShown: boolean = false;
 
-  nextHelpStep = 1;
+  currentHelpStep = 1;
+  numberOfHelpSteps: Array<number> = [];
   previouslyGivenCodeHelp: string = '';
   diffEditorLeftState: string = '';
   diffEditorRightSide: string = '';
+  countdownInProgress = false;
   nextHelpCooldownRemainingTime = 0;
   helpCooldownIntervalHandler: number = -1;
   resizeEvent: UIEvent = new UIEvent('init');
@@ -51,16 +56,28 @@ export class HelpStepDialogComponent implements OnChanges {
   helpText: string = '';
   infoMessage: string = '';
 
+  ngOnInit(): void {
+    this.taskHelpStepService.getHelpStepCount(this.task.id).subscribe({
+      next: (helpStepCount) => {
+        this.numberOfHelpSteps = Array(helpStepCount)
+          .fill(0)
+          .map((_, i) => i + 1);
+      },
+    });
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['visible']) {
       const visibilityChange = changes['visible'];
       if (
         visibilityChange.previousValue === false &&
-        visibilityChange.currentValue === true &&
-        this.nextHelpStep !== -1
+        visibilityChange.currentValue === true
       ) {
-        this.displayNextHelpStep();
+        this.displayHelp(this.currentHelpStep);
         this.handleResize(new UIEvent('reopen'));
+        if (!this.countdownInProgress) {
+          this.countdownUntilNextHelpStep();
+        }
       }
     }
   }
@@ -74,26 +91,17 @@ export class HelpStepDialogComponent implements OnChanges {
   handleHide() {
     this.visible = false;
     this.visibleChange.emit(this.visible);
-
-    if (this.nextHelpStep === -1) {
-      this.onCountdown.emit(0);
-    }
   }
 
-  async displayNextHelpStep() {
-    const newHelpStep = await this.displayHelp(this.nextHelpStep);
-
-    if (newHelpStep !== null) {
-      let cooldownSeconds = this.nextHelpStep * 30;
-      const cooldownComplexityModifier = parseInt(this.task.complexity) * 60;
+  async countdownUntilNextHelpStep() {
+    if (this.currentHelpStep <= this.numberOfHelpSteps.length) {
+      let cooldownSeconds = this.currentHelpStep * 2;
+      const cooldownComplexityModifier = parseInt(this.task.complexity) * 3;
       if (cooldownComplexityModifier > 0) {
         cooldownSeconds += cooldownComplexityModifier;
       }
-      this.startHelpCooldown(cooldownSeconds);
-      this.nextHelpStep++;
+      this.startHelpCooldown(1);
     } else {
-      this.infoMessage = 'Ne mogu ti dati više pomoći, dalje moraš samostalno.';
-      this.nextHelpStep = -1;
       this.onCountdown.emit(0);
     }
   }
@@ -108,16 +116,17 @@ export class HelpStepDialogComponent implements OnChanges {
         return null;
       }
 
-      const nextHelpStep = requestedHelp.helpStep;
-      this.handleDisplayingHelp(nextHelpStep);
+      const displayedHelpStep = requestedHelp.helpStep;
+      this.handleDisplayingHelp(displayedHelpStep);
 
-      return nextHelpStep;
+      return displayedHelpStep;
     } catch (error) {
       return null;
     }
   }
 
   private startHelpCooldown(seconds: number) {
+    this.countdownInProgress = true;
     this.nextHelpCooldownRemainingTime = seconds;
     this.onCountdown.emit(this.nextHelpCooldownRemainingTime);
 
@@ -125,6 +134,8 @@ export class HelpStepDialogComponent implements OnChanges {
       if (this.nextHelpCooldownRemainingTime == 0) {
         clearTimeout(this.helpCooldownIntervalHandler);
         this.onCountdown.emit(0);
+        this.currentHelpStep++;
+        this.countdownInProgress = false;
       } else {
         this.onCountdown.emit(this.nextHelpCooldownRemainingTime--);
       }
@@ -148,7 +159,13 @@ export class HelpStepDialogComponent implements OnChanges {
       this.textShown = true;
     }
 
-    this.dialogTitle = `💡 ${helpStep.step}. pomoć za ovaj zadatak`;
+    this.dialogTitle = `💡 ${this.getTitleForStep(
+      helpStep.step
+    )} za ovaj zadatak`;
+  }
+
+  protected getTitleForStep(helpStepIndex: number): string {
+    return `${helpStepIndex}. korak pomoći`;
   }
 
   private async showCodeDifferenceFromHelpStep(currentHelpStep: HelpStep) {
