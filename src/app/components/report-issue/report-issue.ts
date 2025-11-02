@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, NgZone, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Event, NavigationStart, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
@@ -45,8 +45,7 @@ export class ReportIssue implements OnInit {
     private router: Router,
     private authService: AuthService,
     private messageService: MessageService,
-    private apiService: ApiService,
-    private ngZone: NgZone
+    private apiService: ApiService
   ) {}
 
   isHidden: boolean = false;
