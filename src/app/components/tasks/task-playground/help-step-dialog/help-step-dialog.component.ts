@@ -106,23 +106,17 @@ export class HelpStepDialogComponent implements OnInit, OnChanges {
     }
   }
 
-  private async displayHelp(step: number): Promise<HelpStep | null> {
-    try {
-      const requestedHelp = await firstValueFrom(
-        this.taskHelpStepService.getHelpStep(this.task.id, step)
-      );
-
-      if (!requestedHelp.success) {
-        return null;
-      }
-
-      const displayedHelpStep = requestedHelp.helpStep;
-      this.handleDisplayingHelp(displayedHelpStep);
-
-      return displayedHelpStep;
-    } catch (error) {
-      return null;
+  protected async displayHelp(step: number): Promise<void> {
+    if (step > this.currentHelpStep) {
+      return;
     }
+
+    const requestedHelp = await firstValueFrom(
+      this.taskHelpStepService.getHelpStep(this.task.id, step)
+    );
+
+    const displayedHelpStep = requestedHelp.helpStep;
+    this.handleDisplayingHelp(displayedHelpStep);
   }
 
   private startHelpCooldown(seconds: number) {
