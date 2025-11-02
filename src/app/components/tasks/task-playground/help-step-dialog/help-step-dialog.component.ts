@@ -100,7 +100,7 @@ export class HelpStepDialogComponent implements OnInit, OnChanges {
       if (cooldownComplexityModifier > 0) {
         cooldownSeconds += cooldownComplexityModifier;
       }
-      this.startHelpCooldown(1);
+      this.startHelpCooldown(cooldownSeconds);
     } else {
       this.onCountdown.emit(0);
     }
