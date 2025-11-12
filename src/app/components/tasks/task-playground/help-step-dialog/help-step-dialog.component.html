@@ -4,11 +4,11 @@
 
     <div class="help-dialog-wrapper">
         <div class="help-steps-wrapper">
-            <div *ngFor="let index of numberOfHelpSteps"
-                [ngStyle]="{'color': currentHelpStep < index ? 'red' : 'green'}" (click)="displayHelp(index)">
-                <p *ngIf="currentHelpStep == index - 1 && countdownInProgress">Pričekaj
+            <div *ngFor="let step of numberOfHelpSteps" [ngStyle]="{'color': currentHelpStep != step ? 'red' : 'green'}"
+                (click)="onNewHelpStepClick(step)">
+                <p *ngIf="currentHelpStep == step - 1 && countdownInProgress">Pričekaj
                     {{nextHelpCooldownRemainingTime+1}}s do idućeg koraka.</p>
-                {{'Otvori ' + getTitleForStep(index)}}
+                {{'Otvori ' + getTitleForStep(step)}}
             </div>
 
         </div>

@@ -10,7 +10,6 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Button } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { firstValueFrom } from 'rxjs';
 import { standardCppStarterCode } from '../../../../../helpers/editor-helpers';
@@ -21,7 +20,7 @@ import { EditorComponent } from '../../../editor/editor.component';
 @Component({
   selector: 'app-help-step-dialog',
   standalone: true,
-  imports: [CommonModule, DialogModule, EditorComponent, FormsModule, Button],
+  imports: [CommonModule, DialogModule, EditorComponent, FormsModule],
   templateUrl: './help-step-dialog.component.html',
   styleUrl: './help-step-dialog.component.scss',
 })
@@ -44,6 +43,7 @@ export class HelpStepDialogComponent implements OnInit, OnChanges {
   textShown: boolean = false;
 
   currentHelpStep = 1;
+  maxUnlockedHelpStep = 1;
   numberOfHelpSteps: Array<number> = [];
   previouslyGivenCodeHelp: string = '';
   diffEditorLeftState: string = '';
@@ -73,7 +73,7 @@ export class HelpStepDialogComponent implements OnInit, OnChanges {
         visibilityChange.previousValue === false &&
         visibilityChange.currentValue === true
       ) {
-        this.displayHelp(this.currentHelpStep);
+        this.displayHelp(this.maxUnlockedHelpStep);
         this.handleResize(new UIEvent('reopen'));
         if (!this.countdownInProgress) {
           this.countdownUntilNextHelpStep();
@@ -94,8 +94,8 @@ export class HelpStepDialogComponent implements OnInit, OnChanges {
   }
 
   async countdownUntilNextHelpStep() {
-    if (this.currentHelpStep <= this.numberOfHelpSteps.length) {
-      let cooldownSeconds = this.currentHelpStep * 2;
+    if (this.maxUnlockedHelpStep <= this.numberOfHelpSteps.length) {
+      let cooldownSeconds = this.maxUnlockedHelpStep * 2;
       const cooldownComplexityModifier = parseInt(this.task.complexity) * 3;
       if (cooldownComplexityModifier > 0) {
         cooldownSeconds += cooldownComplexityModifier;
@@ -106,8 +106,16 @@ export class HelpStepDialogComponent implements OnInit, OnChanges {
     }
   }
 
-  protected async displayHelp(step: number): Promise<void> {
-    if (step > this.currentHelpStep) {
+  protected async onNewHelpStepClick(step: number) {
+    console.log('step: ', step);
+    console.log('this.currentHelpStep: ', this.maxUnlockedHelpStep);
+    if (step != this.currentHelpStep) {
+      this.displayHelp(step);
+    }
+  }
+
+  private async displayHelp(step: number) {
+    if (step > this.maxUnlockedHelpStep) {
       return;
     }
 
@@ -128,7 +136,7 @@ export class HelpStepDialogComponent implements OnInit, OnChanges {
       if (this.nextHelpCooldownRemainingTime == 0) {
         clearTimeout(this.helpCooldownIntervalHandler);
         this.onCountdown.emit(0);
-        this.currentHelpStep++;
+        this.maxUnlockedHelpStep++;
         this.countdownInProgress = false;
       } else {
         this.onCountdown.emit(this.nextHelpCooldownRemainingTime--);
@@ -156,6 +164,8 @@ export class HelpStepDialogComponent implements OnInit, OnChanges {
     this.dialogTitle = `💡 ${this.getTitleForStep(
       helpStep.step
     )} za ovaj zadatak`;
+
+    this.currentHelpStep = helpStep.step;
   }
 
   protected getTitleForStep(helpStepIndex: number): string {
