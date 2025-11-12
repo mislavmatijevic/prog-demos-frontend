@@ -127,23 +127,6 @@ export class HelpStepDialogComponent implements OnInit, OnChanges {
     this.handleDisplayingHelp(displayedHelpStep);
   }
 
-  private startHelpCooldown(seconds: number) {
-    this.countdownInProgress = true;
-    this.nextHelpCooldownRemainingTime = seconds;
-    this.onCountdown.emit(this.nextHelpCooldownRemainingTime);
-
-    this.helpCooldownIntervalHandler = setInterval(() => {
-      if (this.nextHelpCooldownRemainingTime == 0) {
-        clearTimeout(this.helpCooldownIntervalHandler);
-        this.onCountdown.emit(0);
-        this.maxUnlockedHelpStep++;
-        this.countdownInProgress = false;
-      } else {
-        this.onCountdown.emit(this.nextHelpCooldownRemainingTime--);
-      }
-    }, 1000) as unknown as number;
-  }
-
   private handleDisplayingHelp(helpStep: HelpStep) {
     const foundHelpfulCodeStep: string | undefined = helpStep.helperCode;
     const foundHelpfulTip: string | undefined = helpStep.helperText;
@@ -166,6 +149,23 @@ export class HelpStepDialogComponent implements OnInit, OnChanges {
     )} za ovaj zadatak`;
 
     this.currentHelpStep = helpStep.step;
+  }
+
+  private startHelpCooldown(seconds: number) {
+    this.countdownInProgress = true;
+    this.nextHelpCooldownRemainingTime = seconds;
+    this.onCountdown.emit(this.nextHelpCooldownRemainingTime);
+
+    this.helpCooldownIntervalHandler = setInterval(() => {
+      if (this.nextHelpCooldownRemainingTime == 0) {
+        clearTimeout(this.helpCooldownIntervalHandler);
+        this.onCountdown.emit(0);
+        this.maxUnlockedHelpStep++;
+        this.countdownInProgress = false;
+      } else {
+        this.onCountdown.emit(this.nextHelpCooldownRemainingTime--);
+      }
+    }, 1000) as unknown as number;
   }
 
   protected getTitleForStep(helpStepIndex: number): string {
