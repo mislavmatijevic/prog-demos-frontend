@@ -57,7 +57,21 @@ export class TaskHelpStepService {
   }
 
   findHelpStep(identifier: HelpStepIdentifier): HelpStep | undefined {
-    return this.storedHelpSteps.get(this.getUniqueHelpStepKey(identifier));
+    const helpStepKey = this.getUniqueHelpStepKey(identifier);
+    let locallySavedHelpStep = this.storedHelpSteps.get(helpStepKey);
+
+    if (locallySavedHelpStep === undefined) {
+      const helpStepFromLocalStorage = localStorage.getItem(helpStepKey);
+      if (helpStepFromLocalStorage != null)
+        try {
+          locallySavedHelpStep =
+            JSON.parse(helpStepFromLocalStorage) ?? undefined;
+        } catch {
+          localStorage.removeItem(helpStepKey);
+        }
+    }
+
+    return locallySavedHelpStep;
   }
 
   getAllStoredHelpSteps(): Array<HelpStep> {
@@ -78,5 +92,11 @@ export class TaskHelpStepService {
 
   private getUniqueHelpStepKey(identifier: HelpStepIdentifier) {
     return `${identifier.taskId}/${identifier.helpStepIndex}`;
+  }
+
+  persistHelpSteps(): void {
+    this.storedHelpSteps.forEach((value, key) =>
+      localStorage.setItem(key, JSON.stringify(value))
+    );
   }
 }

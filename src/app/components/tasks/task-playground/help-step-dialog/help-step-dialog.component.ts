@@ -125,6 +125,8 @@ export class HelpStepDialogComponent implements OnInit, OnChanges {
 
     const displayedHelpStep = requestedHelp.helpStep;
     this.handleDisplayingHelp(displayedHelpStep);
+    this.currentHelpStep = step;
+    this.taskHelpStepService.persistHelpSteps();
   }
 
   private handleDisplayingHelp(helpStep: HelpStep) {
@@ -147,8 +149,6 @@ export class HelpStepDialogComponent implements OnInit, OnChanges {
     this.dialogTitle = `💡 ${this.getTitleForStep(
       helpStep.step
     )} za ovaj zadatak`;
-
-    this.currentHelpStep = helpStep.step;
   }
 
   private startHelpCooldown(seconds: number) {
