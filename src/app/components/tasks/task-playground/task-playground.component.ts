@@ -395,6 +395,10 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
         this.handleOutputSizeLimit(error.reason);
         break;
       }
+      case SolutionErrorCode.EXEC_ERR_SCORE_CALCULATION_FAILED: {
+        this.handleScoreCalculationFailed();
+        break;
+      }
       default:
         break;
     }
@@ -515,6 +519,17 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
       severity: 'error',
       summary: errorTitle,
       detail: errorMessage,
+      life: 120000,
+    });
+  }
+
+  handleScoreCalculationFailed() {
+    this.messageService.add({
+      key: 'central',
+      severity: 'error',
+      summary: 'Problem s izračunom bodova',
+      detail:
+        'Čini se da sintaksa rješenja nije mogla biti pročitana radi utvrđivanja bodova. Koristiš li možda #define naredbe da zamijeniš ključne dijelove C++ sintakse?',
       life: 120000,
     });
   }

@@ -41,6 +41,7 @@ export enum SolutionErrorCode {
   EXEC_RUNTIME_ERROR = 6,
   EXEC_ERR_ILLEGAL_OPERATION = 7,
   EXEC_ERR_FILE_SIZE_EXCEEDED = 8,
+  EXEC_ERR_SCORE_CALCULATION_FAILED = 9,
 }
 
 export type SuccessfulTaskExecutionResponse = {
@@ -60,6 +61,7 @@ export type ExecutionFailureReasonOutputMismatch =
   };
 
 export type FailedTaskExecutionResponse = {
+  message: string;
   errorCode: SolutionErrorCode;
   reason: ExecutionFailureReasonTests &
     ExecutionFailureReasonOutputMismatch &
