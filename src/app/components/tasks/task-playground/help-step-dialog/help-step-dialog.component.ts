@@ -121,8 +121,6 @@ export class HelpStepDialogComponent implements OnInit, OnChanges {
   }
 
   protected async onNewHelpStepClick(step: number) {
-    console.log('step: ', step);
-    console.log('this.currentHelpStep: ', this.maxUnlockedHelpStep);
     if (step != this.currentHelpStep) {
       this.displayHelp(step);
     }
