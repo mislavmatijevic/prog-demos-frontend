@@ -176,6 +176,12 @@ export class HelpStepDialogComponent implements OnInit, OnChanges {
         this.onCountdown.emit(0);
         this.maxUnlockedHelpStep++;
         this.countdownInProgress = false;
+        if (this.authService.isLoggedIn()) {
+          this.taskHelpStepService.makeHelpStepAvailable(
+            this.task.id,
+            this.maxUnlockedHelpStep
+          );
+        }
       } else {
         this.onCountdown.emit(this.nextHelpCooldownRemainingTime--);
       }

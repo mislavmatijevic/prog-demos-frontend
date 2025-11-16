@@ -79,6 +79,12 @@ export class TaskHelpStepService {
       );
   }
 
+  makeHelpStepAvailable(taskId: number, helpStepIndex: number) {
+    this.apiService
+      .post(`/tasks/${taskId}/help/${helpStepIndex}/available`, null, true)
+      .subscribe();
+  }
+
   findHelpStep(identifier: HelpStepIdentifier): HelpStep | undefined {
     const helpStepKey = this.getUniqueHelpStepKey(identifier);
     let locallySavedHelpStep = this.storedHelpSteps.get(helpStepKey);
