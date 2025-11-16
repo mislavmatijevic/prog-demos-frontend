@@ -18,6 +18,16 @@ type HelpStepIdentifier = {
   helpStepIndex: number;
 };
 
+export type AvailableHelpSteps = {
+  step: number;
+  dateMadeAvailable: Date;
+};
+
+export type AvailableHelpStepsResponse = {
+  success: boolean;
+  availableHelpSteps: Array<AvailableHelpSteps>;
+};
+
 @Injectable({
   providedIn: 'root',
 })
@@ -54,6 +64,19 @@ export class TaskHelpStepService {
     return this.apiService
       .get<HelpStepCountResponse>(`/tasks/${taskId}/help`)
       .pipe(map((value: HelpStepCountResponse) => value.helpSteps));
+  }
+
+  getLatestAvailableHelpStep(taskId: number): Observable<number> {
+    return this.apiService
+      .get<AvailableHelpStepsResponse>(`/tasks/${taskId}/help/available`, true)
+      .pipe(
+        map(
+          (value: AvailableHelpStepsResponse) =>
+            value.availableHelpSteps.sort(
+              (step1, step2) => step2.step - step1.step
+            )[0].step
+        )
+      );
   }
 
   findHelpStep(identifier: HelpStepIdentifier): HelpStep | undefined {

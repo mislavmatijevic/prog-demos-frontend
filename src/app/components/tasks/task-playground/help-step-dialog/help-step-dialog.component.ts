@@ -14,6 +14,7 @@ import { DialogModule } from 'primeng/dialog';
 import { firstValueFrom } from 'rxjs';
 import { standardCppStarterCode } from '../../../../../helpers/editor-helpers';
 import { BasicTask, HelpStep } from '../../../../../types/models';
+import { AuthService } from '../../../../services/auth.service';
 import { TaskHelpStepService } from '../../../../services/task-help-step.service';
 import { EditorComponent } from '../../../editor/editor.component';
 
@@ -26,6 +27,7 @@ import { EditorComponent } from '../../../editor/editor.component';
 })
 export class HelpStepDialogComponent implements OnInit, OnChanges {
   constructor(
+    private authService: AuthService,
     private taskHelpStepService: TaskHelpStepService,
     private changeDetectorRef: ChangeDetectorRef
   ) {}
@@ -64,6 +66,18 @@ export class HelpStepDialogComponent implements OnInit, OnChanges {
           .map((_, i) => i + 1);
       },
     });
+
+    if (this.authService.isLoggedIn()) {
+      this.taskHelpStepService
+        .getLatestAvailableHelpStep(this.task.id)
+        .subscribe({
+          next: (latestAvailableStep) => {
+            if (latestAvailableStep > this.maxUnlockedHelpStep) {
+              this.maxUnlockedHelpStep = latestAvailableStep;
+            }
+          },
+        });
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
