@@ -10,10 +10,14 @@
 .help-step-tabs-wrapper {
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: end;
 
   height: 100%;
+
+  small {
+    padding-right: 10px;
+  }
 }
 
 .help-step-tab {
@@ -29,13 +33,40 @@
   &:hover {
     box-shadow: $accent 0px 1px 20px, $accent 0px 0px 0px 2px;
   }
+
+  &.current-tab {
+    color: $accent-light;
+    box-shadow: $accent-light 0px 1px 20px, $accent-light 0px 0px 0px 2px;
+  }
+
+  &.unlocked-tab {
+    color: $accent;
+    cursor: pointer;
+  }
+
+  &.locked-tab {
+    color: $primary;
+    box-shadow: $primary 0px 1px 20px, $primary 0px 0px 0px 2px;
+  }
+}
+
+.tab-lock {
+  color: $accent;
+  text-align: center;
+  box-shadow: $accent 0px 1px 10px, $accent 0px 0px 0px 1px;
+  background-color: $dark-accent;
+
+  &.countdown-in-progress {
+    color: $accent-light;
+    box-shadow: $accent-light 0px 1px 10px, $accent-light 0px 0px 0px 1px;
+  }
 }
 
 .help-wrapper {
   display: flex;
   flex-direction: column;
   height: 100%;
-  box-shadow: $accent 0px 1px 20px, $accent 0px 0px 0px 1px;
+  box-shadow: $accent-light 0px 1px 20px, $accent-light 0px 0px 0px 1px;
   background-color: $dark-accent;
   padding: 10px;
 }

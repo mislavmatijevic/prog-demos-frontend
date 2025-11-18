@@ -4,16 +4,23 @@
 
     <div class="help-dialog-wrapper">
         <div class="help-step-tabs-wrapper">
-            <div *ngFor="let tab of helpStepTabs" class="help-step-tab"
-                [ngStyle]="{'color': tab.isCurrent ? 'green' : tab.isUnlocked ? 'lightblue' : 'red'}"
-                (click)="displayNewHelpStep(tab)">
-                {{'Otvori ' + getTitleForStep(tab.step)}}
-                <div *ngIf="tab == getNextLockedHelpStep()">
-                    <div *ngIf="!countdownInProgress" (click)="countdownUntilNextHelpStep()">Započni otključavanje</div>
-                    <p *ngIf="countdownInProgress">Pričekaj {{nextHelpCooldownRemainingTime+1}}s do idućeg koraka.</p>
+            <div *ngFor="let tab of helpStepTabs">
+                <div class="help-step-tab"
+                    [ngClass]="tab.isCurrent ? 'current-tab' : tab.isUnlocked ? 'unlocked-tab' : 'locked-tab'"
+                    (click)="displayNewHelpStep(tab)">
+                    {{'Otvori ' + getTitleForStep(tab.step)}}
+                </div>
+                <div class="tab-lock" *ngIf="tab == getNextLockedHelpStep()"
+                    [ngClass]="countdownInProgress ? 'countdown-in-progress' : ''">
+                    <div *ngIf="!countdownInProgress" (click)="countdownUntilNextHelpStep()">Započni otključavanje
+                    </div>
+                    <div *ngIf="countdownInProgress">Pričekaj {{nextHelpCooldownRemainingTime+1}}s...
+                    </div>
                 </div>
             </div>
 
+            <small>Kada zapneš u rješavanju, možeš zatražiti i kratko pričekati korak pomoći. Dok se odbrojava vrijeme
+                do iduće pomoći, slobodno zatvori ovaj prozor.</small>
         </div>
         <div class="help-wrapper">
             <p class="info-message" *ngIf="infoMessage != ''">{{infoMessage}}</p>
@@ -27,5 +34,6 @@
                     [(comparedCode)]="diffEditorRightSide" [resizeEvent]="resizeEvent" />
             </div>
         </div>
+
     </div>
 </p-dialog>
