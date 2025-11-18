@@ -1,8 +1,8 @@
 @import "../../../../../styles/variables.scss";
 
 .help-dialog-wrapper {
-  display: grid;
-  grid-template-columns: 1fr 3fr;
+  display: flex;
+  flex-direction: row;
   height: 100%;
   width: 100%;
 }
@@ -14,6 +14,7 @@
   align-items: end;
 
   height: 100%;
+  width: 200px;
 
   small {
     padding-right: 10px;

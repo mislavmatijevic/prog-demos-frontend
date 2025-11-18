@@ -19,8 +19,12 @@
                 </div>
             </div>
 
-            <small>Kada zapneš u rješavanju, možeš zatražiti i kratko pričekati korak pomoći. Dok se odbrojava vrijeme
-                do iduće pomoći, slobodno zatvori ovaj prozor.</small>
+            <div>
+                <small *ngIf="countdownInProgress">Dok se odbrojava vrijeme do iduće pomoći, slobodno zatvori ovaj
+                    prozor.</small>
+                <br *ngIf="countdownInProgress">
+                <small>Kada zapneš u rješavanju, možeš zatražiti i kratko pričekati korak pomoći.</small>
+            </div>
         </div>
         <div class="help-wrapper">
             <p class="info-message" *ngIf="infoMessage != ''">{{infoMessage}}</p>
