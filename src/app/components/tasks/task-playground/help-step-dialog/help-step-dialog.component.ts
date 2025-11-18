@@ -18,6 +18,12 @@ import { AuthService } from '../../../../services/auth.service';
 import { TaskHelpStepService } from '../../../../services/task-help-step.service';
 import { EditorComponent } from '../../../editor/editor.component';
 
+type HelpStepTab = {
+  step: number;
+  isCurrent: boolean;
+  isUnlocked: boolean;
+};
+
 @Component({
   selector: 'app-help-step-dialog',
   standalone: true,
@@ -44,9 +50,10 @@ export class HelpStepDialogComponent implements OnInit, OnChanges {
   codeShown: boolean = false;
   textShown: boolean = false;
 
-  currentHelpStep = 1;
-  maxUnlockedHelpStep = 1;
-  numberOfHelpSteps: Array<number> = [];
+  getCurrentHelpStepTab = () =>
+    this.helpStepTabs.find((v) => v.isCurrent) ?? this.helpStepTabs[0];
+  getNextLockedHelpStep = () => this.helpStepTabs.find((v) => !v.isUnlocked);
+  helpStepTabs: Array<HelpStepTab> = [];
   previouslyGivenCodeHelp: string = '';
   diffEditorLeftState: string = '';
   diffEditorRightSide: string = '';
@@ -61,9 +68,16 @@ export class HelpStepDialogComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.taskHelpStepService.getHelpStepCount(this.task.id).subscribe({
       next: (helpStepCount) => {
-        this.numberOfHelpSteps = Array(helpStepCount)
-          .fill(0)
-          .map((_, i) => i + 1);
+        this.helpStepTabs = Array<HelpStepTab>(helpStepCount)
+          .fill({ step: 0, isCurrent: false, isUnlocked: false })
+          .map((_, i) => {
+            return {
+              step: i + 1,
+              isCurrent: i == 0,
+              isUnlocked: i == 0,
+            };
+          });
+        this.displayCurrentHelp();
       },
     });
 
@@ -72,8 +86,10 @@ export class HelpStepDialogComponent implements OnInit, OnChanges {
         .getLatestAvailableHelpStep(this.task.id)
         .subscribe({
           next: (latestAvailableStep) => {
-            if (latestAvailableStep > this.maxUnlockedHelpStep) {
-              this.maxUnlockedHelpStep = latestAvailableStep;
+            for (const tab of this.helpStepTabs) {
+              if (tab.step <= latestAvailableStep) {
+                tab.isUnlocked = true;
+              }
             }
           },
         });
@@ -87,14 +103,8 @@ export class HelpStepDialogComponent implements OnInit, OnChanges {
         visibilityChange.previousValue === false &&
         visibilityChange.currentValue === true
       ) {
-        this.displayHelp(this.maxUnlockedHelpStep);
+        this.displayCurrentHelp();
         this.handleResize(new UIEvent('reopen'));
-        if (
-          !this.countdownInProgress &&
-          this.numberOfHelpSteps.length != this.maxUnlockedHelpStep
-        ) {
-          this.countdownUntilNextHelpStep();
-        }
       }
     }
   }
@@ -111,37 +121,66 @@ export class HelpStepDialogComponent implements OnInit, OnChanges {
   }
 
   async countdownUntilNextHelpStep() {
-    if (this.maxUnlockedHelpStep <= this.numberOfHelpSteps.length) {
-      let cooldownSeconds = this.maxUnlockedHelpStep * 2;
+    const nextLockedStep = this.getNextLockedHelpStep();
+    if (nextLockedStep !== undefined) {
+      this.nextHelpCooldownRemainingTime = nextLockedStep.step * 2;
       const cooldownComplexityModifier = parseInt(this.task.complexity) * 3;
       if (cooldownComplexityModifier > 0) {
-        cooldownSeconds += cooldownComplexityModifier;
+        this.nextHelpCooldownRemainingTime += cooldownComplexityModifier;
       }
-      this.startHelpCooldown(cooldownSeconds);
+
+      this.countdownInProgress = true;
+      this.onCountdown.emit(this.nextHelpCooldownRemainingTime);
+
+      this.helpCooldownIntervalHandler = setInterval(() => {
+        if (this.nextHelpCooldownRemainingTime == 0) {
+          this.onCountdown.emit(0);
+          this.countdownInProgress = false;
+          clearTimeout(this.helpCooldownIntervalHandler);
+          this.handleCooldownComplete(nextLockedStep);
+        } else {
+          this.onCountdown.emit(this.nextHelpCooldownRemainingTime--);
+        }
+      }, 1000) as unknown as number;
     } else {
       this.onCountdown.emit(0);
     }
   }
 
-  protected async onNewHelpStepClick(step: number) {
-    if (step != this.currentHelpStep) {
-      this.displayHelp(step);
+  private handleCooldownComplete(newlyUnlockedStep: HelpStepTab) {
+    newlyUnlockedStep.isUnlocked = true;
+    this.setCurrentTab(newlyUnlockedStep);
+
+    if (this.authService.isLoggedIn()) {
+      this.taskHelpStepService.makeHelpStepAvailable(
+        this.task.id,
+        newlyUnlockedStep.step
+      );
     }
   }
 
-  private async displayHelp(step: number) {
-    if (step > this.maxUnlockedHelpStep) {
-      return;
+  protected async displayNewHelpStep(tab: HelpStepTab) {
+    if (!tab.isCurrent && tab.isUnlocked) {
+      this.setCurrentTab(tab);
     }
+  }
+
+  private async displayCurrentHelp() {
+    const currentTab = this.getCurrentHelpStepTab();
 
     const requestedHelp = await firstValueFrom(
-      this.taskHelpStepService.getHelpStep(this.task.id, step)
+      this.taskHelpStepService.getHelpStep(this.task.id, currentTab.step)
     );
 
     const displayedHelpStep = requestedHelp.helpStep;
     this.handleDisplayingHelp(displayedHelpStep);
-    this.currentHelpStep = step;
     this.taskHelpStepService.persistHelpSteps();
+  }
+
+  private setCurrentTab(tab: HelpStepTab) {
+    this.getCurrentHelpStepTab().isCurrent = false;
+    tab.isCurrent = true;
+    this.displayCurrentHelp();
   }
 
   private handleDisplayingHelp(helpStep: HelpStep) {
@@ -164,29 +203,6 @@ export class HelpStepDialogComponent implements OnInit, OnChanges {
     this.dialogTitle = `💡 ${this.getTitleForStep(
       helpStep.step
     )} za ovaj zadatak`;
-  }
-
-  private startHelpCooldown(seconds: number) {
-    this.countdownInProgress = true;
-    this.nextHelpCooldownRemainingTime = seconds;
-    this.onCountdown.emit(this.nextHelpCooldownRemainingTime);
-
-    this.helpCooldownIntervalHandler = setInterval(() => {
-      if (this.nextHelpCooldownRemainingTime == 0) {
-        clearTimeout(this.helpCooldownIntervalHandler);
-        this.onCountdown.emit(0);
-        this.maxUnlockedHelpStep++;
-        this.countdownInProgress = false;
-        if (this.authService.isLoggedIn()) {
-          this.taskHelpStepService.makeHelpStepAvailable(
-            this.task.id,
-            this.maxUnlockedHelpStep
-          );
-        }
-      } else {
-        this.onCountdown.emit(this.nextHelpCooldownRemainingTime--);
-      }
-    }, 1000) as unknown as number;
   }
 
   protected getTitleForStep(helpStepIndex: number): string {

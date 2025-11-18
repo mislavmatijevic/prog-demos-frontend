@@ -1,15 +1,15 @@
 <p-dialog [header]="dialogTitle" [(visible)]="visible" [resizable]="true" (onHide)="handleHide()"
-    [style]="{ 'min-width': '25rem', 'max-width': codeShown ? '75rem' : '25rem', height: codeShown ? '35rem' : 'fit-content', 'min-height': codeShown ? '35rem' : 'fit-content', 'max-height': codeShown ? '35rem' : 'fit-content' }"
+    [style]="{ 'min-width': '25rem', 'max-width': codeShown ? '100rem' : '25rem', height: codeShown ? '35rem' : 'fit-content', 'min-height': codeShown ? '35rem' : 'fit-content', 'max-height': codeShown ? '35rem' : 'fit-content' }"
     (onResizeInit)="handleResize($event)" (onResizeEnd)="handleResize($event)">
 
     <div class="help-dialog-wrapper">
         <div class="help-step-tabs-wrapper">
-            <div *ngFor="let step of numberOfHelpSteps" class="help-step-tab"
-                [ngStyle]="{'color': currentHelpStep != step ? 'red' : 'green'}" (click)="onNewHelpStepClick(step)"
-                [ngClass]="">
-                <p *ngIf="currentHelpStep == step - 1 && countdownInProgress">Pričekaj
+            <div *ngFor="let tab of helpStepTabs" class="help-step-tab"
+                [ngStyle]="{'color': tab.isCurrent ? 'green' : tab.isUnlocked ? 'lightblue' : 'red'}"
+                (click)="displayNewHelpStep(tab)">
+                <p *ngIf="countdownInProgress">Pričekaj
                     {{nextHelpCooldownRemainingTime+1}}s do idućeg koraka.</p>
-                {{'Otvori ' + getTitleForStep(step)}}
+                {{'Otvori ' + getTitleForStep(tab.step)}}
             </div>
 
         </div>
