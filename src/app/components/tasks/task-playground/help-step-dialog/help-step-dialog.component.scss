@@ -81,11 +81,15 @@
   padding: 10px;
 }
 
-.info-message {
-  color: $tertiary;
+.help-text {
+  color: $accent-light;
 }
 
 .diff-editor {
   height: 100%;
   width: 100%;
+
+  &-loader {
+    align-self: center;
+  }
 }

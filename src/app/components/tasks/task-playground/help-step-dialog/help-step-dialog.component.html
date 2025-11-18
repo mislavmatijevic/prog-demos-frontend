@@ -27,7 +27,9 @@
             </div>
         </div>
         <div class="help-wrapper">
-            <p class="info-message" *ngIf="infoMessage != ''">{{infoMessage}}</p>
+            <div *ngIf="loadingHelpStep" class="diff-editor-loader">
+                <p-progressSpinner />
+            </div>
 
             <p class="help-text" *ngIf="textShown">
                 {{helpText}}

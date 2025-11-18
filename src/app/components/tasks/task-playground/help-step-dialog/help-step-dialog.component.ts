@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { firstValueFrom } from 'rxjs';
 import { standardCppStarterCode } from '../../../../../helpers/editor-helpers';
 import { BasicTask, HelpStep } from '../../../../../types/models';
@@ -27,7 +28,13 @@ type HelpStepTab = {
 @Component({
   selector: 'app-help-step-dialog',
   standalone: true,
-  imports: [CommonModule, DialogModule, EditorComponent, FormsModule],
+  imports: [
+    CommonModule,
+    DialogModule,
+    EditorComponent,
+    FormsModule,
+    ProgressSpinnerModule,
+  ],
   templateUrl: './help-step-dialog.component.html',
   styleUrl: './help-step-dialog.component.scss',
 })
@@ -47,6 +54,7 @@ export class HelpStepDialogComponent implements OnInit, OnChanges {
 
   dialogTitle: string = '💡 Pomoć';
 
+  loadingHelpStep: boolean = false;
   codeShown: boolean = false;
   textShown: boolean = false;
 
@@ -63,7 +71,6 @@ export class HelpStepDialogComponent implements OnInit, OnChanges {
   resizeEvent: UIEvent = new UIEvent('init');
 
   helpText: string = '';
-  infoMessage: string = '';
 
   ngOnInit(): void {
     this.taskHelpStepService.getHelpStepCount(this.task.id).subscribe({
@@ -168,9 +175,11 @@ export class HelpStepDialogComponent implements OnInit, OnChanges {
   private async displayCurrentHelp() {
     const currentTab = this.getCurrentHelpStepTab();
 
+    this.loadingHelpStep = true;
     const requestedHelp = await firstValueFrom(
       this.taskHelpStepService.getHelpStep(this.task.id, currentTab.step)
     );
+    this.loadingHelpStep = false;
 
     const displayedHelpStep = requestedHelp.helpStep;
     this.handleDisplayingHelp(displayedHelpStep);
