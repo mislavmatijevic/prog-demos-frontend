@@ -1,5 +1,5 @@
 <p-dialog [header]="dialogTitle" [(visible)]="visible" [resizable]="true" (onHide)="handleHide()"
-    [style]="{ width: codeShown ? '75rem' : '25rem', height: codeShown ? '35rem' : 'fit-content', 'max-height': '40rem' }"
+    [style]="{ 'min-width': '25rem', 'max-width': codeShown ? '75rem' : '25rem', height: codeShown ? '35rem' : 'fit-content', 'min-height': codeShown ? '35rem' : 'fit-content', 'max-height': codeShown ? '35rem' : 'fit-content' }"
     (onResizeInit)="handleResize($event)" (onResizeEnd)="handleResize($event)">
 
     <div class="help-dialog-wrapper">
