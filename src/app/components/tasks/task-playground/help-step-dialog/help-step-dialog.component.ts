@@ -89,7 +89,10 @@ export class HelpStepDialogComponent implements OnInit, OnChanges {
       ) {
         this.displayHelp(this.maxUnlockedHelpStep);
         this.handleResize(new UIEvent('reopen'));
-        if (!this.countdownInProgress) {
+        if (
+          !this.countdownInProgress &&
+          this.numberOfHelpSteps.length != this.maxUnlockedHelpStep
+        ) {
           this.countdownUntilNextHelpStep();
         }
       }
