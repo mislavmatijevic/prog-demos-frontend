@@ -152,15 +152,14 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
 
   toggleHelp() {
     this.helpDialogVisible = !this.helpDialogVisible;
-    if (this.helpDialogVisible) {
-      this.helpStepAvailable = false;
-    }
   }
 
   handleCountdown(secondsRemaining: number) {
     this.helpStepCountdown = secondsRemaining;
     if (secondsRemaining === 0) {
       this.helpStepAvailable = true;
+    } else if (this.helpStepAvailable) {
+      this.helpStepAvailable = false;
     }
   }
 

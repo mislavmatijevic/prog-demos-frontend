@@ -122,29 +122,29 @@ export class HelpStepDialogComponent implements OnInit, OnChanges {
 
   async countdownUntilNextHelpStep() {
     const nextLockedStep = this.getNextLockedHelpStep();
-    if (nextLockedStep !== undefined) {
-      this.nextHelpCooldownRemainingTime = nextLockedStep.step * 2;
-      const cooldownComplexityModifier = parseInt(this.task.complexity) * 3;
-      if (cooldownComplexityModifier > 0) {
-        this.nextHelpCooldownRemainingTime += cooldownComplexityModifier;
-      }
-
-      this.countdownInProgress = true;
-      this.onCountdown.emit(this.nextHelpCooldownRemainingTime);
-
-      this.helpCooldownIntervalHandler = setInterval(() => {
-        if (this.nextHelpCooldownRemainingTime == 0) {
-          this.onCountdown.emit(0);
-          this.countdownInProgress = false;
-          clearTimeout(this.helpCooldownIntervalHandler);
-          this.handleCooldownComplete(nextLockedStep);
-        } else {
-          this.onCountdown.emit(this.nextHelpCooldownRemainingTime--);
-        }
-      }, 1000) as unknown as number;
-    } else {
-      this.onCountdown.emit(0);
+    if (nextLockedStep === undefined) {
+      return;
     }
+
+    this.nextHelpCooldownRemainingTime = nextLockedStep.step * 2;
+    const cooldownComplexityModifier = parseInt(this.task.complexity) * 3;
+    if (cooldownComplexityModifier > 0) {
+      this.nextHelpCooldownRemainingTime += cooldownComplexityModifier;
+    }
+
+    this.countdownInProgress = true;
+    this.onCountdown.emit(this.nextHelpCooldownRemainingTime);
+
+    this.helpCooldownIntervalHandler = setInterval(() => {
+      if (this.nextHelpCooldownRemainingTime == 0) {
+        this.countdownInProgress = false;
+        clearTimeout(this.helpCooldownIntervalHandler);
+        this.handleCooldownComplete(nextLockedStep);
+        this.onCountdown.emit(0);
+      } else {
+        this.onCountdown.emit(this.nextHelpCooldownRemainingTime--);
+      }
+    }, 1000) as unknown as number;
   }
 
   private handleCooldownComplete(newlyUnlockedStep: HelpStepTab) {
