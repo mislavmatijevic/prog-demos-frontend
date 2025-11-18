@@ -3,9 +3,10 @@
     (onResizeInit)="handleResize($event)" (onResizeEnd)="handleResize($event)">
 
     <div class="help-dialog-wrapper">
-        <div class="help-steps-wrapper">
-            <div *ngFor="let step of numberOfHelpSteps" [ngStyle]="{'color': currentHelpStep != step ? 'red' : 'green'}"
-                (click)="onNewHelpStepClick(step)">
+        <div class="help-step-tabs-wrapper">
+            <div *ngFor="let step of numberOfHelpSteps" class="help-step-tab"
+                [ngStyle]="{'color': currentHelpStep != step ? 'red' : 'green'}" (click)="onNewHelpStepClick(step)"
+                [ngClass]="">
                 <p *ngIf="currentHelpStep == step - 1 && countdownInProgress">Pričekaj
                     {{nextHelpCooldownRemainingTime+1}}s do idućeg koraka.</p>
                 {{'Otvori ' + getTitleForStep(step)}}
