@@ -1,23 +1,29 @@
 @import "../../../../../styles/variables.scss";
 
 .help-dialog-wrapper {
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: 1fr 5fr;
+  grid-template-rows: 1fr;
   height: 100%;
-  width: 100%;
 }
 
 .help-step-tabs-wrapper {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   align-items: end;
 
   height: 100%;
   width: 200px;
 
+  gap: 2rem;
+
   small {
     padding-right: 10px;
+  }
+
+  .space-between-tabs {
+    height: 2rem;
   }
 }
 
@@ -56,10 +62,13 @@
   text-align: center;
   box-shadow: $accent 0px 1px 10px, $accent 0px 0px 0px 1px;
   background-color: $dark-accent;
+  user-select: none;
+  cursor: pointer;
 
   &.countdown-in-progress {
     color: $accent-light;
     box-shadow: $accent-light 0px 1px 10px, $accent-light 0px 0px 0px 1px;
+    cursor: progress;
   }
 }
 
@@ -67,7 +76,7 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  box-shadow: $accent-light 0px 1px 20px, $accent-light 0px 0px 0px 1px;
+  box-shadow: $accent-light 0px 1px 10px, $accent-light 0px 0px 0px 1px;
   background-color: $dark-accent;
   padding: 10px;
 }

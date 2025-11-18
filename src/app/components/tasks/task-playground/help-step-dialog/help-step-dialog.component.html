@@ -1,5 +1,5 @@
 <p-dialog [header]="dialogTitle" [(visible)]="visible" [resizable]="true" (onHide)="handleHide()"
-    [style]="{ 'min-width': '25rem', 'max-width': codeShown ? '100rem' : '25rem', height: codeShown ? '35rem' : 'fit-content', 'min-height': codeShown ? '35rem' : 'fit-content', 'max-height': codeShown ? '35rem' : 'fit-content' }"
+    [style]="{ 'min-width': '35rem', 'max-width': codeShown ? '100rem' : '35rem', height: codeShown ? '35rem' : 'fit-content', 'min-height': codeShown ? '35rem' : 'fit-content', 'max-height': codeShown ? '35rem' : 'fit-content' }"
     (onResizeInit)="handleResize($event)" (onResizeEnd)="handleResize($event)">
 
     <div class="help-dialog-wrapper">
@@ -20,16 +20,16 @@
             </div>
 
             <div>
-                <small *ngIf="countdownInProgress">Dok se odbrojava vrijeme do iduće pomoći, slobodno zatvori ovaj
-                    prozor.</small>
-                <br *ngIf="countdownInProgress">
-                <small>Kada zapneš u rješavanju, možeš zatražiti i kratko pričekati korak pomoći.</small>
+                <small *ngIf="!countdownInProgress">Kada zapneš u rješavanju, ovdje možeš dobiti korake pomoći koji te
+                    vode prema rješenju.</small>
+                <small *ngIf="countdownInProgress">Slobodno zatvori ovaj prozor, odbrojavanje će se nastaviti u
+                    pozadini.</small>
             </div>
         </div>
         <div class="help-wrapper">
             <p class="info-message" *ngIf="infoMessage != ''">{{infoMessage}}</p>
 
-            <p *ngIf="textShown">
+            <p class="help-text" *ngIf="textShown">
                 {{helpText}}
             </p>
 
