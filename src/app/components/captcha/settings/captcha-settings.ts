@@ -5,7 +5,8 @@ export type CaptchaProtectedActions =
   | 'login'
   | 'register'
   | 'password-reset'
-  | 'request-password-reset';
+  | 'request-password-reset'
+  | 'report-issue';
 
 export type SiteKeys = Array<{
   action: CaptchaProtectedActions;

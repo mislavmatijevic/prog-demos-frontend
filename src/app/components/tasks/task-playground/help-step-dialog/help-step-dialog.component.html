@@ -1,16 +1,45 @@
 <p-dialog [header]="dialogTitle" [(visible)]="visible" [resizable]="true" (onHide)="handleHide()"
-    [style]="{ width: codeShown ? '75rem' : '25rem', height: codeShown ? '35rem' : 'fit-content', 'max-height': '40rem' }"
+    [style]="{ 'min-width': '35rem', 'max-width': codeShown ? '100rem' : '35rem', height: codeShown ? '35rem' : 'fit-content', 'min-height': codeShown ? '35rem' : 'fit-content', 'max-height': codeShown ? '35rem' : 'fit-content' }"
     (onResizeInit)="handleResize($event)" (onResizeEnd)="handleResize($event)">
-    <div class="help-wrapper">
-        <p class="info-message" *ngIf="infoMessage != ''">{{infoMessage}}</p>
 
-        <p *ngIf="textShown">
-            {{helpText}}
-        </p>
+    <div class="help-dialog-wrapper">
+        <div class="help-step-tabs-wrapper">
+            <div *ngFor="let tab of helpStepTabs">
+                <div class="help-step-tab"
+                    [ngClass]="tab.isCurrent ? 'current-tab' : tab.isUnlocked ? 'unlocked-tab' : 'locked-tab'"
+                    (click)="displayNewHelpStep(tab)">
+                    {{'Otvori ' + getTitleForStep(tab.step)}}
+                </div>
+                <div class="tab-lock" *ngIf="tab == getNextLockedHelpStep()"
+                    [ngClass]="countdownInProgress ? 'countdown-in-progress' : ''">
+                    <div *ngIf="!countdownInProgress" (click)="countdownUntilNextHelpStep()">Započni otključavanje
+                    </div>
+                    <div *ngIf="countdownInProgress">Pričekaj {{nextHelpCooldownRemainingTime+1}}s...
+                    </div>
+                </div>
+            </div>
 
-        <div *ngIf="codeShown" class="diff-editor">
-            <app-editor [isDiffEditor]="true" [originalCode]="diffEditorLeftState"
-                [(comparedCode)]="diffEditorRightSide" [resizeEvent]="resizeEvent" />
+            <div>
+                <small *ngIf="!countdownInProgress">Kada zapneš u rješavanju, ovdje možeš dobiti korake pomoći koji te
+                    vode prema rješenju.</small>
+                <small *ngIf="countdownInProgress">Slobodno zatvori ovaj prozor, odbrojavanje će se nastaviti u
+                    pozadini.</small>
+            </div>
         </div>
+        <div class="help-wrapper">
+            <div *ngIf="loadingHelpStep" class="diff-editor-loader">
+                <p-progressSpinner />
+            </div>
+
+            <p class="help-text" *ngIf="textShown">
+                {{helpText}}
+            </p>
+
+            <div *ngIf="codeShown" class="diff-editor">
+                <app-editor [isDiffEditor]="true" [originalCode]="diffEditorLeftState"
+                    [(comparedCode)]="diffEditorRightSide" [resizeEvent]="resizeEvent" />
+            </div>
+        </div>
+
     </div>
 </p-dialog>

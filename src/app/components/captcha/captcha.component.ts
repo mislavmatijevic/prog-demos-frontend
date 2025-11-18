@@ -67,7 +67,7 @@ export class CaptchaComponent implements OnInit {
     this.turnstileConfig = {
       action: this.action,
       siteKey: isDevMode()
-        ? DevSiteKey.ALWAYS_PASSES_INVISIBLE
+        ? DevSiteKey.FORCE_INTERACTIVE_CHALLENGE
         : currentSiteKey,
       theme: Theme.DARK,
       size:
@@ -112,11 +112,17 @@ export class CaptchaComponent implements OnInit {
 
   private notifySuccess(result: Result) {
     this.turnstileManager = result.manager;
-    this.ngZone.run(() => this.captchaTokenChange.emit(result.data));
+    this.ngZone.run(() => {
+      this.captchaToken = result.data;
+      this.captchaTokenChange.emit(this.captchaToken);
+    });
   }
 
   private notifyError(): void {
-    this.ngZone.run(() => this.captchaTokenChange.emit(null));
+    this.ngZone.run(() => {
+      this.captchaToken = null;
+      this.captchaTokenChange.emit(this.captchaToken);
+    });
   }
 
   @HostBinding('style.display')

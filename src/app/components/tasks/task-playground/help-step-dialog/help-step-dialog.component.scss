@@ -1,16 +1,95 @@
 @import "../../../../../styles/variables.scss";
 
+.help-dialog-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 5fr;
+  grid-template-rows: 1fr;
+  height: 100%;
+}
+
+.help-step-tabs-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: end;
+
+  height: 100%;
+  width: 200px;
+
+  gap: 2rem;
+
+  small {
+    padding-right: 10px;
+  }
+
+  .space-between-tabs {
+    height: 2rem;
+  }
+}
+
+.help-step-tab {
+  padding: 10px;
+  width: 12rem;
+  background: linear-gradient(50deg, darken($accent, 40%), $dark-accent);
+  box-shadow: $accent 0px 1px 10px, $accent 0px 0px 0px 2px;
+
+  user-select: none;
+
+  transition: box-shadow 1s cubic-bezier(0.075, 0.82, 0.165, 1);
+
+  &:hover {
+    box-shadow: $accent 0px 1px 20px, $accent 0px 0px 0px 2px;
+  }
+
+  &.current-tab {
+    color: $accent-light;
+    box-shadow: $accent-light 0px 1px 20px, $accent-light 0px 0px 0px 2px;
+  }
+
+  &.unlocked-tab {
+    color: $accent;
+    cursor: pointer;
+  }
+
+  &.locked-tab {
+    color: $primary;
+    box-shadow: $primary 0px 1px 20px, $primary 0px 0px 0px 2px;
+  }
+}
+
+.tab-lock {
+  color: $accent;
+  text-align: center;
+  box-shadow: $accent 0px 1px 10px, $accent 0px 0px 0px 1px;
+  background-color: $dark-accent;
+  user-select: none;
+  cursor: pointer;
+
+  &.countdown-in-progress {
+    color: $accent-light;
+    box-shadow: $accent-light 0px 1px 10px, $accent-light 0px 0px 0px 1px;
+    cursor: progress;
+  }
+}
+
 .help-wrapper {
   display: flex;
   flex-direction: column;
   height: 100%;
+  box-shadow: $accent-light 0px 1px 10px, $accent-light 0px 0px 0px 1px;
+  background-color: $dark-accent;
+  padding: 10px;
 }
 
-.info-message {
-  color: $tertiary;
+.help-text {
+  color: $accent-light;
 }
 
 .diff-editor {
   height: 100%;
   width: 100%;
+
+  &-loader {
+    align-self: center;
+  }
 }
