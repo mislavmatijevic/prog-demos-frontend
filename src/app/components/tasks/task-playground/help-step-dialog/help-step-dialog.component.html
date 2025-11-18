@@ -7,9 +7,11 @@
             <div *ngFor="let tab of helpStepTabs" class="help-step-tab"
                 [ngStyle]="{'color': tab.isCurrent ? 'green' : tab.isUnlocked ? 'lightblue' : 'red'}"
                 (click)="displayNewHelpStep(tab)">
-                <p *ngIf="countdownInProgress">Pričekaj
-                    {{nextHelpCooldownRemainingTime+1}}s do idućeg koraka.</p>
                 {{'Otvori ' + getTitleForStep(tab.step)}}
+                <div *ngIf="tab == getNextLockedHelpStep()">
+                    <div *ngIf="!countdownInProgress" (click)="countdownUntilNextHelpStep()">Započni otključavanje</div>
+                    <p *ngIf="countdownInProgress">Pričekaj {{nextHelpCooldownRemainingTime+1}}s do idućeg koraka.</p>
+                </div>
             </div>
 
         </div>
