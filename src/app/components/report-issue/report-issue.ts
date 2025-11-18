@@ -10,6 +10,7 @@ import { DividerModule } from 'primeng/divider';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { TooltipModule } from 'primeng/tooltip';
 import { ApiService } from '../../services/api.service';
 import { AuthService } from '../../services/auth.service';
 import { CaptchaComponent } from '../captcha/captcha.component';
@@ -36,6 +37,7 @@ type ReportIssueResponse = {
     DialogModule,
     CheckboxModule,
     CaptchaComponent,
+    TooltipModule,
   ],
   templateUrl: './report-issue.html',
   styleUrl: './report-issue.scss',
