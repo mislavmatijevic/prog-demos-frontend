@@ -6,7 +6,7 @@ import {
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { throwError } from 'rxjs';
+import { NEVER, throwError } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 
@@ -32,7 +32,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
           severity: 'error',
           detail: 'Ne čini se da imaš prava pristupiti ovome!',
         });
-        router.navigateByUrl('/login');
         return throwError(() => errRes);
       } else if (errRes.status === 403) {
         return authService.refreshTokens().pipe(
@@ -42,9 +41,11 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
           }),
           catchError((err: HttpErrorResponse) => {
             if (err.status === 403) {
-              router.navigateByUrl('/login');
+              router.navigateByUrl('/logout');
+              return NEVER;
+            } else {
+              return throwError(() => errRes);
             }
-            return throwError(() => errRes);
           })
         );
       } else {

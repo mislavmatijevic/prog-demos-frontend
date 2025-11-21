@@ -7,6 +7,7 @@ import { AccountComponent } from './main/account/account.component';
 import { ActivationComponent } from './main/activation/activation.component';
 import { CreateTaskComponent } from './main/create-task/create-task.component';
 import { LoginPageComponent } from './main/login-page/login-page.component';
+import { LogoutPage } from './main/logout-page/logout-page';
 import { PasswordResetComponent } from './main/password-reset/password-reset.component';
 import { PrivacyComponent } from './main/privacy/privacy.component';
 import { RegisterPageComponent } from './main/register-page/register-page.component';
@@ -39,6 +40,12 @@ export const routes: Routes = [
     path: 'login',
     canActivate: [noAuthGuard],
     component: LoginPageComponent,
+    title: 'Prog Demos | Prijava',
+  },
+  {
+    path: 'logout',
+    canActivate: [authGuard],
+    component: LogoutPage,
     title: 'Prog Demos | Prijava',
   },
   {

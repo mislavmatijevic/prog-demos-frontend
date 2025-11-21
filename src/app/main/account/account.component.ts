@@ -89,8 +89,7 @@ export class AccountComponent implements OnInit {
   }
 
   signOut() {
-    this.authService.logout();
-    this.router.navigateByUrl('/');
+    this.router.navigateByUrl('/logout');
   }
 
   getRadarOptions(): any {
