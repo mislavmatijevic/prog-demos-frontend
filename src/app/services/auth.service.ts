@@ -213,7 +213,7 @@ export class AuthService {
     return authorizedRequest;
   }
 
-  ensureRefreshTokenStillValid(): boolean {
+  isRefreshTokenExpired(): boolean {
     const refreshTokenExpiry = localStorage.getItem(
       refreshTokenExpiryStorageKey
     );
