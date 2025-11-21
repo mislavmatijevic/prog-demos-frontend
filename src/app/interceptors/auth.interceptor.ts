@@ -44,7 +44,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
               router.navigateByUrl('/logout');
               return NEVER;
             } else {
-              return throwError(() => errRes);
+              return throwError(() => err);
             }
           })
         );
