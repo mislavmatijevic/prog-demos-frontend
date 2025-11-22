@@ -213,7 +213,7 @@ export class AuthService {
     return authorizedRequest;
   }
 
-  ensureRefreshTokenStillValid(): boolean {
+  isRefreshTokenExpired(): boolean {
     const refreshTokenExpiry = localStorage.getItem(
       refreshTokenExpiryStorageKey
     );
@@ -222,12 +222,7 @@ export class AuthService {
     const currentTime = new Date();
     const expiryTime = new Date(refreshTokenExpiry!);
 
-    const isExpired = currentTime > expiryTime;
-    if (isExpired) {
-      this.clearAllLoginData();
-    }
-
-    return isExpired;
+    return currentTime > expiryTime;
   }
 
   isLoggedIn = signal(this.getAccessToken() !== null);

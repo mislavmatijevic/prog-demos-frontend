@@ -32,8 +32,8 @@ export class AppComponent implements OnInit {
   }
 
   private checkIfRefreshTokenExpired() {
-    if (this.authService.ensureRefreshTokenStillValid()) {
-      this.router.navigateByUrl('/login');
+    if (this.authService.isRefreshTokenExpired()) {
+      this.router.navigateByUrl('/logout?expired=true');
     }
   }
 }
