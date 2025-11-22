@@ -133,7 +133,9 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.saveCurrentCode(this.mainCode!);
+    if (this.task != null) {
+      this.saveCurrentCode(this.mainCode!);
+    }
   }
 
   onMainEditorReady() {
