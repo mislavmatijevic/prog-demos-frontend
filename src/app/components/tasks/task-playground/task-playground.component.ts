@@ -1,6 +1,6 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { CommonModule } from '@angular/common';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
@@ -315,12 +315,12 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
           if (err instanceof HttpErrorResponse) {
             var errorRes = err.error as FailedTaskExecutionResponse;
             switch (err.status) {
-              case 403: // token refresh should be in progress
+              case HttpStatusCode.Unauthorized: // token refresh should be in progress
                 break;
-              case 422:
+              case HttpStatusCode.UnprocessableEntity:
                 this.handleSolutionEvaluationFailure(errorRes);
                 break;
-              case 429:
+              case HttpStatusCode.TooManyRequests:
                 this.messageService.add({
                   key: 'central',
                   severity: 'error',
@@ -332,7 +332,7 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
                 });
                 break;
 
-              case 500:
+              case HttpStatusCode.InternalServerError:
                 this.messageService.add({
                   key: 'central',
                   severity: 'error',
