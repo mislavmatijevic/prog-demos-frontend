@@ -2,10 +2,10 @@ import {
   HttpContextToken,
   HttpErrorResponse,
   HttpInterceptorFn,
+  HttpStatusCode,
 } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { MessageService } from 'primeng/api';
 import { NEVER, throwError } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
@@ -15,7 +15,6 @@ export const APPEND_AUTHORIZATION = new HttpContextToken<boolean>(() => false);
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
   const authService = inject(AuthService);
-  let messageService: MessageService;
 
   if (req.context.get(APPEND_AUTHORIZATION)) {
     req = authService.getRequestWithAuthHeader(req);
@@ -23,33 +22,25 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(req).pipe(
     catchError((errRes: HttpErrorResponse) => {
-      if (errRes.status === 401) {
-        if (messageService === undefined) {
-          messageService = inject(MessageService);
-        }
-        messageService.add({
-          key: 'general',
-          severity: 'error',
-          detail: 'Ne čini se da imaš prava pristupiti ovome!',
-        });
-        return throwError(() => errRes);
-      } else if (errRes.status === 403) {
+      const isAuthTokenExpiredResponse =
+        errRes.status === HttpStatusCode.Unauthorized;
+      const isFailedRefreshResponse =
+        errRes.status === HttpStatusCode.Forbidden;
+
+      if (isAuthTokenExpiredResponse) {
         return authService.refreshTokens().pipe(
           switchMap(() => {
             const newRequest = authService.getRequestWithAuthHeader(req);
             return next(newRequest);
-          }),
-          catchError((err: HttpErrorResponse) => {
-            if (err.status === 403) {
-              router.navigateByUrl('/logout?expired=true');
-              return NEVER;
-            } else {
-              return throwError(() => err);
-            }
           })
         );
+      } else if (isFailedRefreshResponse) {
+        router.navigateByUrl('/logout?expired=true', { replaceUrl: true });
+        return NEVER;
       } else {
-        return throwError(() => errRes);
+        return throwError(() =>
+          errRes instanceof Error ? errRes : new Error(JSON.stringify(errRes))
+        );
       }
     })
   );
