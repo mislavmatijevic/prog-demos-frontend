@@ -1,6 +1,6 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { CommonModule } from '@angular/common';
-import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
+import { HttpStatusCode } from '@angular/common/http';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
@@ -312,47 +312,51 @@ export class TaskPlaygroundComponent implements OnInit, OnDestroy {
           this.popConfetti();
         },
         error: (err) => {
-          if (err instanceof HttpErrorResponse) {
-            var errorRes = err.error as FailedTaskExecutionResponse;
-            switch (err.status) {
-              case HttpStatusCode.Unauthorized: // token refresh should be in progress
-                break;
-              case HttpStatusCode.UnprocessableEntity:
-                this.handleSolutionEvaluationFailure(errorRes);
-                break;
-              case HttpStatusCode.TooManyRequests:
-                this.messageService.add({
-                  key: 'central',
-                  severity: 'error',
-                  summary: 'Preveliko opterećenje sustava!',
-                  detail:
-                    'Čini se da previše korisnika u ovome trenutku koristi stranicu. Molim te pokušaj za par trenutaka. ' +
-                    'Ako se ova greška ponavlja, pričekaj nekoliko sati.',
-                  life: 30000,
-                });
-                break;
+          var errorRes = err.error as FailedTaskExecutionResponse;
 
-              case HttpStatusCode.InternalServerError:
-                this.messageService.add({
-                  key: 'central',
-                  severity: 'error',
-                  summary: 'Dogodila se pogreška u sustavu!',
-                  detail:
-                    'Testiranje zadatka nije uspjelo iz nepoznatog razloga! ' +
-                    'Ja ću pogledati o čemu je riječ, a ti u međuvremenu lokalno testiraj.',
-                  life: 30000,
-                });
-                break;
+          switch (err.status) {
+            case HttpStatusCode.Unauthorized: // token refresh should be in progress
+              break;
+            case HttpStatusCode.UnprocessableEntity:
+              this.handleSolutionEvaluationFailure(errorRes);
+              break;
+            case HttpStatusCode.TooManyRequests:
+              this.messageService.add({
+                key: 'central',
+                severity: 'error',
+                summary: 'Preveliko opterećenje sustava!',
+                detail:
+                  'Čini se da previše korisnika u ovome trenutku koristi stranicu. Molim te pokušaj za par trenutaka. ' +
+                  'Ako se ova greška ponavlja, pričekaj nekoliko sati.',
+                life: 30000,
+              });
+              break;
 
-              default:
-                this.messageService.add({
-                  key: 'central',
-                  severity: 'error',
-                  summary: 'Ups',
-                  detail: 'Čini se da nije moguće testirati tvoje rješenje.',
-                });
-                break;
-            }
+            case HttpStatusCode.InternalServerError:
+              this.messageService.add({
+                key: 'central',
+                severity: 'error',
+                summary: 'Dogodila se pogreška u sustavu!',
+                detail:
+                  'Testiranje zadatka nije uspjelo iz nepoznatog razloga! ' +
+                  'Ja ću pogledati o čemu je riječ, a ti u međuvremenu lokalno testiraj.',
+                life: 30000,
+              });
+              break;
+
+            default:
+              this.messageService.add({
+                key: 'central',
+                severity: 'error',
+                summary: 'Ups',
+                detail:
+                  'Čini se da nije moguće testirati tvoje rješenje. ' +
+                  'Provjeri internetsku vezu. ' +
+                  'Ako je do sada sve OK radilo, probaj se odjaviti i opet prijaviti. ' +
+                  'Ako se problem bude ponavljao, možeš ga prijaviti koristeći žuti gumb na gornjem desnom vrhu ekrana.',
+                life: 60000,
+              });
+              break;
           }
         },
       });
