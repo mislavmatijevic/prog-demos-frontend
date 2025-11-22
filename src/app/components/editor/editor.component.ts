@@ -17,7 +17,7 @@ import {
   MonacoEditorModule,
   NgxEditorModel,
 } from 'ngx-monaco-editor-v2';
-import { NewlinePipe } from '../../pipes/newline.pipe';
+import { EditorCodePipe } from '../../pipes/editor-code.pipe';
 
 export type SyntaxError = {
   line: number;
@@ -29,12 +29,12 @@ export type SyntaxError = {
   selector: 'app-editor',
   standalone: true,
   imports: [CommonModule, MonacoEditorModule],
-  providers: [NewlinePipe],
+  providers: [EditorCodePipe],
   templateUrl: './editor.component.html',
   styleUrl: './editor.component.scss',
 })
 export class EditorComponent implements OnInit, OnChanges {
-  constructor(private newlinePipe: NewlinePipe, private ngZone: NgZone) {}
+  constructor(private editorCodePipe: EditorCodePipe, private ngZone: NgZone) {}
 
   @ViewChild('errorExplanationPopup')
   errorExplanationPopup!: ElementRef<HTMLDivElement>;
@@ -87,11 +87,11 @@ export class EditorComponent implements OnInit, OnChanges {
 
     if (this.isDiffEditor) {
       this.diffOriginalModel = {
-        code: this.newlinePipe.transform(this.originalCode),
+        code: this.editorCodePipe.transform(this.originalCode),
         language: 'cpp',
       };
       this.diffModifiedModel = {
-        code: this.newlinePipe.transform(this.comparedCode),
+        code: this.editorCodePipe.transform(this.comparedCode),
         language: 'cpp',
       };
     } else {
@@ -204,7 +204,7 @@ export class EditorComponent implements OnInit, OnChanges {
     if (!this.isActivelyHandlingBitcoding && this.isBeingBitcoded) {
       this.isActivelyHandlingBitcoding = true;
       this.editorModel = {
-        value: this.newlinePipe.transform(this.code),
+        value: this.editorCodePipe.transform(this.code),
         language: 'raw',
       };
     } else if (this.isActivelyHandlingBitcoding && !this.isBeingBitcoded) {
@@ -276,7 +276,7 @@ export class EditorComponent implements OnInit, OnChanges {
 
   private setCodeEditorModel() {
     this.editorModel = {
-      value: this.newlinePipe.transform(this.code),
+      value: this.editorCodePipe.transform(this.code),
       language: 'cpp',
     };
   }

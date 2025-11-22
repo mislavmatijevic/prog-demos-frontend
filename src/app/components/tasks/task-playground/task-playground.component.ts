@@ -18,7 +18,6 @@ import { finalize } from 'rxjs';
 import { standardCppStarterCode } from '../../../../helpers/editor-helpers';
 import { sizes } from '../../../../styles/variables';
 import { FullTask, TaskScore } from '../../../../types/models';
-import { NewlinePipe } from '../../../pipes/newline.pipe';
 import { AuthService } from '../../../services/auth.service';
 import {
   ExecutionFailureReasonOutputMismatch,
@@ -41,7 +40,6 @@ import { SuccessDialogComponent } from './success-dialog/success-dialog.componen
   standalone: true,
   imports: [
     CommonModule,
-    NewlinePipe,
     Button,
     OverlayPanelModule,
     TooltipModule,
