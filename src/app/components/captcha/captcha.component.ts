@@ -47,7 +47,6 @@ export class CaptchaComponent implements OnInit {
   forceRefresh(): void {
     if (this.turnstileManager !== undefined) {
       this.turnstileManager.reset(null);
-      console.log('refreshed');
     }
   }
 
