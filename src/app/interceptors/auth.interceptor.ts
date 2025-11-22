@@ -38,9 +38,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         router.navigateByUrl('/logout?expired=true', { replaceUrl: true });
         return NEVER;
       } else {
-        return throwError(() =>
-          errRes instanceof Error ? errRes : new Error(JSON.stringify(errRes))
-        );
+        return throwError(() => errRes);
       }
     })
   );

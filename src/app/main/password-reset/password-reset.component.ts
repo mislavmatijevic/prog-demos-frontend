@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -130,7 +130,7 @@ export class PasswordResetComponent implements OnInit {
           error: (errorResponse: HttpErrorResponse) => {
             let errorMessage = '';
 
-            if (errorResponse.status == 403) {
+            if (errorResponse.status == HttpStatusCode.Unauthorized) {
               errorMessage =
                 'Zahtjev za novom lozinkom je istekao. Ponovno zatraži promjenu lozinke.';
             } else {
